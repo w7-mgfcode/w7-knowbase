@@ -275,47 +275,58 @@ flowchart TD
           <h2 class="section__title"><span lang="hu">API-szolgáltatók</span><span lang="en">API provider models</span></h2>
         </div>
         <div class="grid grid-3">
-          <div class="card">
+          <div class="card card--rich card--flat">
+            <span class="card__tag">text-embedding-3</span>
             <div class="card__title">OpenAI</div>
-            <p class="card__body">
-              <span lang="hu">text-embedding-3-large — 3072d MRL, 8191 token kontextus, $0.13/1M (batch $0.065). text-embedding-3-small — 1536d MRL, $0.02/1M (batch $0.01). Az elavult ada-002 ($0.10/1M) nem ajánlott. text-embedding-4 nem létezik.</span>
-              <span lang="en">text-embedding-3-large — 3072d MRL, 8191-token context, $0.13/1M (batch $0.065). text-embedding-3-small — 1536d MRL, $0.02/1M (batch $0.01). The legacy ada-002 ($0.10/1M) is not recommended. There is no text-embedding-4.</span>
-            </p>
+            <ul class="feature-list">
+              <li><span lang="hu">text-embedding-3-large — 3072d MRL, 8191 token, $0.13/1M (batch $0.065).</span><span lang="en">text-embedding-3-large — 3072d MRL, 8191-token context, $0.13/1M (batch $0.065).</span></li>
+              <li><span lang="hu">text-embedding-3-small — 1536d MRL, $0.02/1M (batch $0.01).</span><span lang="en">text-embedding-3-small — 1536d MRL, $0.02/1M (batch $0.01).</span></li>
+              <li><span lang="hu">Az elavult ada-002 ($0.10/1M) nem ajánlott; text-embedding-4 nem létezik.</span><span lang="en">The legacy ada-002 ($0.10/1M) is not recommended; there is no text-embedding-4.</span></li>
+            </ul>
           </div>
-          <div class="card">
+          <div class="card card--rich card--hier">
+            <span class="card__tag">gemini-embedding</span>
             <div class="card__title">Google</div>
-            <p class="card__body">
-              <span lang="hu">gemini-embedding-001 — 3072d MRL (→1536/768), 2048 token kontextus, $0.15/1M, ingyenes szint, GA. gemini-embedding-2 — az első natívan 5-modalitású modell (szöveg/kép/videó/audio/PDF), 8192 token szöveges kontextus, kb. $0.20/1M; előzetes → ~GA 2026 áprilisa.</span>
-              <span lang="en">gemini-embedding-001 — 3072d MRL (→1536/768), 2048-token context, $0.15/1M, free tier, GA. gemini-embedding-2 — the first natively 5-modality model (text/image/video/audio/PDF), 8192-token text context, approx. $0.20/1M; preview → ~GA late Apr 2026.</span>
-            </p>
+            <ul class="feature-list">
+              <li><span lang="hu">gemini-embedding-001 — 3072d MRL (→1536/768), 2048 token, $0.15/1M, GA, ingyenes szint.</span><span lang="en">gemini-embedding-001 — 3072d MRL (→1536/768), 2048-token context, $0.15/1M, GA, free tier.</span></li>
+              <li><span lang="hu">gemini-embedding-2 — első 5-modalitású modell (szöveg/kép/videó/audio/PDF), kb. $0.20/1M.</span><span lang="en">gemini-embedding-2 — first 5-modality model (text/image/video/audio/PDF), approx. $0.20/1M.</span></li>
+              <li><span lang="hu">Előzetes → ~GA 2026 áprilisa.</span><span lang="en">Preview → ~GA late Apr 2026.</span></li>
+            </ul>
           </div>
-          <div class="card">
+          <div class="card card--rich card--graph">
+            <span class="card__tag">embed-v4.0</span>
             <div class="card__title">Cohere</div>
-            <p class="card__body">
-              <span lang="hu">embed-v4.0 — 256/512/1024/1536d Matryoshka, 128K kontextus, kb. $0.12/1M, multimodális (szöveg+kép+PDF). Kvantizálás: float/int8/binary/ubinary. 2025 áprilisában jelent meg.</span>
-              <span lang="en">embed-v4.0 — 256/512/1024/1536d Matryoshka, 128K context, approx. $0.12/1M, multimodal (text+image+PDF). Quantization: float/int8/binary/ubinary. Released April 2025.</span>
-            </p>
+            <ul class="feature-list">
+              <li><span lang="hu">embed-v4.0 — 256/512/1024/1536d Matryoshka, 128K kontextus, kb. $0.12/1M.</span><span lang="en">embed-v4.0 — 256/512/1024/1536d Matryoshka, 128K context, approx. $0.12/1M.</span></li>
+              <li><span lang="hu">Multimodális: szöveg + kép + PDF.</span><span lang="en">Multimodal: text + image + PDF.</span></li>
+              <li><span lang="hu">Kvantizálás: float / int8 / binary / ubinary. 2025 áprilisa.</span><span lang="en">Quantization: float / int8 / binary / ubinary. April 2025.</span></li>
+            </ul>
           </div>
-          <div class="card">
+          <div class="card card--rich card--agent">
+            <span class="card__tag">Voyage 4</span>
             <div class="card__title">Voyage AI</div>
-            <p class="card__body">
-              <span lang="hu">A MongoDB tulajdonában. A Voyage 4 sorozat 2026-01-15-én indult: 256–2048d Matryoshka, 32K kontextus, 200M ingyenes token, közös embedding-tér. voyage-4-large $0.12/1M (MoE), voyage-4 $0.06, voyage-4-lite $0.02, voyage-4-nano nyílt súlyú (Apache 2.0). voyage-context-3 $0.18, voyage-code-3 $0.18, voyage-multimodal-3.5 $0.12.</span>
-              <span lang="en">Owned by MongoDB. The Voyage 4 series launched 2026-01-15: 256–2048d Matryoshka, 32K context, 200M free tokens, shared embedding space. voyage-4-large $0.12/1M (MoE), voyage-4 $0.06, voyage-4-lite $0.02, voyage-4-nano open-weight (Apache 2.0). voyage-context-3 $0.18, voyage-code-3 $0.18, voyage-multimodal-3.5 $0.12.</span>
-            </p>
+            <ul class="feature-list">
+              <li><span lang="hu">Voyage 4 sorozat (2026-01-15): 256–2048d Matryoshka, 32K kontextus, közös embedding-tér.</span><span lang="en">Voyage 4 series (2026-01-15): 256–2048d Matryoshka, 32K context, shared embedding space.</span></li>
+              <li><span lang="hu">voyage-4-large $0.12/1M (MoE), voyage-4 $0.06, voyage-4-lite $0.02, voyage-4-nano nyílt súlyú.</span><span lang="en">voyage-4-large $0.12/1M (MoE), voyage-4 $0.06, voyage-4-lite $0.02, voyage-4-nano open-weight.</span></li>
+              <li><span lang="hu">voyage-context-3 / voyage-code-3 $0.18; voyage-multimodal-3.5 $0.12. A MongoDB tulajdona; 200M ingyenes token.</span><span lang="en">voyage-context-3 / voyage-code-3 $0.18; voyage-multimodal-3.5 $0.12. Owned by MongoDB; 200M free tokens.</span></li>
+            </ul>
           </div>
-          <div class="card">
+          <div class="card card--rich card--adapt">
+            <span class="card__tag">mistral-embed</span>
             <div class="card__title">Mistral</div>
-            <p class="card__body">
-              <span lang="hu">mistral-embed — 1024d, kb. 8K kontextus, kb. $0.10/1M. codestral-embed-2505 — kódra specializált, kb. $0.15/1M.</span>
-              <span lang="en">mistral-embed — 1024d, approx. 8K context, approx. $0.10/1M. codestral-embed-2505 — code-specialized, approx. $0.15/1M.</span>
-            </p>
+            <ul class="feature-list">
+              <li><span lang="hu">mistral-embed — 1024d, kb. 8K kontextus, kb. $0.10/1M.</span><span lang="en">mistral-embed — 1024d, approx. 8K context, approx. $0.10/1M.</span></li>
+              <li><span lang="hu">codestral-embed-2505 — kódra specializált, kb. $0.15/1M.</span><span lang="en">codestral-embed-2505 — code-specialized, approx. $0.15/1M.</span></li>
+            </ul>
           </div>
-          <div class="card">
+          <div class="card card--rich card--raptor">
+            <span class="card__tag">Titan v2</span>
             <div class="card__title">AWS</div>
-            <p class="card__body">
-              <span lang="hu">amazon.titan-embed-text-v2:0 — 256/512/1024d MRL, 8192 token kontextus, $0.11/1M. (Nincs „Nova embedding” modell — a Nova egy generatív modellcsalád.)</span>
-              <span lang="en">amazon.titan-embed-text-v2:0 — 256/512/1024d MRL, 8192-token context, $0.11/1M. (There is no "Nova embedding" model — Nova is a generative model family.)</span>
-            </p>
+            <ul class="feature-list">
+              <li><span lang="hu">amazon.titan-embed-text-v2:0 — 256/512/1024d MRL, 8192 token kontextus, $0.11/1M.</span><span lang="en">amazon.titan-embed-text-v2:0 — 256/512/1024d MRL, 8192-token context, $0.11/1M.</span></li>
+              <li><span lang="hu">Amazon Bedrockon érhető el.</span><span lang="en">Available on Amazon Bedrock.</span></li>
+              <li><span lang="hu">Nincs „Nova embedding” modell — a Nova egy generatív modellcsalád.</span><span lang="en">There is no "Nova embedding" model — Nova is a generative model family.</span></li>
+            </ul>
           </div>
         </div>
         <p class="section__desc" style="margin-top:24px;">
@@ -359,68 +370,176 @@ flowchart TD
           <h2 class="section__title"><span lang="hu">Nyílt forráskódú modellek</span><span lang="en">Open-source models</span></h2>
         </div>
         <div class="grid grid-3">
-          <div class="card">
+          <div class="card card--rich card--flat">
+            <span class="card__tag">Apache 2.0</span>
             <div class="card__title">Qwen3-Embedding</div>
+            <p class="card__spec">0.6B / 4B / 8B · 32–4096d MRL · 32K ctx</p>
             <p class="card__body">
-              <span lang="hu">Alibaba, Apache 2.0, 2025. június. 0.6B / 4B / 8B méret, LLM-gerinc, instrukció-tudatos, MRL 32–4096d, 32K kontextus, 100+ nyelv (kóddal együtt). A 2026-os referencia nyílt súlyú RAG-modell.</span>
-              <span lang="en">Alibaba, Apache 2.0, June 2025. 0.6B / 4B / 8B sizes, LLM backbone, instruction-aware, MRL 32–4096d, 32K context, 100+ languages incl. code. The reference open-weight RAG model in 2026.</span>
+              <span lang="hu">Alibaba, 2025. június. LLM-gerinc, instrukció-tudatos, 100+ nyelv (kóddal együtt). A 2026-os referencia nyílt súlyú RAG-modell.</span>
+              <span lang="en">Alibaba, June 2025. LLM backbone, instruction-aware, 100+ languages incl. code. The reference open-weight RAG model in 2026.</span>
             </p>
+            <div class="card__stats">
+              <div class="card__stat">
+                <span class="card__stat-label">MMTEB</span>
+                <span class="card__stat-value">70.58</span>
+              </div>
+              <div class="card__stat">
+                <span class="card__stat-label"><span lang="hu">Kontextus</span><span lang="en">Context</span></span>
+                <span class="card__stat-value card__stat-value--muted">32K</span>
+              </div>
+            </div>
           </div>
-          <div class="card">
+          <div class="card card--rich card--hier">
+            <span class="card__tag">MIT</span>
             <div class="card__title">BGE-M3</div>
+            <p class="card__spec">1024d · 8192 ctx · ~568M</p>
             <p class="card__body">
-              <span lang="hu">BAAI, MIT. Egy modell, három mód: dense + sparse (lexikai) + multi-vektor (ColBERT-stílus). 1024d, 8192 kontextus, ~568M paraméter, 100+ nyelv.</span>
-              <span lang="en">BAAI, MIT. One model, three modes: dense + sparse (lexical) + multi-vector (ColBERT-style). 1024d, 8192 context, ~568M params, 100+ languages.</span>
+              <span lang="hu">BAAI. Egy modell, három mód: dense + sparse (lexikai) + multi-vektor (ColBERT-stílus).</span>
+              <span lang="en">BAAI. One model, three modes: dense + sparse (lexical) + multi-vector (ColBERT-style).</span>
             </p>
+            <div class="card__stats">
+              <div class="card__stat">
+                <span class="card__stat-label"><span lang="hu">Nyelvek</span><span lang="en">Languages</span></span>
+                <span class="card__stat-value">100+</span>
+              </div>
+              <div class="card__stat">
+                <span class="card__stat-label"><span lang="hu">Kontextus</span><span lang="en">Context</span></span>
+                <span class="card__stat-value card__stat-value--muted">8192</span>
+              </div>
+            </div>
           </div>
-          <div class="card">
+          <div class="card card--rich card--graph">
+            <span class="card__tag">Apache 2.0</span>
             <div class="card__title">bge-en-icl</div>
+            <p class="card__spec">~7B · 4096d · English</p>
             <p class="card__body">
-              <span lang="hu">BAAI, Apache 2.0. ~7B paraméter, 4096d, angol zászlóshajó. Újdonsága az in-context learning: néhány példa megadása inferencia közben.</span>
-              <span lang="en">BAAI, Apache 2.0. ~7B params, 4096d, English flagship. Its novelty is in-context learning: few-shot examples supplied at inference time.</span>
+              <span lang="hu">BAAI, angol zászlóshajó. Újdonsága az in-context learning: néhány példa megadása inferencia közben.</span>
+              <span lang="en">BAAI, English flagship. Its novelty is in-context learning: few-shot examples supplied at inference time.</span>
             </p>
+            <div class="card__stats">
+              <div class="card__stat">
+                <span class="card__stat-label"><span lang="hu">Paraméter</span><span lang="en">Params</span></span>
+                <span class="card__stat-value">~7B</span>
+              </div>
+              <div class="card__stat">
+                <span class="card__stat-label">Dim</span>
+                <span class="card__stat-value card__stat-value--muted">4096</span>
+              </div>
+            </div>
           </div>
-          <div class="card">
+          <div class="card card--rich card--self">
+            <span class="card__tag">CC-BY-NC-4.0</span>
             <div class="card__title">NV-Embed-v2</div>
+            <p class="card__spec">~7.85B · 4096d · Mistral-7B</p>
             <p class="card__body">
-              <span lang="hu">NVIDIA, CC-BY-NC-4.0 — nem kereskedelmi licenc. ~7.85B paraméter, Mistral-7B alap, latent-attention pooling. MTEB v1 #1 (72.31, 2024. augusztus) — de a licenc miatt produkcióban nem használható.</span>
-              <span lang="en">NVIDIA, CC-BY-NC-4.0 — non-commercial license. ~7.85B params, Mistral-7B base, latent-attention pooling. MTEB v1 #1 (72.31, Aug 2024) — but not usable in production due to the license.</span>
+              <span lang="hu">NVIDIA. Latent-attention pooling. Nem kereskedelmi licenc — produkcióban nem használható.</span>
+              <span lang="en">NVIDIA. Latent-attention pooling. Non-commercial license — not usable in production.</span>
             </p>
+            <div class="card__stats">
+              <div class="card__stat">
+                <span class="card__stat-label">MTEB v1</span>
+                <span class="card__stat-value">72.31</span>
+              </div>
+              <div class="card__stat">
+                <span class="card__stat-label"><span lang="hu">Licenc</span><span lang="en">License</span></span>
+                <span class="card__stat-value card__stat-value--muted">NC</span>
+              </div>
+            </div>
           </div>
-          <div class="card">
+          <div class="card card--rich card--agent">
+            <span class="card__tag">MIT</span>
             <div class="card__title">multilingual-e5-large-instruct</div>
+            <p class="card__spec">~560M · 1024d · 100 lang</p>
             <p class="card__body">
-              <span lang="hu">Microsoft / intfloat, MIT. ~560M paraméter, 1024d, csak 512 token kontextus, 100 nyelv — könnyű, érett választás.</span>
-              <span lang="en">Microsoft / intfloat, MIT. ~560M params, 1024d, only 512-token context, 100 languages — a lightweight, mature option.</span>
+              <span lang="hu">Microsoft / intfloat. Könnyű, érett választás — de csak 512 token kontextus.</span>
+              <span lang="en">Microsoft / intfloat. A lightweight, mature option — but only 512-token context.</span>
             </p>
+            <div class="card__stats">
+              <div class="card__stat">
+                <span class="card__stat-label"><span lang="hu">Paraméter</span><span lang="en">Params</span></span>
+                <span class="card__stat-value">~560M</span>
+              </div>
+              <div class="card__stat">
+                <span class="card__stat-label"><span lang="hu">Kontextus</span><span lang="en">Context</span></span>
+                <span class="card__stat-value card__stat-value--muted">512</span>
+              </div>
+            </div>
           </div>
-          <div class="card">
+          <div class="card card--rich card--adapt">
+            <span class="card__tag">Apache 2.0</span>
             <div class="card__title">gte-modernbert-base</div>
+            <p class="card__spec">149M · 768d · 8192 ctx</p>
             <p class="card__body">
-              <span lang="hu">Alibaba, Apache 2.0. 149M paraméter, 768d, 8192 kontextus, ModernBERT-alapú — erős kis encoder-only self-host választás.</span>
-              <span lang="en">Alibaba, Apache 2.0. 149M params, 768d, 8192 context, ModernBERT-based — a strong small encoder-only self-host pick.</span>
+              <span lang="hu">Alibaba, ModernBERT-alapú — erős kis encoder-only self-host választás.</span>
+              <span lang="en">Alibaba, ModernBERT-based — a strong small encoder-only self-host pick.</span>
             </p>
+            <div class="card__stats">
+              <div class="card__stat">
+                <span class="card__stat-label"><span lang="hu">Paraméter</span><span lang="en">Params</span></span>
+                <span class="card__stat-value">149M</span>
+              </div>
+              <div class="card__stat">
+                <span class="card__stat-label"><span lang="hu">Kontextus</span><span lang="en">Context</span></span>
+                <span class="card__stat-value card__stat-value--muted">8192</span>
+              </div>
+            </div>
           </div>
-          <div class="card">
+          <div class="card card--rich card--raptor">
+            <span class="card__tag">Apache 2.0</span>
             <div class="card__title">nomic-embed-text-v2-moe</div>
+            <p class="card__spec">475M / 305M active · 768→256d MRL</p>
             <p class="card__body">
-              <span lang="hu">Nomic, Apache 2.0, 2025. február. Az első általános célú MoE szöveg-embedder: 8 szakértő, top-2 routing, 475M összes / 305M aktív paraméter, 768→256d MRL, 512 kontextus, ~100 nyelv.</span>
-              <span lang="en">Nomic, Apache 2.0, Feb 2025. The first general-purpose MoE text embedder: 8 experts, top-2 routing, 475M total / 305M active params, 768→256d MRL, 512 context, ~100 languages.</span>
+              <span lang="hu">Nomic, 2025. február. Az első általános célú MoE szöveg-embedder: 8 szakértő, top-2 routing, ~100 nyelv.</span>
+              <span lang="en">Nomic, Feb 2025. The first general-purpose MoE text embedder: 8 experts, top-2 routing, ~100 languages.</span>
             </p>
+            <div class="card__stats">
+              <div class="card__stat">
+                <span class="card__stat-label"><span lang="hu">Aktív param.</span><span lang="en">Active</span></span>
+                <span class="card__stat-value">305M</span>
+              </div>
+              <div class="card__stat">
+                <span class="card__stat-label"><span lang="hu">Szakértők</span><span lang="en">Experts</span></span>
+                <span class="card__stat-value card__stat-value--muted">8</span>
+              </div>
+            </div>
           </div>
-          <div class="card">
+          <div class="card card--rich card--flat">
+            <span class="card__tag">Apache 2.0</span>
             <div class="card__title">Snowflake Arctic Embed 2.0</div>
+            <p class="card__spec">~568M · 8192 ctx · l-v2.0</p>
             <p class="card__body">
-              <span lang="hu">Snowflake (l-v2.0), Apache 2.0, 2024. december. ~568M paraméter, 8192 kontextus, kvantizálás-barát MRL — akár 128 bájt/vektor mellett is használható.</span>
-              <span lang="en">Snowflake (l-v2.0), Apache 2.0, Dec 2024. ~568M params, 8192 context, quantization-friendly MRL — usable down to 128 bytes/vector.</span>
+              <span lang="hu">Snowflake, 2024. december. Kvantizálás-barát MRL — akár 128 bájt/vektor mellett is használható.</span>
+              <span lang="en">Snowflake, Dec 2024. Quantization-friendly MRL — usable down to 128 bytes/vector.</span>
             </p>
+            <div class="card__stats">
+              <div class="card__stat">
+                <span class="card__stat-label"><span lang="hu">Paraméter</span><span lang="en">Params</span></span>
+                <span class="card__stat-value">~568M</span>
+              </div>
+              <div class="card__stat">
+                <span class="card__stat-label"><span lang="hu">Kontextus</span><span lang="en">Context</span></span>
+                <span class="card__stat-value card__stat-value--muted">8192</span>
+              </div>
+            </div>
           </div>
-          <div class="card">
+          <div class="card card--rich card--hier">
+            <span class="card__tag">Gemma</span>
             <div class="card__title">EmbeddingGemma</div>
+            <p class="card__spec">308M · 768d MRL (→512/256/128) · 2048 ctx</p>
             <p class="card__body">
-              <span lang="hu">Google (embeddinggemma-300m), Gemma licenc, 2025. szeptember. 308M paraméter, 768d MRL (→512/256/128), 2048 kontextus — eszközön futtatható: &lt;200 MB RAM kvantálva, &lt;22 ms EdgeTPU-n, teljesen offline.</span>
-              <span lang="en">Google (embeddinggemma-300m), Gemma license, Sep 2025. 308M params, 768d MRL (→512/256/128), 2048 context — runs on-device: &lt;200 MB RAM quantized, &lt;22 ms on EdgeTPU, fully offline.</span>
+              <span lang="hu">Google, 2025. szeptember. Eszközön futtatható: &lt;22 ms EdgeTPU-n, teljesen offline.</span>
+              <span lang="en">Google, Sep 2025. Runs on-device: &lt;22 ms on EdgeTPU, fully offline.</span>
             </p>
+            <div class="card__stats">
+              <div class="card__stat">
+                <span class="card__stat-label">RAM</span>
+                <span class="card__stat-value">&lt;200MB</span>
+              </div>
+              <div class="card__stat">
+                <span class="card__stat-label"><span lang="hu">Kontextus</span><span lang="en">Context</span></span>
+                <span class="card__stat-value card__stat-value--muted">2048</span>
+              </div>
+            </div>
           </div>
         </div>
       </section>
@@ -582,42 +701,48 @@ flowchart TD
           <h2 class="section__title"><span lang="hu">Trendek 2026</span><span lang="en">Trends 2026</span></h2>
         </div>
         <div class="grid grid-3">
-          <div class="card">
+          <div class="card card--rich card--flat">
+            <span class="card__tag">MRL</span>
             <div class="card__title"><span lang="hu">Univerzális MRL</span><span lang="en">Universal MRL</span></div>
             <p class="card__body">
               <span lang="hu">Minden komoly modell csonkítható dimenziókkal érkezik — a tárhely és a sebesség paraméterré vált.</span>
               <span lang="en">Every serious model ships with truncatable dimensions — storage and speed have become a parameter.</span>
             </p>
           </div>
-          <div class="card">
+          <div class="card card--rich card--hier">
+            <span class="card__tag">QAT</span>
             <div class="card__title"><span lang="hu">Kvantizálás-tudatos tanítás</span><span lang="en">Quantization-aware training</span></div>
             <p class="card__body">
               <span lang="hu">Natív int8 / binary kimenet; a tárhely 32×-es csökkentése a minőség minimális romlásával.</span>
               <span lang="en">Native int8 / binary output; up to 32× storage cuts with minimal quality loss.</span>
             </p>
           </div>
-          <div class="card">
+          <div class="card card--rich card--graph">
+            <span class="card__tag">Context</span>
             <div class="card__title"><span lang="hu">Kontextualizált chunkok</span><span lang="en">Contextualized chunks</span></div>
             <p class="card__body">
               <span lang="hu">A voyage-context-3 és a késői chunkolás globális dokumentum-kontextust visz a chunk-vektorokba.</span>
               <span lang="en">voyage-context-3 and late chunking inject global document context into chunk vectors.</span>
             </p>
           </div>
-          <div class="card">
+          <div class="card card--rich card--agent">
+            <span class="card__tag">Multimodal</span>
             <div class="card__title"><span lang="hu">Multimodalitás + videó/audio</span><span lang="en">Multimodal + video/audio</span></div>
             <p class="card__body">
               <span lang="hu">A voyage-multimodal-3.5 és a Gemini Embedding 2 egységes vektortérbe vonja a videót és a hangot is.</span>
               <span lang="en">voyage-multimodal-3.5 and Gemini Embedding 2 bring video and audio into a unified vector space.</span>
             </p>
           </div>
-          <div class="card">
+          <div class="card card--rich card--adapt">
+            <span class="card__tag">LoRA</span>
             <div class="card__title"><span lang="hu">Cserélhető LoRA-adapterek</span><span lang="en">Swappable LoRA adapters</span></div>
             <p class="card__body">
               <span lang="hu">Egy gerinc, több feladat: a Jina v4/v5 retrieval / matching / klaszterezés / klasszifikáció adaptereket szállít.</span>
               <span lang="en">One backbone, many tasks: Jina v4/v5 ship retrieval / matching / clustering / classification adapters.</span>
             </p>
           </div>
-          <div class="card">
+          <div class="card card--rich card--raptor">
+            <span class="card__tag">On-device</span>
             <div class="card__title"><span lang="hu">Eszközön futó embedding</span><span lang="en">On-device embeddings</span></div>
             <p class="card__body">
               <span lang="hu">Az EmbeddingGemma &lt;200 MB RAM mellett, teljesen offline fut — embedding a hálózat széle felé tolva.</span>

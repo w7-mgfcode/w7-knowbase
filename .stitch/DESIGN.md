@@ -56,6 +56,14 @@ Each RAG architecture owns one signature color. Each has a `-dim` variant
 **Rule:** a page uses exactly one architecture color as its accent. Reference
 pages (embedding models, reranking, evaluation, …) use `--cyan`.
 
+**Exception — categorical card grids.** On a reference page, a *card grid* may
+color individual cards with the architecture palette as a categorical cue —
+one color per provider / model / trend — via the `card--<arch>` variants. The
+page accent stays `--cyan` for all page chrome (section titles, tags, chips,
+links); only the catalog cards carry per-card color. This keeps the
+single-accent rule for the page while letting dense catalog grids stay
+scannable. First applied on `reference/embedding-models.html`.
+
 ## 3. Typography
 
 | Token | Family | Use |
@@ -96,6 +104,7 @@ Transitions: `--transition-fast 0.15s ease`, `--transition-base 0.25s ease`.
 | **Page header** | Architecture title + subtitle, tinted with the accent color. |
 | **Section** | Numbered label (mono tag) + title in accent color + description. |
 | **Card** | `--bg-card`, accent top-border, tag, title, body. Hover lifts to `--bg-card-hover`. |
+| **Rich card** | `card--rich` + a `card--<arch>` color: mono `card__tag` pill, optional `card__spec` line, body, and a bleeding 2-cell `card__stats` footer. For reference catalog grids. |
 | **Tag / pill** | Mono, uppercase, accent-tinted background. |
 | **Comparison table** | Dark rows, accent header, used on the landing page. |
 | **Mermaid diagram** | Rendered in a `--bg-secondary` box; theme matched to dark palette. |
