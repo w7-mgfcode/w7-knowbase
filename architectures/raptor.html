@@ -157,10 +157,234 @@ flowchart TD
         </div>
       </section>
 
-      <!-- 04 When to use it -->
+      <!-- 04 Core Principles -->
       <section class="section">
         <div class="section__head">
           <span class="section__num">04</span>
+          <h2 class="section__title"><span lang="hu">Alapelvek</span><span lang="en">Core Principles</span></h2>
+        </div>
+        <p class="section__desc">
+          <span lang="hu">A RAPTOR négy alapelvre épül: a darabok rekurzív, alulról felfelé történő absztrakciójára egy fába, amelyben a lekérdezés bármely részletességi szinten kereshet.</span>
+          <span lang="en">RAPTOR rests on four principles: a recursive, bottom-up abstraction of chunks into a tree where a query can retrieve at any level of detail.</span>
+        </p>
+        <div class="grid grid-2">
+          <div class="info-box">
+            <p class="info-box__title"><span lang="hu">Rekurzív embed–klaszterezés–összegzés</span><span lang="en">Recursive embed–cluster–summarize</span></p>
+            <p class="info-box__body">
+              <span lang="hu">A darabokat embeddinggé alakítja, klaszterezi, majd minden klaszterhez összefoglalót generál — és ezt alulról felfelé rekurzívan ismétli, amíg egyetlen gyökér marad.</span>
+              <span lang="en">Chunks are embedded, clustered, then a summary is generated for each cluster — and this repeats recursively bottom-up until a single root remains.</span>
+            </p>
+          </div>
+          <div class="info-box">
+            <p class="info-box__title"><span lang="hu">Lágy klaszterezés (GMM + UMAP)</span><span lang="en">Soft clustering (GMM + UMAP)</span></p>
+            <p class="info-box__body">
+              <span lang="hu">A Gaussian Mixture Model UMAP dimenziócsökkentéssel lágy klaszterezést végez — egy csomópont több klaszterhez is tartozhat, így az átfedő témák nem vesznek el.</span>
+              <span lang="en">A Gaussian Mixture Model with UMAP dimensionality reduction performs soft clustering — a node can belong to multiple clusters, so overlapping topics are not lost.</span>
+            </p>
+          </div>
+          <div class="info-box">
+            <p class="info-box__title"><span lang="hu">Több absztrakciós szint</span><span lang="en">Multiple abstraction levels</span></p>
+            <p class="info-box__body">
+              <span lang="hu">A fa több absztrakciós szintet tárol: a levelek kb. 100 tokenes darabok, a belső csomópontok összefoglalók, egészen egyetlen gyökérig.</span>
+              <span lang="en">The tree holds multiple abstraction levels: leaves are ~100-token chunks, internal nodes are summaries, up to a single root.</span>
+            </p>
+          </div>
+          <div class="info-box">
+            <p class="info-box__title"><span lang="hu">Keresés tetszőleges szinten</span><span lang="en">Retrieval at any level</span></p>
+            <p class="info-box__body">
+              <span lang="hu">A visszakeresés két módban történhet: <strong>összevont fa</strong> (minden csomópont laposítva, token-keretig keresve — a cikk ajánlott módja) vagy <strong>fabejárás</strong> (gyökértől levelekig leereszkedve).</span>
+              <span lang="en">Retrieval runs in two modes: <strong>collapsed tree</strong> (all nodes flattened, retrieved to a token budget — the paper's recommended mode) or <strong>tree traversal</strong> (descending root to leaves).</span>
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- 05 Use Cases -->
+      <section class="section">
+        <div class="section__head">
+          <span class="section__num">05</span>
+          <h2 class="section__title"><span lang="hu">Felhasználási esetek</span><span lang="en">Use Cases</span></h2>
+        </div>
+        <p class="section__desc">
+          <span lang="hu">A RAPTOR ott a legjobb, ahol egy lekérdezésnek vagy egy elrejtett részletre, vagy egy dokumentum-szintű szintézisre lehet szüksége — hosszú dokumentumokon és tematikus kérdés-válaszhoz.</span>
+          <span lang="en">RAPTOR is at its best where a query may need either a buried detail or a document-wide synthesis — on long documents and thematic Q&amp;A.</span>
+        </p>
+        <div class="grid grid-3">
+          <div class="card">
+            <div class="card__title"><span lang="hu">Hosszú dokumentumok és könyvek</span><span lang="en">Long documents &amp; books</span></div>
+            <p class="card__body">
+              <span lang="hu">Teljes könyvek vagy hosszú narratívák (QuALITY-jellegű kérdés-válasz), ahol a kontextus a dokumentum egészéből származhat.</span>
+              <span lang="en">Full books or long narratives (QuALITY-style Q&amp;A), where context can come from the whole document.</span>
+            </p>
+          </div>
+          <div class="card">
+            <div class="card__title"><span lang="hu">Tudományos cikkek</span><span lang="en">Scientific papers</span></div>
+            <p class="card__body">
+              <span lang="hu">Tudományos publikációk (QASPER) és pénzügyi kutatási cikkek kérdés-válasza — részlet és összegzés egyaránt.</span>
+              <span lang="en">Scientific papers (QASPER) and finance research-paper QA — both detail and synthesis.</span>
+            </p>
+          </div>
+          <div class="card">
+            <div class="card__title"><span lang="hu">Jogi és klinikai dokumentumok</span><span lang="en">Legal &amp; clinical documents</span></div>
+            <p class="card__body">
+              <span lang="hu">Klinikai vizsgálati nyilvántartások, jogi és szabályozási dokumentumok — buried detail vagy korpusz-szintű áttekintés.</span>
+              <span lang="en">Clinical trial registries, legal and policy documents — a buried detail or a corpus-wide overview.</span>
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- 06 Routing Strategy -->
+      <section class="section">
+        <div class="section__head">
+          <span class="section__num">06</span>
+          <h2 class="section__title"><span lang="hu">Útválasztási stratégia</span><span lang="en">Routing Strategy</span></h2>
+        </div>
+        <p class="section__desc">
+          <span lang="hu">A RAPTOR belsőleg <strong>absztrakciós szint szerint „útválaszt”</strong>: az összevont fa lehetővé teszi, hogy a hasonlósági keresés automatikusan válasszon levél- vagy összefoglaló-csomópontot.</span>
+          <span lang="en">RAPTOR internally "routes" <strong>by abstraction level</strong>: the collapsed tree lets similarity search automatically pick leaf or summary nodes.</span>
+        </p>
+        <div class="info-box">
+          <p class="info-box__title"><span lang="hu">Mikor irányítson ide egy rendszer-útválasztó</span><span lang="en">When a system router picks RAPTOR</span></p>
+          <p class="info-box__body">
+            <span lang="hu">Egy rendszerszintű útválasztó akkor irányít a RAPTOR-hoz, ha a kérdés egyetlen nagy korpusz felett egyszerre igényel finom részletet és magas szintű kontextust. A szint-alapú Adaptive RAG-ban a 2–3. szintű lekérdezések „fa-érveléshez”, azaz RAPTOR-jellegű mintához kerülnek.</span>
+            <span lang="en">A system-level router picks RAPTOR when a question over a single large corpus needs both fine detail and high-level context at once. In tier-based Adaptive RAG, Tier 2–3 queries route to "tree reasoning", i.e. the RAPTOR-style pattern.</span>
+          </p>
+        </div>
+      </section>
+
+      <!-- 07 Recommended Frameworks -->
+      <section class="section">
+        <div class="section__head">
+          <span class="section__num">07</span>
+          <h2 class="section__title"><span lang="hu">Ajánlott keretrendszerek</span><span lang="en">Recommended Frameworks</span></h2>
+        </div>
+        <div class="grid grid-3">
+          <div class="card card--rich card--raptor">
+            <span class="card__tag">orchestration</span>
+            <div class="card__title"><span lang="hu">LlamaIndex RaptorPack</span><span lang="en">LlamaIndex RaptorPack</span></div>
+            <p class="card__spec">pip install llama-index-packs-raptor</p>
+            <p class="card__body">
+              <span lang="hu">A <code>llama_index.packs.raptor</code> a legéletképesebb implementáció: klaszterezés és összegzés, <code>collapsed</code> és <code>tree_traversal</code> móddal.</span>
+              <span lang="en">The most production-ready implementation — <code>llama_index.packs.raptor</code>: clustering and summarization, with <code>collapsed</code> and <code>tree_traversal</code> modes.</span>
+            </p>
+          </div>
+          <div class="card card--rich card--raptor">
+            <span class="card__tag">recipe</span>
+            <div class="card__title"><span lang="hu">LangChain RAPTOR cookbook</span><span lang="en">LangChain RAPTOR cookbook</span></div>
+            <p class="card__spec">langchain + scikit-learn + umap-learn</p>
+            <p class="card__body">
+              <span lang="hu">A LangChain RAPTOR-receptje klaszterezésből és összegzésből áll össze — rugalmas, de kézzel kell összeállítani.</span>
+              <span lang="en">The LangChain RAPTOR cookbook is assembled from clustering and summarization — flexible, but hand-assembled.</span>
+            </p>
+          </div>
+          <div class="card card--rich card--raptor">
+            <span class="card__tag">reference</span>
+            <div class="card__title"><span lang="hu">Eredeti implementáció</span><span lang="en">Original implementation</span></div>
+            <p class="card__spec">arXiv 2401.18059 — ICLR 2024</p>
+            <p class="card__body">
+              <span lang="hu">A Sarthi és munkatársai (Stanford) referencia-implementációja — a módszer eredeti, kutatási kódja.</span>
+              <span lang="en">The reference implementation by Sarthi et al. (Stanford) — the method's original research code.</span>
+            </p>
+          </div>
+        </div>
+        <div class="info-box">
+          <p class="info-box__title"><span lang="hu">Összetevők</span><span lang="en">Components</span></p>
+          <p class="info-box__body">
+            <span lang="hu">A RAPTOR-folyamat építőelemei: <strong>SBERT</strong> embeddingek, <strong>UMAP</strong> dimenziócsökkentés, <strong>Gaussian Mixture Model</strong> a lágy klaszterezéshez, és egy LLM az összefoglalók előállításához.</span>
+            <span lang="en">The building blocks of the RAPTOR pipeline: <strong>SBERT</strong> embeddings, <strong>UMAP</strong> dimensionality reduction, <strong>Gaussian Mixture Models</strong> for soft clustering, and an LLM for summarization.</span>
+          </p>
+        </div>
+      </section>
+
+      <!-- 08 Expected Results -->
+      <section class="section">
+        <div class="section__head">
+          <span class="section__num">08</span>
+          <h2 class="section__title"><span lang="hu">Várható eredmények</span><span lang="en">Expected Results</span></h2>
+        </div>
+        <p class="section__desc">
+          <span lang="hu">A RAPTOR az eredeti cikkben több olvasásértési mérőszámon új csúcsot ért el; a GraphRAG-Bench szerint az összegzésben erős, a ténykeresésben gyengébb.</span>
+          <span lang="en">RAPTOR set new state-of-the-art on several reading-comprehension metrics in the original paper; GraphRAG-Bench shows it strong on summarization, weaker on fact retrieval.</span>
+        </p>
+        <div class="compare-table-wrap">
+          <table class="compare-table">
+            <thead>
+              <tr>
+                <th><span lang="hu">Mérőszám</span><span lang="en">Metric</span></th>
+                <th><span lang="hu">Érték</span><span lang="en">Value</span></th>
+                <th><span lang="hu">Megjegyzés</span><span lang="en">Note</span></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="arch-name">QuALITY</td>
+                <td class="mono">82.6%</td>
+                <td><span lang="hu">GPT-4-gyel; +20% abszolút a korábbi legjobb eredményhez képest</span><span lang="en">With GPT-4; +20% absolute over the best prior result</span></td>
+              </tr>
+              <tr>
+                <td class="arch-name">QASPER</td>
+                <td class="mono">55.7 F1</td>
+                <td><span lang="hu">GPT-4-gyel</span><span lang="en">With GPT-4</span></td>
+              </tr>
+              <tr>
+                <td class="arch-name">NarrativeQA</td>
+                <td class="mono">19.1 METEOR</td>
+                <td><span lang="hu">Visszakeresőkkel szemben: F1 ≥1,8 pont &gt; DPR, ≥5,3 pont &gt; BM25</span><span lang="en">Vs retrievers: F1 ≥1.8 pts &gt; DPR, ≥5.3 pts &gt; BM25</span></td>
+              </tr>
+              <tr>
+                <td class="arch-name"><span lang="hu">Ténykeresés (GraphRAG-Bench)</span><span lang="en">Fact retrieval (GraphRAG-Bench)</span></td>
+                <td class="mono">49.25%</td>
+                <td><span lang="hu">Középmezőny — összegzésben erős, ténykeresésben gyengébb</span><span lang="en">Mid-pack — strong on summarization, weaker on fact retrieval</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="info-box">
+          <p class="info-box__title"><span lang="hu">Költség</span><span lang="en">Cost</span></p>
+          <p class="info-box__body">
+            <span lang="hu">A QuALITY, QASPER és NarrativeQA számok az eredeti cikkből (arXiv 2401.18059) származnak. A költség jellege: egyszeri, rekurzív összegzésű indexelés; a lekérdezésidejű költség a lapos visszakereséshez hasonló.</span>
+            <span lang="en">The QuALITY, QASPER and NarrativeQA figures are from the original paper (arXiv 2401.18059). Cost profile: a one-time recursive-summarization indexing pass; query-time cost is similar to flat retrieval.</span>
+          </p>
+        </div>
+      </section>
+
+      <!-- 09 Evaluation -->
+      <section class="section">
+        <div class="section__head">
+          <span class="section__num">09</span>
+          <h2 class="section__title"><span lang="hu">Kiértékelés</span><span lang="en">Evaluation</span></h2>
+        </div>
+        <p class="section__desc">
+          <span lang="hu">A RAPTOR kiértékelése feladat-specifikus mérőszámokat és a standard RAGAS-metrikákat ötvözi — a kulcs, hogy több absztrakciós szinten mérj.</span>
+          <span lang="en">Evaluating RAPTOR combines task-specific metrics with the standard RAGAS set — the key is to measure at multiple abstraction levels.</span>
+        </p>
+        <div class="grid grid-2">
+          <ul class="feature-list feature-list--ok">
+            <li><span lang="hu">Olvasásértési pontosság — QuALITY feleletválasztós.</span><span lang="en">Reading-comprehension accuracy — QuALITY multiple-choice.</span></li>
+            <li><span lang="hu">F1-érték — QASPER.</span><span lang="en">F1 score — QASPER.</span></li>
+            <li><span lang="hu">METEOR / ROUGE — NarrativeQA.</span><span lang="en">METEOR / ROUGE — NarrativeQA.</span></li>
+            <li><span lang="hu">RAGAS: kontextus-pontosság és kontextus-felidézés egyébként.</span><span lang="en">RAGAS: context precision and context recall otherwise.</span></li>
+          </ul>
+          <ul class="feature-list feature-list--warn">
+            <li><span lang="hu">Mérj több absztrakciós szinten: levél-részlet a konkrét kérdésekhez.</span><span lang="en">Evaluate at multiple abstraction levels: leaf detail for specific questions.</span></li>
+            <li><span lang="hu">Összefoglaló-csomópontok a tematikus kérdésekhez.</span><span lang="en">Summary nodes for thematic questions.</span></li>
+            <li><span lang="hu">A belső csomópontok összefoglaló-minősége közvetlenül korlátozza a válasz minőségét.</span><span lang="en">Internal-node summary quality directly bounds answer quality.</span></li>
+          </ul>
+        </div>
+        <div class="info-box">
+          <p class="info-box__title"><span lang="hu">Architektúra-specifikus szempont</span><span lang="en">Architecture-specific concern</span></p>
+          <p class="info-box__body">
+            <span lang="hu">A RAPTOR akkor jó, ha minden szint jó: ha egy belső csomópont összefoglalója pontatlan vagy elnagyolt, a fölötte épülő válaszok is romlanak. Ezért az összefoglaló minőségét külön, szintenként érdemes ellenőrizni.</span>
+            <span lang="en">RAPTOR is only as good as every level: if an internal node's summary is inaccurate or coarse, answers built on top of it degrade too. Summary quality should therefore be checked separately, level by level.</span>
+          </p>
+        </div>
+      </section>
+
+      <!-- 10 When to use it -->
+      <section class="section">
+        <div class="section__head">
+          <span class="section__num">10</span>
           <h2 class="section__title"><span lang="hu">Mikor érdemes használni</span><span lang="en">When to use it</span></h2>
         </div>
         <div class="grid grid-2">
@@ -185,18 +409,22 @@ flowchart TD
         <div class="info-box">
           <p class="info-box__title"><span lang="hu">Pro tipp</span><span lang="en">Pro tip</span></p>
           <p class="info-box__body">
-            <span lang="hu">Inkrementális RAPTOR-nál csak az érintett klasztereket és a felettük lévő összefoglalókat kell újraépíteni — nem az egész fát. Ez drasztikusan csökkenti a frissítési költséget dinamikusan növekvő korpuszok esetén.</span>
-            <span lang="en">For incremental RAPTOR, rebuild only the affected clusters and their parent summaries — not the entire tree. This dramatically reduces update cost on dynamically growing corpora.</span>
+            <span lang="hu">A LlamaIndex <code>RaptorPack</code>-kel a kód-szintű döntés az <code>összevont fa</code> (collapsed) és a <code>fabejárás</code> (tree_traversal) mód között dől el — a cikk az összevont fát ajánlja. Inkrementális RAPTOR-nál csak az érintett klasztereket és a felettük lévő összefoglalókat kell újraépíteni — nem az egész fát. Ez drasztikusan csökkenti a frissítési költséget dinamikusan növekvő korpuszok esetén.</span>
+            <span lang="en">With the LlamaIndex <code>RaptorPack</code> the code-level decision is between the <code>collapsed</code> (collapsed tree) and <code>tree_traversal</code> modes — the paper recommends the collapsed tree. For incremental RAPTOR, rebuild only the affected clusters and their parent summaries — not the entire tree. This dramatically reduces update cost on dynamically growing corpora.</span>
           </p>
         </div>
       </section>
 
-      <!-- 05 Code example -->
+      <!-- 11 Code example -->
       <section class="section">
         <div class="section__head">
-          <span class="section__num">05</span>
+          <span class="section__num">11</span>
           <h2 class="section__title"><span lang="hu">Kódpélda</span><span lang="en">Code example</span></h2>
         </div>
+        <p class="section__desc">
+          <span lang="hu">A LlamaIndex <code>RaptorPack</code> felépíti a fát, és lekérdezéskor a <code>collapsed</code> (összevont fa) vagy a <code>tree_traversal</code> (fabejárás) mód közül lehet választani.</span>
+          <span lang="en">The LlamaIndex <code>RaptorPack</code> builds the tree, and at query time you choose between the <code>collapsed</code> (collapsed tree) and <code>tree_traversal</code> retrieval modes.</span>
+        </p>
         <div class="code-block">
           <div class="code-block__head">
             <span>raptor_index_build.py</span>
@@ -210,7 +438,7 @@ from llama_index.embeddings.openai import OpenAIEmbedding
 <span class="tok-comment"># Load corpus — works well for large document collections</span>
 documents = SimpleDirectoryReader("./corpus").load_data()
 
-llm = OpenAI(model="gpt-4o-mini", temperature=0)
+llm = OpenAI(model="gpt-5.4-mini", temperature=0)
 embed_model = OpenAIEmbedding(model="text-embedding-3-small")
 
 <span class="tok-comment"># Build the RAPTOR tree — clusters chunks, summarises each cluster,</span>
@@ -221,7 +449,9 @@ raptor_pack = RaptorPack(
     embed_model=embed_model,
     summary_module=None,   <span class="tok-comment"># use default LLM summariser</span>
     num_workers=4,
-    max_cluster_size=10,
+    <span class="tok-comment"># "collapsed" = flatten all nodes, retrieve to a token budget</span>
+    <span class="tok-comment"># (the paper's recommended mode); "tree_traversal" descends root-&gt;leaves</span>
+    mode="collapsed",
 )
 
 <span class="tok-comment"># Query — collapsed tree: top-K retrieved from any level simultaneously</span>

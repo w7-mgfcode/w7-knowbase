@@ -28,6 +28,11 @@ project follows [Semantic Versioning](https://semver.org/) — see
   the 2026 model lineup, streaming, function calling, structured outputs,
   built-in tools/MCP, the OpenAI-compatible server ecosystem, and best
   practices. Wired into the sidebar nav and the reference pager chain.
+- All 7 architecture pages extended from 5 to 11 sections — Core Principles,
+  Use Cases, Routing Strategy, Recommended Frameworks, Expected Results, and
+  Evaluation — with content refreshed to mid-2026 practice (named frameworks,
+  cited benchmark numbers, 2025-2026 developments such as LazyGraphRAG,
+  LightRAG, HippoRAG2, and RAGRouter-Bench).
 
 ### Changed
 - Embedding Models reference page deep-refreshed with mid-2026 data: MMTEB

@@ -159,10 +159,255 @@ flowchart TD
         </div>
       </section>
 
-      <!-- 04 When to use it -->
+      <!-- 04 Core Principles -->
       <section class="section">
         <div class="section__head">
           <span class="section__num">04</span>
+          <h2 class="section__title"><span lang="hu">Alapelvek</span><span lang="en">Core Principles</span></h2>
+        </div>
+        <p class="section__desc">
+          <span lang="hu">Az Agentic RAG abban tér el a korábbi mintáktól, hogy a visszakeresés már nem rögzített lépés, hanem az ágens által vezérelt döntés. Az alábbi alapelvek határozzák meg a mintát.</span>
+          <span lang="en">Agentic RAG departs from earlier patterns in that retrieval is no longer a fixed step but an agent-driven decision. The principles below define the pattern.</span>
+        </p>
+        <div class="grid grid-2">
+          <div class="info-box">
+            <p class="info-box__title"><span lang="hu">A keresés egy eszköz</span><span lang="en">Retrieval is a tool</span></p>
+            <p class="info-box__body">
+              <span lang="hu">A rendszer maga dönti el, <em>kell-e</em> keresni, <em>mit</em> és <em>mikor</em> — a visszakeresés egy meghívható eszköz, nem a folyamat kötelező állomása.</span>
+              <span lang="en">The system itself decides <em>whether</em>, <em>what</em> and <em>when</em> to retrieve — retrieval is a callable tool, not a mandatory stage of the pipeline.</span>
+            </p>
+          </div>
+          <div class="info-box">
+            <p class="info-box__title"><span lang="hu">Ágens-hurok</span><span lang="en">Agent loop</span></p>
+            <p class="info-box__body">
+              <span lang="hu">Tervezés → keresés → következtetés → kritika → újrafogalmazás → reflexió, amíg az ágens magabiztos nem lesz, vagy ki nem merül a költségkeret.</span>
+              <span lang="en">Plan → retrieve → reason → critique → rewrite → reflect, looping until the agent is confident or the budget is exhausted.</span>
+            </p>
+          </div>
+          <div class="info-box">
+            <p class="info-box__title"><span lang="hu">Több lépéses következtetés eszközhasználattal</span><span lang="en">Multi-step reasoning with tools</span></p>
+            <p class="info-box__body">
+              <span lang="hu">Az ágens több-lépéses, multi-hop következtetést végez, és közben eszközöket hív: keresőt, kalkulátort, al-visszakeresőket vagy webes keresést.</span>
+              <span lang="en">The agent performs multi-step, multi-hop reasoning, calling tools along the way: search, calculators, sub-retrievers or web search.</span>
+            </p>
+          </div>
+          <div class="info-box">
+            <p class="info-box__title"><span lang="hu">Önjavítás és többágenses ellenőrzés</span><span lang="en">Self-correction &amp; multi-agent checks</span></p>
+            <p class="info-box__body">
+              <span lang="hu">Sikertelen keresés esetén az ágens újrafogalmazza a lekérdezést; gyakran többágenses felállás működik, ahol szakosodott ágensek ellenőrzik egymást.</span>
+              <span lang="en">On a failed retrieval the agent rewrites the query; the setup is often multi-agent, with specialized agents checking each other.</span>
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- 05 Use Cases -->
+      <section class="section">
+        <div class="section__head">
+          <span class="section__num">05</span>
+          <h2 class="section__title"><span lang="hu">Felhasználási esetek</span><span lang="en">Use Cases</span></h2>
+        </div>
+        <p class="section__desc">
+          <span lang="hu">Az Agentic RAG ott térül meg, ahol a kérdés egyetlen kereséssel nem válaszolható meg. A 2026-os konszenzus szerint az ágensalapú RAG „a legtöbb éles RAG-rendszert hajtó architektúra”.</span>
+          <span lang="en">Agentic RAG pays off where a question cannot be answered with a single retrieval. The 2026 consensus is that agentic RAG is "the architecture driving most production RAG systems".</span>
+        </p>
+        <div class="grid grid-3">
+          <div class="card">
+            <div class="card__title"><span lang="hu">Multi-hop kutatás</span><span lang="en">Multi-hop research</span></div>
+            <p class="card__body">
+              <span lang="hu">Több lépéses kutatási kérdések, ahol a válasz több forrás összekapcsolt láncolatából áll össze.</span>
+              <span lang="en">Multi-hop research questions where the answer is assembled from a linked chain of several sources.</span>
+            </p>
+          </div>
+          <div class="card">
+            <div class="card__title"><span lang="hu">Kétértelmű lekérdezések</span><span lang="en">Ambiguous queries</span></div>
+            <p class="card__body">
+              <span lang="hu">Pontosítást igénylő, homályos kérdések, ahol az ágens visszakérdez vagy szűkíti a keresést.</span>
+              <span lang="en">Vague queries needing clarification, where the agent asks back or narrows the search.</span>
+            </p>
+          </div>
+          <div class="card">
+            <div class="card__title"><span lang="hu">Döntéstámogatás</span><span lang="en">Decision support</span></div>
+            <p class="card__body">
+              <span lang="hu">Jogi, orvosi és pénzügyi döntéstámogatás, ahol több forrás mérlegelése elengedhetetlen.</span>
+              <span lang="en">Legal, medical and financial decision support, where weighing several sources is essential.</span>
+            </p>
+          </div>
+          <div class="card">
+            <div class="card__title"><span lang="hu">Vállalati asszisztensek</span><span lang="en">Enterprise assistants</span></div>
+            <p class="card__body">
+              <span lang="hu">Több eszközt és adatforrást átfogó vállalati asszisztensek egységes felületen.</span>
+              <span lang="en">Enterprise assistants spanning multiple tools and data sources behind a single interface.</span>
+            </p>
+          </div>
+          <div class="card">
+            <div class="card__title"><span lang="hu">Deep-research folyamatok</span><span lang="en">Deep-research workflows</span></div>
+            <p class="card__body">
+              <span lang="hu">Mélykutatási munkafolyamatok, ahol az ágens önállóan tervezi és bővíti a forrásgyűjtést.</span>
+              <span lang="en">Deep-research workflows where the agent autonomously plans and expands its source gathering.</span>
+            </p>
+          </div>
+          <div class="card">
+            <div class="card__title"><span lang="hu">Eszközökön átívelő feladatok</span><span lang="en">Cross-tool tasks</span></div>
+            <p class="card__body">
+              <span lang="hu">Keresést, számítást és külső API-kat ötvöző feladatok egyetlen, vezérelt folyamatban.</span>
+              <span lang="en">Tasks combining search, computation and external APIs in one orchestrated flow.</span>
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- 06 Routing Strategy -->
+      <section class="section">
+        <div class="section__head">
+          <span class="section__num">06</span>
+          <h2 class="section__title"><span lang="hu">Útválasztási stratégia</span><span lang="en">Routing Strategy</span></h2>
+        </div>
+        <p class="section__desc">
+          <span lang="hu">Az Agentic RAG gyakran maga <em>az</em> útválasztó: egy LLM vagy ágens kérdésenként dönti el, kihagyja-e a keresést, egyetlen kört futtat, iterál, vagy webes keresést hív. Az Adaptive RAG taxonómiájában ez a legmagasabb komplexitású réteg.</span>
+          <span lang="en">Agentic RAG often <em>is</em> the router: an LLM or agent decides per query whether to skip retrieval, do single-shot retrieval, iterate, or call web search. Within the Adaptive RAG taxonomy it is the highest-complexity tier.</span>
+        </p>
+        <div class="info-box">
+          <p class="info-box__title"><span lang="hu">Mikor irányít ide az útválasztó</span><span lang="en">When the router selects this tier</span></p>
+          <p class="info-box__body">
+            <span lang="hu">Egy rendszerszintű útválasztó akkor küldi a kérdést az Agentic RAG-hoz, ha az multi-hop következtetést, eszközhasználatot vagy önjavító keresést igényel — és elkerüli, ha a kérdés egylépéses, ténykereső jellegű (oda a Flat RAG a megfelelő réteg). Mivel ez a legdrágább tier, csak akkor érdemes ide irányítani, ha az olcsóbb minták előreláthatóan elbuknának.</span>
+            <span lang="en">A system-level router sends a query to Agentic RAG when it needs multi-hop reasoning, tool use, or self-correcting retrieval — and routes away when the query is single-step and factual (Flat RAG is the right tier there). Because this is the most expensive tier, route here only when the cheaper patterns would predictably fail.</span>
+          </p>
+        </div>
+      </section>
+
+      <!-- 07 Recommended Frameworks -->
+      <section class="section">
+        <div class="section__head">
+          <span class="section__num">07</span>
+          <h2 class="section__title"><span lang="hu">Ajánlott keretrendszerek</span><span lang="en">Recommended Frameworks</span></h2>
+        </div>
+        <p class="section__desc">
+          <span lang="hu">Az ágensalapú RAG-ot 2026-ban néhány érett orkesztrációs keretrendszer uralja. A választás a feladat jellegétől függ: állapottartó hurkok, eseményvezérelt folyamatok, szerepalapú többágenses felállás vagy optimalizálható pipeline-ok.</span>
+          <span lang="en">Agentic RAG in 2026 is dominated by a handful of mature orchestration frameworks. The choice depends on the task: stateful loops, event-driven flows, role-based multi-agent setups, or optimizable pipelines.</span>
+        </p>
+        <div class="grid grid-3">
+          <div class="card card--rich card--agent">
+            <span class="card__tag">orchestration</span>
+            <div class="card__title"><span lang="hu">LangGraph</span><span lang="en">LangGraph</span></div>
+            <p class="card__spec">pip install langgraph</p>
+            <p class="card__body">
+              <span lang="hu">A 2026 meghatározó orkesztrátora: állapottartó, <em>ciklikus</em> gráfok, amelyek natívan kifejezik a keresés→osztályozás→újrafogalmazás→újrapróbálkozás hurkokat.</span>
+              <span lang="en">The dominant 2026 orchestrator: stateful, <em>cyclic</em> graphs that natively express retrieve→grade→rewrite→retry loops.</span>
+            </p>
+          </div>
+          <div class="card card--rich card--agent">
+            <span class="card__tag">workflows</span>
+            <div class="card__title"><span lang="hu">LlamaIndex Workflows</span><span lang="en">LlamaIndex Workflows</span></div>
+            <p class="card__spec">pip install llama-index</p>
+            <p class="card__body">
+              <span lang="hu">Eseményvezérelt visszakeresés-orkesztráció: a lépéseket események kötik össze, ami rugalmas, elágazó RAG-folyamatokat tesz lehetővé.</span>
+              <span lang="en">Event-driven retrieval orchestration: steps are linked by events, enabling flexible, branching RAG flows.</span>
+            </p>
+          </div>
+          <div class="card card--rich card--agent">
+            <span class="card__tag">multi-agent</span>
+            <div class="card__title"><span lang="hu">CrewAI</span><span lang="en">CrewAI</span></div>
+            <p class="card__spec">pip install crewai</p>
+            <p class="card__body">
+              <span lang="hu">Szerepalapú többágenses keretrendszer: szakosodott ágensek (kutató, ellenőrző, író) együttműködve oldják meg a feladatot.</span>
+              <span lang="en">Role-specialized multi-agent framework: specialized agents (researcher, checker, writer) collaborate to solve the task.</span>
+            </p>
+          </div>
+          <div class="card card--rich card--agent">
+            <span class="card__tag">declarative</span>
+            <div class="card__title"><span lang="hu">DSPy</span><span lang="en">DSPy</span></div>
+            <p class="card__spec">pip install dspy</p>
+            <p class="card__body">
+              <span lang="hu">Deklaratív, optimalizálható pipeline-ok: a promptokat és lépéseket nem kézzel hangoljuk, hanem az adatok alapján optimalizáljuk.</span>
+              <span lang="en">Declarative, optimizable pipelines: prompts and steps are not hand-tuned but optimized from data.</span>
+            </p>
+          </div>
+        </div>
+        <div class="info-box">
+          <p class="info-box__title"><span lang="hu">2026-os „alap-stack”</span><span lang="en">The 2026 "default stack"</span></p>
+          <p class="info-box__body">
+            <span lang="hu">A bevett 2026-os felállás: LangGraph (orkesztráció) + LlamaIndex Workflows (visszakeresés) + RAGAS / Arize Phoenix / Langfuse a kiértékeléshez és a megfigyelhetőséghez.</span>
+            <span lang="en">The established 2026 setup is LangGraph (orchestration) + LlamaIndex Workflows (retrieval) + RAGAS / Arize Phoenix / Langfuse for evaluation and observability.</span>
+          </p>
+        </div>
+      </section>
+
+      <!-- 08 Expected Results -->
+      <section class="section">
+        <div class="section__head">
+          <span class="section__num">08</span>
+          <h2 class="section__title"><span lang="hu">Várható eredmények</span><span lang="en">Expected Results</span></h2>
+        </div>
+        <p class="section__desc">
+          <span lang="hu">Az Agentic RAG egy <em>minta</em>, nem egyetlen lemért módszer, ezért a nyereséget feltételesen érdemes kezelni — a többletköltség akkor térül meg, ha a feladat valóban több lépést igényel.</span>
+          <span lang="en">Agentic RAG is a <em>pattern</em>, not a single benchmarked method, so gains should be treated conditionally — the extra cost earns its keep only when the task genuinely needs multiple steps.</span>
+        </p>
+        <div class="compare-table-wrap">
+          <table class="compare-table">
+            <thead>
+              <tr>
+                <th><span lang="hu">Dimenzió</span><span lang="en">Dimension</span></th>
+                <th><span lang="hu">Egylépéses RAG-hoz képest</span><span lang="en">Vs one-pass RAG</span></th>
+                <th><span lang="hu">Megjegyzés</span><span lang="en">Note</span></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="arch-name"><span lang="hu">Tokenköltség</span><span lang="en">Token cost</span></td>
+                <td class="mono">3–10×</td>
+                <td><span lang="hu">iparági becslés</span><span lang="en">industry estimate</span></td>
+              </tr>
+              <tr>
+                <td class="arch-name"><span lang="hu">Késleltetés</span><span lang="en">Latency</span></td>
+                <td class="mono">2–5×</td>
+                <td><span lang="hu">iparági becslés</span><span lang="en">industry estimate</span></td>
+              </tr>
+              <tr>
+                <td class="arch-name"><span lang="hu">Hallucináció-csökkenés (multi-hop)</span><span lang="en">Hallucination reduction (multi-hop)</span></td>
+                <td class="mono">~20–40%</td>
+                <td><span lang="hu">iparági, extrapolált</span><span lang="en">industry, extrapolated</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="info-box">
+          <p class="info-box__title"><span lang="hu">Mikor térül meg a költség</span><span lang="en">When the cost is justified</span></p>
+          <p class="info-box__body">
+            <span lang="hu">Az ágensalapú RAG a multi-hop, kétértelmű és magas tétű kérdéseken „termeli ki” a 3–10× tokent és 2–5× késleltetést. Egyszerű, egylépéses kérdéseken a többletköltség nem térül meg — ott egy olcsóbb minta a helyes választás. A fenti számok iparági becslések, nem rögzített tények: az Agentic RAG nem egyetlen benchmarkolt módszer, hanem egy minta, így a tényleges nyereség a feladattól függ.</span>
+            <span lang="en">Agentic RAG "earns" its 3–10× tokens and 2–5× latency on multi-hop, ambiguous and high-stakes queries. On simple, single-step questions the extra cost is not recovered — a cheaper pattern is the right choice there. The figures above are industry estimates, not fixed facts: Agentic RAG is a pattern, not a single benchmarked method, so the actual gain depends on the task.</span>
+          </p>
+        </div>
+      </section>
+
+      <!-- 09 Evaluation -->
+      <section class="section">
+        <div class="section__head">
+          <span class="section__num">09</span>
+          <h2 class="section__title"><span lang="hu">Kiértékelés</span><span lang="en">Evaluation</span></h2>
+        </div>
+        <p class="section__desc">
+          <span lang="hu">Az ágensalapú RAG kiértékelése három rétegben történik: kérdésenkénti minőség, a teljes ágens-pálya átvizsgálása, és a hosszú távú elcsúszás (drift) figyelése.</span>
+          <span lang="en">Evaluating agentic RAG happens in three layers: per-query quality, inspection of the full agent trajectory, and monitoring of long-term drift.</span>
+        </p>
+        <ul class="feature-list feature-list--ok">
+          <li><span lang="hu"><strong>Kérdésenkénti RAGAS</strong> — context precision, context recall, faithfulness, answer relevancy. Iparági célértékek: faithfulness ≥ 0,9, answer relevancy ≥ 0,85, context precision ≥ 0,8.</span><span lang="en"><strong>Per-query RAGAS</strong> — context precision, context recall, faithfulness, answer relevancy. Industry targets: faithfulness ≥ 0.9, answer relevancy ≥ 0.85, context precision ≥ 0.8.</span></li>
+          <li><span lang="hu"><strong>Pálya-nyomkövetés</strong> — Arize Phoenix vagy Langfuse: minden hurok-lépés (terv, eszközhívás, megfigyelés) átvizsgálható, így a hiba pontosan lokalizálható.</span><span lang="en"><strong>Trajectory tracing</strong> — Arize Phoenix or Langfuse: every loop step (plan, tool call, observation) is inspectable, so failures can be pinpointed.</span></li>
+          <li><span lang="hu"><strong>Drift-figyelés</strong> — éles környezetben a minőség romlásának folyamatos követése, hogy a regresszió még a felhasználók előtt kiderüljön.</span><span lang="en"><strong>Drift monitoring</strong> — continuous tracking of quality degradation in production, so regressions surface before users do.</span></li>
+        </ul>
+        <div class="info-box">
+          <p class="info-box__title"><span lang="hu">Benchmarkok és adathalmazok</span><span lang="en">Benchmarks &amp; datasets</span></p>
+          <p class="info-box__body">
+            <span lang="hu">Eszközhasználati benchmarkok: TRAJECT-Bench, AgenticRAGTracer. Multi-hop adathalmazok a következtetési képesség méréséhez: HotpotQA, 2WikiMultiHopQA, MuSiQue. Mivel az iparági célértékek becslések, mindig a saját adathalmazodon kalibráld őket.</span>
+            <span lang="en">Tool-use benchmarks: TRAJECT-Bench, AgenticRAGTracer. Multi-hop datasets for measuring reasoning capability: HotpotQA, 2WikiMultiHopQA, MuSiQue. As the industry targets are estimates, always calibrate them on your own dataset.</span>
+          </p>
+        </div>
+      </section>
+
+      <!-- 10 When to use it -->
+      <section class="section">
+        <div class="section__head">
+          <span class="section__num">10</span>
           <h2 class="section__title"><span lang="hu">Mikor érdemes használni</span><span lang="en">When to use it</span></h2>
         </div>
         <div class="grid grid-2">
@@ -188,16 +433,16 @@ flowchart TD
         <div class="info-box">
           <p class="info-box__title"><span lang="hu">Pro tipp</span><span lang="en">Pro tip</span></p>
           <p class="info-box__body">
-            <span lang="hu">Használj LangGraph state-gráfot a ReAct-hurok helyett: a döntési pontok explicitek, a hibakeresés egyszerűbb, és human-in-the-loop breakpoint-okat is beépíthetsz.</span>
-            <span lang="en">Prefer a LangGraph state graph over a bare ReAct loop: decision points are explicit, debugging is simpler, and you can add human-in-the-loop breakpoints.</span>
+            <span lang="hu">Használj LangGraph state-gráfot a ReAct-hurok helyett: a döntési pontok explicitek, a hibakeresés egyszerűbb, és human-in-the-loop breakpoint-okat is beépíthetsz. A LangGraph ciklikus gráf-modellje — amely a retrieve→grade→rewrite→retry hurkokat natívan kezeli — 2026-ban az ágensalapú RAG de facto alapértelmezett mintája.</span>
+            <span lang="en">Prefer a LangGraph state graph over a bare ReAct loop: decision points are explicit, debugging is simpler, and you can add human-in-the-loop breakpoints. LangGraph's cyclic-graph model — which natively expresses retrieve→grade→rewrite→retry loops — is the de facto default pattern for agentic RAG in 2026.</span>
           </p>
         </div>
       </section>
 
-      <!-- 05 Code example -->
+      <!-- 11 Code example -->
       <section class="section">
         <div class="section__head">
-          <span class="section__num">05</span>
+          <span class="section__num">11</span>
           <h2 class="section__title"><span lang="hu">Kódpélda</span><span lang="en">Code example</span></h2>
         </div>
         <div class="code-block">

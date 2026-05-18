@@ -159,66 +159,335 @@ flowchart TD
         </div>
       </section>
 
-      <!-- 04 When to use it -->
+      <!-- 04 Core Principles -->
       <section class="section">
         <div class="section__head">
           <span class="section__num">04</span>
+          <h2 class="section__title"><span lang="hu">Alapelvek</span><span lang="en">Core Principles</span></h2>
+        </div>
+        <div class="grid grid-2">
+          <div class="info-box">
+            <p class="info-box__title"><span lang="hu">Gráfépítés betöltéskor</span><span lang="en">Graph construction at ingestion</span></p>
+            <p class="info-box__body">
+              <span lang="hu">A betöltéskor egy LLM entitásokat és kapcsolatokat nyer ki a szövegből, és ezekből épít fel egy strukturált tudásgráfot — a gráf csomópontjai entitások, az élei a köztük lévő relációk.</span>
+              <span lang="en">At ingestion an LLM extracts entities and relationships from the text and assembles them into a structured knowledge graph — graph nodes are entities, edges are the relations between them.</span>
+            </p>
+          </div>
+          <div class="info-box">
+            <p class="info-box__title"><span lang="hu">Közösségek és előösszegzés</span><span lang="en">Communities and pre-summarization</span></p>
+            <p class="info-box__body">
+              <span lang="hu">A gráfot a <strong>Leiden</strong>-algoritmus közösségekbe klaszterezi, és minden közösséghez előre elkészül egy összegzés — ezekre épül a globális keresés.</span>
+              <span lang="en">The graph is clustered into communities by the <strong>Leiden</strong> algorithm, and a summary is pre-computed for each community — these underpin global search.</span>
+            </p>
+          </div>
+          <div class="info-box">
+            <p class="info-box__title"><span lang="hu">Lokális és globális keresés</span><span lang="en">Local and global search</span></p>
+            <p class="info-box__body">
+              <span lang="hu">A <strong>lokális keresés</strong> az entitás-szomszédság bejárásával konkrét kérdésekre válaszol; a <strong>globális keresés</strong> a közösség-összegzések aggregálásával tematikus, korpusz-szintű kérdéseket szolgál ki.</span>
+              <span lang="en"><strong>Local search</strong> answers specific questions by traversing the entity neighborhood; <strong>global search</strong> serves thematic, corpus-wide questions by aggregating community summaries.</span>
+            </p>
+          </div>
+          <div class="info-box">
+            <p class="info-box__title"><span lang="hu">Visszakeresés gráfbejárással</span><span lang="en">Retrieval as graph traversal</span></p>
+            <p class="info-box__body">
+              <span lang="hu">A visszakeresés gráfbejárás: a relációs struktúra mentén olyan összefüggéseket hoz felszínre, amelyeket a lapos vektoros keresés nem lát.</span>
+              <span lang="en">Retrieval is graph traversal: following the relational structure surfaces connections that flat vector search misses.</span>
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- 05 Use Cases -->
+      <section class="section">
+        <div class="section__head">
+          <span class="section__num">05</span>
+          <h2 class="section__title"><span lang="hu">Felhasználási esetek</span><span lang="en">Use Cases</span></h2>
+        </div>
+        <div class="grid grid-3">
+          <div class="card">
+            <div class="card__title"><span lang="hu">Jog</span><span lang="en">Legal</span></div>
+            <p class="card__body">
+              <span lang="hu">Szerződések és jogesetek: kikötések, felek és precedensek közötti kapcsolatok feltérképezése.</span>
+              <span lang="en">Contracts and case law: mapping the relationships between clauses, parties and precedents.</span>
+            </p>
+          </div>
+          <div class="card">
+            <div class="card__title"><span lang="hu">Pénzügyi elemzés</span><span lang="en">Financial analysis</span></div>
+            <p class="card__body">
+              <span lang="hu">Cég–vezető–jelentés–esemény gráfok kockázatértékeléshez és összefüggés-vizsgálathoz.</span>
+              <span lang="en">Company–executive–filing–event graphs for risk assessment and connection analysis.</span>
+            </p>
+          </div>
+          <div class="card">
+            <div class="card__title"><span lang="hu">Egészségügy</span><span lang="en">Healthcare</span></div>
+            <p class="card__body">
+              <span lang="hu">Betegútvonalak és gyógyszerkutatás: entitások közötti kapcsolatok feltárása.</span>
+              <span lang="en">Patient pathways and drug discovery: uncovering relationships between entities.</span>
+            </p>
+          </div>
+          <div class="card">
+            <div class="card__title"><span lang="hu">Tudományos szakirodalom</span><span lang="en">Scientific literature</span></div>
+            <p class="card__body">
+              <span lang="hu">Szakirodalom-áttekintés: szerzők, fogalmak és hivatkozások hálózatának bejárása.</span>
+              <span lang="en">Literature review: traversing the network of authors, concepts and citations.</span>
+            </p>
+          </div>
+          <div class="card">
+            <div class="card__title"><span lang="hu">Vállalati tudásgráfok</span><span lang="en">Enterprise knowledge graphs</span></div>
+            <p class="card__body">
+              <span lang="hu">Belső dokumentumok, projektek és csapatok összekapcsolása egyetlen lekérdezhető gráfba.</span>
+              <span lang="en">Linking internal documents, projects and teams into a single queryable graph.</span>
+            </p>
+          </div>
+          <div class="card">
+            <div class="card__title"><span lang="hu">2026-os trend</span><span lang="en">2026 trend</span></div>
+            <p class="card__body">
+              <span lang="hu">A Gartner a GraphRAG-et a 2026-os adat- és analitikai trendek élére sorolja.</span>
+              <span lang="en">Gartner lists GraphRAG among the top 2026 data &amp; analytics trends.</span>
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- 06 Routing Strategy -->
+      <section class="section">
+        <div class="section__head">
+          <span class="section__num">06</span>
+          <h2 class="section__title"><span lang="hu">Útválasztási stratégia</span><span lang="en">Routing Strategy</span></h2>
+        </div>
+        <p class="section__desc">
+          <span lang="hu">Egy útválasztó akkor irányítja a kérdést a Graph RAG-hez, ha az <strong>dokumentumokon átívelő, több-lépéses következtetést</strong> igényel, vagy <strong>globális, tematikus szintézist</strong> kér („Mik a fő témák…”). Az elszigetelt ténykeresést érdemes másik mintára irányítani — ott a lapos RAG olcsóbb és nem rosszabb.</span>
+          <span lang="en">A router sends a query to Graph RAG when it needs <strong>multi-hop reasoning across documents</strong>, or asks for <strong>global, thematic synthesis</strong> ("what are the main themes…"). Isolated fact lookup is better routed elsewhere — there flat RAG is cheaper and no worse.</span>
+        </p>
+        <div class="info-box">
+          <p class="info-box__title"><span lang="hu">Hüvelykujjszabály</span><span lang="en">Rule of thumb</span></p>
+          <p class="info-box__body">
+            <span lang="hu">Iparági becslés szerint kb. 1M token alatti korpusznál a gráf-indexelés többletköltsége többnyire nem éri meg — ekkor a lapos vagy hierarchikus RAG a jobb választás. A Graph RAG akkor „termeli ki” az árát, ha a kérdéshalmaz relációs vagy összegző jellegű.</span>
+            <span lang="en">Industry estimates suggest that below roughly 1M tokens of corpus the graph-indexing overhead is usually not worth it — flat or hierarchical RAG is the better pick there. Graph RAG earns its cost when the query mix is relational or summarization-heavy.</span>
+          </p>
+        </div>
+      </section>
+
+      <!-- 07 Recommended Frameworks -->
+      <section class="section">
+        <div class="section__head">
+          <span class="section__num">07</span>
+          <h2 class="section__title"><span lang="hu">Ajánlott keretrendszerek</span><span lang="en">Recommended Frameworks</span></h2>
+        </div>
+        <div class="grid grid-3">
+          <div class="card card--rich card--graph">
+            <span class="card__tag">reference impl</span>
+            <div class="card__title"><span lang="hu">Microsoft GraphRAG</span><span lang="en">Microsoft GraphRAG</span></div>
+            <p class="card__spec">pip install graphrag</p>
+            <p class="card__body">
+              <span lang="hu">A referenciaimplementáció: entitás-gráf, Leiden-közösségek, közösség-összegzések, lokális és globális keresés.</span>
+              <span lang="en">The reference implementation: entity graph, Leiden communities, community summaries, local and global search.</span>
+            </p>
+          </div>
+          <div class="card card--rich card--graph">
+            <span class="card__tag">low-cost indexing</span>
+            <div class="card__title"><span lang="hu">LazyGraphRAG</span><span lang="en">LazyGraphRAG</span></div>
+            <p class="card__spec">Microsoft · 2025-06</p>
+            <p class="card__body">
+              <span lang="hu">Az összegzést lekérdezési időre halasztja — a GraphRAG indexelési költségének kb. 0,1%-áért dolgozik.</span>
+              <span lang="en">Defers summarization to query time — running at roughly 0.1% of GraphRAG's indexing cost.</span>
+            </p>
+          </div>
+          <div class="card card--rich card--graph">
+            <span class="card__tag">dual-level retrieval</span>
+            <div class="card__title"><span lang="hu">LightRAG</span><span lang="en">LightRAG</span></div>
+            <p class="card__spec">HKUDS · EMNLP 2025</p>
+            <p class="card__body">
+              <span lang="hu">Kétszintű visszakeresés: egyszerre kezeli az entitás- és a téma-szintű lekérdezéseket.</span>
+              <span lang="en">Dual-level retrieval: handles entity-level and theme-level queries together.</span>
+            </p>
+          </div>
+          <div class="card card--rich card--graph">
+            <span class="card__tag">minimal core</span>
+            <div class="card__title"><span lang="hu">nano-graphrag</span><span lang="en">nano-graphrag</span></div>
+            <p class="card__spec">pip install nano-graphrag</p>
+            <p class="card__body">
+              <span lang="hu">Minimális, jól hekkelhető mag — a MedGraphRAG és a Fast GraphRAG alapja.</span>
+              <span lang="en">A minimal, hackable core — the base for MedGraphRAG and Fast GraphRAG.</span>
+            </p>
+          </div>
+          <div class="card card--rich card--graph">
+            <span class="card__tag">PageRank retrieval</span>
+            <div class="card__title"><span lang="hu">HippoRAG2</span><span lang="en">HippoRAG2</span></div>
+            <p class="card__spec">pip install hipporag</p>
+            <p class="card__body">
+              <span lang="hu">Személyre szabott PageRank-et futtat a gráfon — erős a komplex következtetésben.</span>
+              <span lang="en">Runs personalized PageRank over the graph — strong on complex reasoning.</span>
+            </p>
+          </div>
+          <div class="card card--rich card--graph">
+            <span class="card__tag">graph database</span>
+            <div class="card__title"><span lang="hu">Neo4j</span><span lang="en">Neo4j</span></div>
+            <p class="card__spec">neo4j-graphrag · Graphiti</p>
+            <p class="card__body">
+              <span lang="hu">Gráfadatbázis a <code>neo4j-graphrag</code> csomaggal; a <strong>Graphiti</strong> időbeli (temporal) gráfokhoz — alternatíva: Memgraph.</span>
+              <span lang="en">Graph database with the <code>neo4j-graphrag</code> package; <strong>Graphiti</strong> for temporal graphs — Memgraph is an alternative.</span>
+            </p>
+          </div>
+        </div>
+        <div class="info-box">
+          <p class="info-box__title"><span lang="hu">Általános célú keretrendszerek</span><span lang="en">General-purpose frameworks</span></p>
+          <p class="info-box__body">
+            <span lang="hu">A nagyobb keretrendszereknek is van gráf-modulja: a LlamaIndex <code>PropertyGraphIndex</code> osztálya és a LangChain <code>LLMGraphTransformer</code> komponense entitás-gráfot épít meglévő pipeline-okba — kényelmes belépési pont, ha a projekt már ezekre épül.</span>
+            <span lang="en">The larger frameworks also ship a graph module: the LlamaIndex <code>PropertyGraphIndex</code> class and the LangChain <code>LLMGraphTransformer</code> component build an entity graph into existing pipelines — a convenient entry point if a project already uses them.</span>
+          </p>
+        </div>
+      </section>
+
+      <!-- 08 Expected Results -->
+      <section class="section">
+        <div class="section__head">
+          <span class="section__num">08</span>
+          <h2 class="section__title"><span lang="hu">Várható eredmények</span><span lang="en">Expected Results</span></h2>
+        </div>
+        <p class="section__desc">
+          <span lang="hu">A GraphRAG-Bench szerint a Graph RAG <strong>a komplex következtetésen és a kontextuális összegzésen nyer, az egyszerű ténykeresésen veszít</strong>. Az alábbi számok a benchmark regény-alapú adatkészletéről származnak.</span>
+          <span lang="en">GraphRAG-Bench finds that Graph RAG <strong>wins on complex reasoning and contextual summarization, and loses on simple fact retrieval</strong>. The numbers below come from the benchmark's novel-based dataset.</span>
+        </p>
+        <div class="compare-table-wrap">
+          <table class="compare-table">
+            <thead>
+              <tr>
+                <th><span lang="hu">Feladat</span><span lang="en">Task</span></th>
+                <th><span lang="hu">Graph RAG</span><span lang="en">Graph RAG</span></th>
+                <th><span lang="hu">Alap RAG</span><span lang="en">Basic RAG</span></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="arch-name"><span lang="hu">Kontextuális összegzés</span><span lang="en">Contextual summarization</span></td>
+                <td class="mono">64.40% (MS-GraphRAG)</td>
+                <td class="mono">51.30%</td>
+              </tr>
+              <tr>
+                <td class="arch-name"><span lang="hu">Komplex következtetés</span><span lang="en">Complex reasoning</span></td>
+                <td class="mono">53.38% (HippoRAG2)</td>
+                <td class="mono">42.93%</td>
+              </tr>
+              <tr>
+                <td class="arch-name"><span lang="hu">Ténykeresés</span><span lang="en">Fact retrieval</span></td>
+                <td class="mono">60.14% (HippoRAG2)</td>
+                <td class="mono">60.92%</td>
+              </tr>
+              <tr>
+                <td class="arch-name"><span lang="hu">Indexelési költség</span><span lang="en">Indexing cost</span></td>
+                <td class="mono">$20–500</td>
+                <td class="mono">$2–5</td>
+              </tr>
+              <tr>
+                <td class="arch-name"><span lang="hu">Token / lekérdezés (globális)</span><span lang="en">Tokens / query (global)</span></td>
+                <td class="mono">~40,000</td>
+                <td class="mono">~879</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="info-box">
+          <p class="info-box__title"><span lang="hu">A költség az ár</span><span lang="en">Cost is the catch</span></p>
+          <p class="info-box__body">
+            <span lang="hu">A Microsoft beszámolója szerint a LazyGraphRAG 96/96 arányban nyert a vektoros RAG, a RAPTOR, a LightRAG és a GraphRAG ellen — ezt vendor-mérésként érdemes kezelni. A globális keresés tokenigénye a fő korlát: a 2025 januári Dynamic Community Selection becslések szerint kb. 79%-kal csökkentette a globális keresés tokenfogyasztását.</span>
+            <span lang="en">Microsoft reports that LazyGraphRAG won 96/96 against vector RAG, RAPTOR, LightRAG and GraphRAG — treat this as a vendor measurement. Global-search token use is the main constraint: the January 2025 Dynamic Community Selection is estimated to have cut global-search tokens by roughly 79%.</span>
+          </p>
+        </div>
+      </section>
+
+      <!-- 09 Evaluation -->
+      <section class="section">
+        <div class="section__head">
+          <span class="section__num">09</span>
+          <h2 class="section__title"><span lang="hu">Kiértékelés</span><span lang="en">Evaluation</span></h2>
+        </div>
+        <ul class="feature-list feature-list--ok">
+          <li><span lang="hu">RAGAS alapmetrikák: kontextus-precizitás, kontextus-visszahívás, hűség (faithfulness) és válaszrelevancia.</span><span lang="en">RAGAS core metrics: context precision, context recall, faithfulness and answer relevancy.</span></li>
+          <li><span lang="hu">Microsoft <strong>BenchmarkQED</strong> a GraphRAG automatizált összemérésére.</span><span lang="en">Microsoft <strong>BenchmarkQED</strong> for automated GraphRAG benchmarking.</span></li>
+          <li><span lang="hu">Globális / összegző kérdéseknél LLM-as-judge páronkénti összehasonlítás — átfogóság, sokszínűség és „empowerment” mentén, nem pontos egyezéssel.</span><span lang="en">For global / summarization queries use LLM-as-judge pairwise comparison — on comprehensiveness, diversity and empowerment, not exact match.</span></li>
+        </ul>
+        <div class="info-box">
+          <p class="info-box__title"><span lang="hu">Gráf-specifikus szempont</span><span lang="en">Graph-specific concern</span></p>
+          <p class="info-box__body">
+            <span lang="hu">A gráf minősége implementációnként ingadozik, és közvetlenül meghatározza a visszakeresés minőségét — egy hiányos entitás-kinyerés vagy rosszul klaszterezett közösség-struktúra csendben rontja a teljes rendszert. A kiértékelésnek ezért a gráf felépítését is mérnie kell, nem csak a végső választ.</span>
+            <span lang="en">Graph quality varies by implementation and directly determines retrieval quality — incomplete entity extraction or a poorly clustered community structure silently degrades the whole system. Evaluation must therefore measure the graph construction itself, not just the final answer.</span>
+          </p>
+        </div>
+      </section>
+
+      <!-- 10 When to use it -->
+      <section class="section">
+        <div class="section__head">
+          <span class="section__num">10</span>
           <h2 class="section__title"><span lang="hu">Mikor érdemes használni</span><span lang="en">When to use it</span></h2>
         </div>
         <div class="grid grid-2">
           <div class="panel panel--ok">
             <h3 class="panel__title"><span lang="hu">Erősségek</span><span lang="en">Strengths</span></h3>
             <ul class="feature-list feature-list--ok">
-              <li><span lang="hu">Kiváló több-lépéses (multi-hop) kérdésekhez.</span><span lang="en">Excellent for multi-hop questions.</span></li>
-              <li><span lang="hu">Magas kontextuális pontosság.</span><span lang="en">High contextual accuracy.</span></li>
-              <li><span lang="hu">Strukturált és strukturálatlan adatok ötvözése.</span><span lang="en">Combines structured and unstructured data.</span></li>
+              <li><span lang="hu">Kiváló több-lépéses (multi-hop), dokumentumokon átívelő kérdésekhez.</span><span lang="en">Excellent for multi-hop questions that span documents.</span></li>
+              <li><span lang="hu">A globális keresés korpusz-szintű, tematikus összegzést ad — amire a lapos vektoros keresés képtelen.</span><span lang="en">Global search delivers corpus-wide, thematic synthesis — which flat vector search cannot do.</span></li>
+              <li><span lang="hu">A lokális keresés pontos entitás-szomszédsági kontextust nyújt konkrét kérdésekre.</span><span lang="en">Local search supplies precise entity-neighborhood context for specific questions.</span></li>
+              <li><span lang="hu">Strukturált és strukturálatlan adatok ötvözése egyetlen tudásgráfban.</span><span lang="en">Combines structured and unstructured data in a single knowledge graph.</span></li>
             </ul>
           </div>
           <div class="panel panel--warn">
             <h3 class="panel__title"><span lang="hu">Kihívások</span><span lang="en">Trade-offs</span></h3>
             <ul class="feature-list feature-list--warn">
-              <li><span lang="hu">Magas indexelési és gráfépítési költség.</span><span lang="en">High indexing and graph-construction cost.</span></li>
-              <li><span lang="hu">Lassabb válaszidő a komplex bejárás miatt.</span><span lang="en">Slower response time due to complex traversal.</span></li>
-              <li><span lang="hu">Speciális adatbázist igényel (pl. Neo4j).</span><span lang="en">Requires a specialized database (e.g. Neo4j).</span></li>
+              <li><span lang="hu">Magas indexelési és gráfépítési költség: a teljes GraphRAG-indexelés $20–500 a vektoros RAG $2–5-jével szemben.</span><span lang="en">High indexing and graph-construction cost: full GraphRAG indexing runs $20–500 vs $2–5 for vector RAG.</span></li>
+              <li><span lang="hu">A globális keresés sok tokent fogyaszt — lekérdezésenként akár ~40 000 tokent.</span><span lang="en">Global search is token-hungry — up to ~40,000 tokens per query.</span></li>
+              <li><span lang="hu">Egyszerű ténykeresésen nem ver rá a lapos RAG-re.</span><span lang="en">Does not beat flat RAG on simple fact retrieval.</span></li>
+              <li><span lang="hu">Speciális adatbázist igényel (pl. Neo4j); a gráf minősége implementációnként ingadozik.</span><span lang="en">Requires a specialized database (e.g. Neo4j); graph quality varies by implementation.</span></li>
             </ul>
           </div>
         </div>
         <div class="info-box">
           <p class="info-box__title"><span lang="hu">Pro tipp</span><span lang="en">Pro tip</span></p>
           <p class="info-box__body">
-            <span lang="hu">Használj hibrid megközelítést: vektoros keresés a kezdeti entitás-azonosításhoz, majd gráfbejárás a pontos kontextus kibővítéséhez.</span>
-            <span lang="en">Use a hybrid approach: vector search for initial entity identification, then graph traversal to expand precise context.</span>
+            <span lang="hu">Igazítsd a keresési módot a kérdéshez: konkrét, entitás-fókuszú kérdéshez <strong>lokális keresés</strong> (entitás-szomszédság bejárása), tematikus, korpusz-szintű kérdéshez <strong>globális keresés</strong> (közösség-összegzések aggregálása). Kb. 1M token alatti, statikus korpusznál a gráf-indexelés többletköltsége többnyire nem térül meg — ekkor maradj a lapos vektoros RAG-nél.</span>
+            <span lang="en">Match the search mode to the query: use <strong>local search</strong> (entity-neighborhood traversal) for specific, entity-focused questions, and <strong>global search</strong> (aggregating community summaries) for thematic, corpus-wide questions. Below ~1M tokens of static corpus the graph-indexing overhead usually does not pay off — stay on flat vector RAG instead.</span>
           </p>
         </div>
       </section>
 
-      <!-- 05 Code example -->
+      <!-- 11 Code example -->
       <section class="section">
         <div class="section__head">
-          <span class="section__num">05</span>
+          <span class="section__num">11</span>
           <h2 class="section__title"><span lang="hu">Kódpélda</span><span lang="en">Code example</span></h2>
         </div>
+        <p class="section__desc">
+          <span lang="hu">A Microsoft GraphRAG referenciaimplementációja entitás-gráfot épít, Leiden-közösségekbe klaszterez, majd lokális vagy globális keresést futtat. A Neo4j-alapú gráf közvetlenül is lekérdezhető a <code>neo4j-graphrag</code> csomaggal.</span>
+          <span lang="en">The Microsoft GraphRAG reference implementation builds an entity graph, clusters it into Leiden communities, then runs local or global search. A Neo4j-backed graph can also be queried directly with the <code>neo4j-graphrag</code> package.</span>
+        </p>
         <div class="code-block">
           <div class="code-block__head">
             <span>graph_rag_query.py</span>
           </div>
-          <pre><code><span class="tok-comment"># Initialize the graph store</span>
-graph_store = Neo4jGraphStore(url=NEO4J_URI, username="neo4j", password=PASSWORD)
+          <pre><code><span class="tok-comment"># pip install graphrag neo4j-graphrag</span>
+<span class="tok-comment"># --- Microsoft GraphRAG: local vs global search --------------------</span>
+from graphrag.query.structured_search.local_search.search import LocalSearch
+from graphrag.query.structured_search.global_search.search import GlobalSearch
 
-<span class="tok-comment"># Build the knowledge-graph index</span>
-index = KnowledgeGraphIndex.from_documents(
-    documents,
-    max_triplets_per_chunk=2,
-    storage_context=StorageContext.from_defaults(graph_store=graph_store),
-)
+<span class="tok-comment"># Local search: entity-neighborhood traversal for a specific question</span>
+local = LocalSearch(llm=llm, context_builder=local_context, token_encoder=enc)
+answer = local.search("Which filings mention executive X?")
 
-<span class="tok-comment"># Query with graph traversal</span>
-query_engine = index.as_query_engine(
-    include_text=True,
-    response_mode="tree_summarize",
-    embedding_mode="hybrid",
+<span class="tok-comment"># Global search: aggregate community summaries for a thematic query</span>
+global_search = GlobalSearch(llm=llm, context_builder=community_context, token_encoder=enc)
+answer = global_search.search("What are the main risk themes across the corpus?")
+
+<span class="tok-comment"># --- Neo4j-backed knowledge graph, queried directly ----------------</span>
+from neo4j_graphrag.retrievers import VectorCypherRetriever
+
+retriever = VectorCypherRetriever(
+    driver=neo4j_driver,
+    index_name="entity_embeddings",
+    retrieval_query="MATCH (n)-[r]-&gt;(m) RETURN n, r, m LIMIT 25",
+    embedder=embedder,
 )
-response = query_engine.query(question)
+result = retriever.search(query_text=question, top_k=5)
 </code></pre>
         </div>
       </section>
