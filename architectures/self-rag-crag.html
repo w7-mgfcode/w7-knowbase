@@ -155,10 +155,274 @@ flowchart TD
         </div>
       </section>
 
-      <!-- 04 When to use it -->
+      <!-- 04 Core Principles -->
       <section class="section">
         <div class="section__head">
           <span class="section__num">04</span>
+          <h2 class="section__title"><span lang="hu">Alapelvek</span><span lang="en">Core Principles</span></h2>
+        </div>
+        <p class="section__desc">
+          <span lang="hu">A két minta közös elve: <strong>ne bízz vakon a visszakeresésben</strong> — értékeld a relevanciát, korrigálj vagy eszkalálj, és ellenőrizd a megalapozottságot, mielőtt válaszolsz. Az alábbi két kártya azt mutatja, hogyan valósítja meg ezt a Self-RAG és a CRAG.</span>
+          <span lang="en">The shared principle of the two patterns: <strong>do not trust retrieval blindly</strong> — assess relevance, correct or escalate, and verify grounding before answering. The two cards below show how Self-RAG and CRAG each implement this.</span>
+        </p>
+        <div class="grid grid-2">
+          <div class="info-box">
+            <p class="info-box__title"><span lang="hu">Self-RAG — tanult reflexiós tokenek</span><span lang="en">Self-RAG — learned reflection tokens</span></p>
+            <p class="info-box__body">
+              <span lang="hu">A modellt arra tanítják, hogy speciális reflexiós tokeneket bocsásson ki: <code>Retrieve</code> (kell-e keresni), <code>ISREL</code> (releváns-e a passzus), <code>ISSUP</code> (megalapozza-e a bizonyíték a kimenetet) és <code>ISUSE</code> (hasznos-e a válasz). A kritikust offline tanítják, így a következtetéskor nincs szükség külön kritikus modellre.</span>
+              <span lang="en">The model is trained to emit special reflection tokens: <code>Retrieve</code> (retrieve or not), <code>ISREL</code> (is the passage relevant), <code>ISSUP</code> (is the output supported by evidence) and <code>ISUSE</code> (is the answer useful). The critic is trained offline, so no separate critic model is needed at inference.</span>
+            </p>
+          </div>
+          <div class="info-box">
+            <p class="info-box__title"><span lang="hu">CRAG — könnyűsúlyú visszakeresési értékelő</span><span lang="en">CRAG — lightweight retrieval evaluator</span></p>
+            <p class="info-box__body">
+              <span lang="hu">Egy könnyűsúlyú visszakeresési értékelő pontozza a találatokat; a bizalmi érték három cselekvés egyikét váltja ki: <strong>Correct</strong> (finomítás dekompozíció-majd-újraépítés úton), <strong>Incorrect</strong> (elvetés → web-keresés fallback) és <strong>Ambiguous</strong> (a kettő kombinálása). A CRAG plug-inként ráhelyezhető bármilyen RAG- vagy Self-RAG-folyamatra.</span>
+              <span lang="en">A lightweight retrieval evaluator scores the retrieved docs; the confidence value triggers one of three actions: <strong>Correct</strong> (refine via decompose-then-recompose), <strong>Incorrect</strong> (discard → web-search fallback) and <strong>Ambiguous</strong> (combine both). CRAG is a plug-in that sits on top of any RAG or Self-RAG pipeline.</span>
+            </p>
+          </div>
+        </div>
+        <ul class="feature-list feature-list--ok">
+          <li><span lang="hu">A relevancia és a megalapozottság a folyamat explicit, ellenőrzött lépései — nem hallgatólagos feltevések.</span><span lang="en">Relevance and groundedness are explicit, checked steps of the pipeline — not implicit assumptions.</span></li>
+          <li><span lang="hu">A gyenge vagy hiányzó találatok korrekciót vagy eszkalációt (web-keresés) váltanak ki, nem pedig hallucinált választ.</span><span lang="en">Weak or missing retrievals trigger correction or escalation (web search) instead of a hallucinated answer.</span></li>
+          <li><span lang="hu">A válasz csak akkor kerül kiadásra, ha a bizonyíték igazolja — különben újabb visszacsatolás indul.</span><span lang="en">The answer is only released once evidence supports it — otherwise another feedback loop is started.</span></li>
+        </ul>
+      </section>
+
+      <!-- 05 Use Cases -->
+      <section class="section">
+        <div class="section__head">
+          <span class="section__num">05</span>
+          <h2 class="section__title"><span lang="hu">Felhasználási esetek</span><span lang="en">Use Cases</span></h2>
+        </div>
+        <p class="section__desc">
+          <span lang="hu">A Self-RAG és a CRAG ott térül meg, ahol egy téves válasz költséges, vagy ahol a tudásbázis tökéletlen, illetve gyorsan változik.</span>
+          <span lang="en">Self-RAG and CRAG pay off where a wrong answer is costly, or where the knowledge base is imperfect or fast-changing.</span>
+        </p>
+        <div class="grid grid-3">
+          <div class="card">
+            <div class="card__title"><span lang="hu">Pontosság-kritikus Q&amp;A</span><span lang="en">Accuracy-critical Q&amp;A</span></div>
+            <p class="card__body"><span lang="hu">Egészségügyi és népegészségügyi útmutatás, ahol egy hibás válasz közvetlen kárt okozhat.</span><span lang="en">Healthcare and public-health guidance, where an incorrect answer can cause direct harm.</span></p>
+          </div>
+          <div class="card">
+            <div class="card__title"><span lang="hu">Tudományos és műszaki tartalom</span><span lang="en">Scientific &amp; technical content</span></div>
+            <p class="card__body"><span lang="hu">Pontosságot követelő szakterületek, ahol a megalapozottság ellenőrzése nélkülözhetetlen.</span><span lang="en">Domains demanding precision, where verifying groundedness is indispensable.</span></p>
+          </div>
+          <div class="card">
+            <div class="card__title"><span lang="hu">Tényellenőrzés</span><span lang="en">Fact-checking</span></div>
+            <p class="card__body"><span lang="hu">Állítások verifikálása, ahol minden választ alá kell támasztani bizonyítékkal.</span><span lang="en">Verifying claims, where every answer must be backed by evidence.</span></p>
+          </div>
+          <div class="card">
+            <div class="card__title"><span lang="hu">Ügyfélszolgálat</span><span lang="en">Customer support</span></div>
+            <p class="card__body"><span lang="hu">Tökéletlen vagy gyorsan változó tudásbázisok felett — a web fallback fedezi az elavult korpuszt.</span><span lang="en">Over imperfect or fast-changing knowledge bases — the web fallback covers a stale corpus.</span></p>
+          </div>
+          <div class="card">
+            <div class="card__title"><span lang="hu">Elavuló korpuszok</span><span lang="en">Stale corpora</span></div>
+            <p class="card__body"><span lang="hu">Ha a tudásbázis lemaradhat a valóságtól, a CRAG web-keresési ága friss adatot von be.</span><span lang="en">When the knowledge base may lag reality, CRAG's web-search branch brings in fresh data.</span></p>
+          </div>
+          <div class="card">
+            <div class="card__title"><span lang="hu">Zajos tudásbázisok</span><span lang="en">Noisy knowledge bases</span></div>
+            <p class="card__body"><span lang="hu">Nem egyenletesen releváns dokumentumok felett a relevancia-értékelés kiszűri a zajt.</span><span lang="en">Over unevenly relevant documents, the relevance grading filters out the noise.</span></p>
+          </div>
+        </div>
+      </section>
+
+      <!-- 06 Routing Strategy -->
+      <section class="section">
+        <div class="section__head">
+          <span class="section__num">06</span>
+          <h2 class="section__title"><span lang="hu">Útválasztási stratégia</span><span lang="en">Routing Strategy</span></h2>
+        </div>
+        <p class="section__desc">
+          <span lang="hu">A CRAG visszakeresési értékelője lényegében egy belső útválasztó: a bizalmi pontszáma dönt a finomítás, a web-keresés és a hibrid (mindkettő) ág között. Rendszerszinten akkor érdemes a Self-RAG/CRAG felé irányítani egy lekérdezést, ha a tényszerű pontosság és a hallucináció-kontroll kritikus, a visszakeresés minősége pedig változó.</span>
+          <span lang="en">CRAG's retrieval evaluator is essentially an internal router: its confidence score decides between the refine, web-search and hybrid (both) branches. At the system level, route a query to Self-RAG/CRAG when factual accuracy and hallucination control are critical and retrieval quality is variable.</span>
+        </p>
+        <div class="grid grid-2">
+          <div class="info-box">
+            <p class="info-box__title"><span lang="hu">Self-RAG — token-vezérelt útválasztás</span><span lang="en">Self-RAG — token-driven routing</span></p>
+            <p class="info-box__body">
+              <span lang="hu">A <code>Retrieve</code> token dönti el, hogy kell-e egyáltalán keresni; az <code>ISREL</code> token a releváns passzusokat tartja meg; az <code>ISSUP</code> és <code>ISUSE</code> tokenek pedig a generálás után minősítenek. Az útválasztás magába a modellbe van betanítva.</span>
+              <span lang="en">The <code>Retrieve</code> token decides whether to retrieve at all; the <code>ISREL</code> token keeps the relevant passages; the <code>ISSUP</code> and <code>ISUSE</code> tokens grade after generation. The routing is trained into the model itself.</span>
+            </p>
+          </div>
+          <div class="info-box">
+            <p class="info-box__title"><span lang="hu">CRAG — bizalmi pontszámú útválasztás</span><span lang="en">CRAG — confidence-score routing</span></p>
+            <p class="info-box__body">
+              <span lang="hu">A könnyűsúlyú értékelő bizalmi pontszáma három ágra oszt: <strong>Correct</strong> → tudás-finomítás, <strong>Incorrect</strong> → web-keresés fallback, <strong>Ambiguous</strong> → a kettő kombinálása. Az útválasztó egy külön, tanítható komponens.</span>
+              <span lang="en">The lightweight evaluator's confidence score splits into three branches: <strong>Correct</strong> → knowledge refinement, <strong>Incorrect</strong> → web-search fallback, <strong>Ambiguous</strong> → a combination of both. The router is a separate, trainable component.</span>
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- 07 Recommended Frameworks -->
+      <section class="section">
+        <div class="section__head">
+          <span class="section__num">07</span>
+          <h2 class="section__title"><span lang="hu">Ajánlott keretrendszerek</span><span lang="en">Recommended Frameworks</span></h2>
+        </div>
+        <div class="grid grid-3">
+          <div class="card card--rich card--self">
+            <span class="card__tag">orchestration</span>
+            <div class="card__title"><span lang="hu">LangGraph</span><span lang="en">LangGraph</span></div>
+            <p class="card__spec">pip install langgraph</p>
+            <p class="card__body">
+              <span lang="hu">A mai standard mód mindkét minta megvalósítására: értékelő döntési csomópontok és újrapróbálkozó körök — „flow engineering" ciklikus gráffal.</span>
+              <span lang="en">The standard way to implement both patterns today: grading decision nodes plus retry loops — "flow engineering" with a cyclic graph.</span>
+            </p>
+            <ul class="feature-list">
+              <li><span lang="hu">Állapottartó, ciklikus gráf a grade→decide→retry hurokhoz.</span><span lang="en">Stateful, cyclic graph for the grade→decide→retry loop.</span></li>
+              <li><span lang="hu">Feltételes élek a CRAG három ágához.</span><span lang="en">Conditional edges for CRAG's three branches.</span></li>
+            </ul>
+          </div>
+          <div class="card card--rich card--self">
+            <span class="card__tag">model</span>
+            <div class="card__title"><span lang="hu">Self-RAG (eredeti)</span><span lang="en">Self-RAG (original)</span></div>
+            <p class="card__spec">AkariAsai/self-rag</p>
+            <p class="card__body">
+              <span lang="hu">A finomhangolt modell, amely reflexiós tokeneket generál; offline tanított kritikus, így következtetéskor nincs külön kritikus hívás.</span>
+              <span lang="en">The fine-tuned model that generates reflection tokens; an offline-trained critic, so there is no separate critic call at inference.</span>
+            </p>
+            <ul class="feature-list">
+              <li><span lang="hu">Beépített <code>Retrieve</code> / <code>ISREL</code> / <code>ISSUP</code> / <code>ISUSE</code> tokenek.</span><span lang="en">Built-in <code>Retrieve</code> / <code>ISREL</code> / <code>ISSUP</code> / <code>ISUSE</code> tokens.</span></li>
+              <li><span lang="hu">7B-es referencia-implementáció.</span><span lang="en">7B reference implementation.</span></li>
+            </ul>
+          </div>
+          <div class="card card--rich card--self">
+            <span class="card__tag">evaluator</span>
+            <div class="card__title"><span lang="hu">CRAG (eredeti)</span><span lang="en">CRAG (original)</span></div>
+            <p class="card__spec">HuskyInSalt/CRAG</p>
+            <p class="card__body">
+              <span lang="hu">A finomhangolt T5-large visszakeresési értékelő, amely gyorsan, teljes LLM-hívás nélkül osztályozza a dokumentumokat.</span>
+              <span lang="en">The fine-tuned T5-large retrieval evaluator that classifies documents quickly, without a full LLM call.</span>
+            </p>
+            <ul class="feature-list">
+              <li><span lang="hu">Könnyűsúlyú: ~0,77 milliárd paraméter.</span><span lang="en">Lightweight: ~0.77 B parameters.</span></li>
+              <li><span lang="hu">Correct / Incorrect / Ambiguous osztályozás.</span><span lang="en">Correct / Incorrect / Ambiguous classification.</span></li>
+            </ul>
+          </div>
+          <div class="card card--rich card--self">
+            <span class="card__tag">pack</span>
+            <div class="card__title"><span lang="hu">LlamaIndex CorrectiveRAGPack</span><span lang="en">LlamaIndex CorrectiveRAGPack</span></div>
+            <p class="card__spec">llama-index-packs-corrective-rag</p>
+            <p class="card__body">
+              <span lang="hu">Kész, korrekciós RAG-csomag a LlamaIndexben: dokumentum-értékelés és web-keresési fallback egy lépésben telepíthető.</span>
+              <span lang="en">A ready-made corrective-RAG pack for LlamaIndex: document grading and web-search fallback installable in one step.</span>
+            </p>
+            <ul class="feature-list">
+              <li><span lang="hu">A CRAG-minta gyors prototípusához.</span><span lang="en">For quick prototyping of the CRAG pattern.</span></li>
+            </ul>
+          </div>
+          <div class="card card--rich card--self">
+            <span class="card__tag">web search</span>
+            <div class="card__title"><span lang="hu">Web-keresési eszköz</span><span lang="en">Web-search tool</span></div>
+            <p class="card__spec">Tavily / SerpAPI / Bing</p>
+            <p class="card__body">
+              <span lang="hu">A CRAG fallback-ágához: amikor a találatok bizonytalanok vagy irrelevánsak, friss web-tartalom egészíti ki a kontextust.</span>
+              <span lang="en">For CRAG's fallback branch: when the retrieved docs are ambiguous or irrelevant, fresh web content supplements the context.</span>
+            </p>
+            <ul class="feature-list">
+              <li><span lang="hu">Elavuló korpuszokat fed le friss adattal.</span><span lang="en">Covers stale corpora with fresh data.</span></li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <!-- 08 Expected Results -->
+      <section class="section">
+        <div class="section__head">
+          <span class="section__num">08</span>
+          <h2 class="section__title"><span lang="hu">Várható eredmények</span><span lang="en">Expected Results</span></h2>
+        </div>
+        <p class="section__desc">
+          <span lang="hu">A publikált mérések szerint az önreflexió és a korrekció érdemben emeli a tényszerű pontosságot. Az alábbi számok kutatási cikkekből származnak.</span>
+          <span lang="en">Published measurements show that self-reflection and correction meaningfully raise factual accuracy. The numbers below come from research papers.</span>
+        </p>
+        <div class="compare-table-wrap">
+          <table class="compare-table">
+            <thead>
+              <tr>
+                <th><span lang="hu">Beállítás</span><span lang="en">Setup</span></th>
+                <th><span lang="hu">Mérőszám / adathalmaz</span><span lang="en">Metric / dataset</span></th>
+                <th><span lang="hu">Eredmény</span><span lang="en">Result</span></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="arch-name">Self-RAG (7B)</td>
+                <td><span lang="hu">PopQA pontosság (vs. Ret-ChatGPT 51,8%)</span><span lang="en">PopQA accuracy (vs. Ret-ChatGPT 51.8%)</span></td>
+                <td class="mono">54.9%</td>
+              </tr>
+              <tr>
+                <td class="arch-name">Self-RAG</td>
+                <td><span lang="hu">Pontosságesés a kritikus eltávolításakor</span><span lang="en">Accuracy drop when the critic is removed</span></td>
+                <td class="mono">-10–15 pt</td>
+              </tr>
+              <tr>
+                <td class="arch-name">CRAG vs. RAG</td>
+                <td><span lang="hu">PopQA pontosság</span><span lang="en">PopQA accuracy</span></td>
+                <td class="mono">+19.0%</td>
+              </tr>
+              <tr>
+                <td class="arch-name">CRAG vs. RAG</td>
+                <td><span lang="hu">Biography FactScore</span><span lang="en">Biography FactScore</span></td>
+                <td class="mono">+14.9</td>
+              </tr>
+              <tr>
+                <td class="arch-name">CRAG vs. RAG</td>
+                <td><span lang="hu">PubHealth pontosság</span><span lang="en">PubHealth accuracy</span></td>
+                <td class="mono">+36.6%</td>
+              </tr>
+              <tr>
+                <td class="arch-name">CRAG vs. RAG</td>
+                <td><span lang="hu">ARC-Challenge pontosság</span><span lang="en">ARC-Challenge accuracy</span></td>
+                <td class="mono">+8.1%</td>
+              </tr>
+              <tr>
+                <td class="arch-name">Self-CRAG vs. Self-RAG</td>
+                <td><span lang="hu">PopQA pontosság</span><span lang="en">PopQA accuracy</span></td>
+                <td class="mono">+20.0%</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="info-box">
+          <p class="info-box__title"><span lang="hu">Költség</span><span lang="en">Cost</span></p>
+          <p class="info-box__body">
+            <span lang="hu">A többletköltség a fokozatozáshoz és korrekcióhoz szükséges extra LLM-hívásokból, valamint az alkalmankénti web-keresésből adódik. A késleltetés-növekedés mérsékelt — jóval a teljes agentic RAG alatt marad.</span>
+            <span lang="en">The extra cost comes from additional LLM calls for grading and correction, plus an occasional web search. The latency increase is moderate — well below full agentic RAG.</span>
+          </p>
+        </div>
+      </section>
+
+      <!-- 09 Evaluation -->
+      <section class="section">
+        <div class="section__head">
+          <span class="section__num">09</span>
+          <h2 class="section__title"><span lang="hu">Kiértékelés</span><span lang="en">Evaluation</span></h2>
+        </div>
+        <p class="section__desc">
+          <span lang="hu">Mivel ezek az architektúrák épp a megalapozottság emelése céljából léteznek, a <strong>faithfulness / groundedness</strong> a fő mérőszám.</span>
+          <span lang="en">Since these architectures exist precisely to raise grounding, <strong>faithfulness / groundedness</strong> is the headline metric.</span>
+        </p>
+        <ul class="feature-list feature-list--ok">
+          <li><span lang="hu">Faithfulness / groundedness: a fő mérőszám — ezek az architektúrák ezt hivatottak emelni.</span><span lang="en">Faithfulness / groundedness: the headline metric — these architectures exist to raise it.</span></li>
+          <li><span lang="hu">FactScore hosszú formátumú, generatív válaszokhoz.</span><span lang="en">FactScore for long-form, generative answers.</span></li>
+          <li><span lang="hu">Pontosság a PopQA, PubHealth és ARC-Challenge adathalmazokon.</span><span lang="en">Accuracy on the PopQA, PubHealth and ARC-Challenge datasets.</span></li>
+          <li><span lang="hu">RAGAS alapmetrikák: context precision, context recall, faithfulness, answer relevancy.</span><span lang="en">RAGAS core metrics: context precision, context recall, faithfulness, answer relevancy.</span></li>
+        </ul>
+        <div class="info-box">
+          <p class="info-box__title"><span lang="hu">Architektúra-specifikus figyelmeztetés</span><span lang="en">Architecture-specific caveat</span></p>
+          <p class="info-box__body">
+            <span lang="hu">Magát a fokozatozót / értékelőt is ki kell értékelni: egy rosszul kalibrált <code>ISSUP</code>/<code>ISREL</code> token vagy T5-értékelő csendben rontja le az egész rendszert. A grader minősége felső korlátot szab a teljes folyamat pontosságának.</span>
+            <span lang="en">The grader / evaluator itself must also be evaluated: a miscalibrated <code>ISSUP</code>/<code>ISREL</code> token or T5 evaluator silently degrades the whole system. The grader's quality sets an upper bound on the accuracy of the entire pipeline.</span>
+          </p>
+        </div>
+      </section>
+
+      <!-- 10 When to use it -->
+      <section class="section">
+        <div class="section__head">
+          <span class="section__num">10</span>
           <h2 class="section__title"><span lang="hu">Mikor érdemes használni</span><span lang="en">When to use it</span></h2>
         </div>
         <div class="grid grid-2">
@@ -190,10 +454,10 @@ flowchart TD
         </div>
       </section>
 
-      <!-- 05 Code example -->
+      <!-- 11 Code example -->
       <section class="section">
         <div class="section__head">
-          <span class="section__num">05</span>
+          <span class="section__num">11</span>
           <h2 class="section__title"><span lang="hu">Kódpélda</span><span lang="en">Code example</span></h2>
         </div>
         <div class="code-block">
@@ -231,14 +495,26 @@ def generate(state: CRAGState) -&gt; CRAGState:
         "context": "\n\n".join(state["documents"]),
         "question": state["question"],
     })
-    return {**state, "generation": answer}
+    tries = state.get("_tries", 0) + 1
+    return {**state, "generation": answer, "_tries": tries}
 
-<span class="tok-comment"># Edge: route after grading</span>
+<span class="tok-comment"># Edge: decide after grading — refine, or fall back to web search</span>
 def route_after_grade(state: CRAGState) -&gt; str:
     grade = state.get("_grade", "ambiguous")
     if grade == "correct":
         return "generate"
     return "web_search"   <span class="tok-comment"># ambiguous or incorrect — supplement with web</span>
+
+<span class="tok-comment"># Edge: grade the generation — retry the loop if it is not grounded</span>
+def route_after_generate(state: CRAGState) -&gt; str:
+    grounded = answer_grader.invoke({
+        "question": state["question"],
+        "documents": state["documents"],
+        "generation": state["generation"],
+    })
+    if grounded or state.get("_tries", 0) &gt;= 2:
+        return "end"
+    return "retrieve"   <span class="tok-comment"># ungrounded — grade → decide → retry</span>
 
 <span class="tok-comment"># Build state graph</span>
 graph = StateGraph(CRAGState)
@@ -250,7 +526,7 @@ graph.set_entry_point("retrieve")
 graph.add_edge("retrieve", "grade_documents")
 graph.add_conditional_edges("grade_documents", route_after_grade, {"generate": "generate", "web_search": "web_search"})
 graph.add_edge("web_search", "generate")
-graph.add_edge("generate", END)
+graph.add_conditional_edges("generate", route_after_generate, {"end": END, "retrieve": "retrieve"})
 chain = graph.compile()
 
 result = chain.invoke({"question": "Why is the payments-api pod crashing?", "documents": [], "generation": ""})
