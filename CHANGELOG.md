@@ -33,6 +33,13 @@ project follows [Semantic Versioning](https://semver.org/) — see
   Evaluation — with content refreshed to mid-2026 practice (named frameworks,
   cited benchmark numbers, 2025-2026 developments such as LazyGraphRAG,
   LightRAG, HippoRAG2, and RAGRouter-Bench).
+- Gemini API compatibility reference page
+  (`reference/gemini-compatibility.html`) — the native `google-genai` SDK vs
+  the OpenAI-compatibility layer, the mid-2026 Gemini 3.x model lineup,
+  streaming, function calling, structured outputs, the RAG-relevant features
+  (long context, context caching, search grounding, embeddings, Batch API),
+  and an OpenAI→Gemini migration guide. Cyan-accented, wired into the sidebar
+  nav and the reference pager chain.
 - LLM Wiki page (`architectures/llm-wiki.html`) — a 15-section bilingual
   deep-dive on Karpathy's "compile, don't retrieve" knowledge pattern: the
   compilation analogy, the three-layer architecture, the three operations
