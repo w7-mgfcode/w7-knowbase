@@ -251,6 +251,7 @@ body.lang-en [lang="hu"] { display: none; }
   justify-content: space-between;
   gap: var(--space-md);
   padding: 0 var(--space-xl);
+  background: var(--bg-primary); /* fallback when color-mix() is unsupported */
   background: color-mix(in srgb, var(--bg-primary) 92%, transparent);
   backdrop-filter: blur(8px);
   border-bottom: 1px solid var(--border);
