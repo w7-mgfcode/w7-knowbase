@@ -654,6 +654,189 @@ mkdir raw
         </div>
       </section>
 
+      <!-- 13 The core idea -->
+      <section class="section">
+        <div class="section__head">
+          <span class="section__num">13</span>
+          <h2 class="section__title"><span lang="hu">Az alapgondolat: ne keress, fordíts</span><span lang="en">The core idea: stop retrieving, start compiling</span></h2>
+        </div>
+        <p class="section__desc">
+          <span lang="hu">Az alapgondolat egyetlen mondatban: ahelyett, hogy az LLM minden kérdésnél újraolvasná a nyers dokumentumokat, építs egyszer egy tartós, strukturált wikit, és tartsd örökké naprakészen. Karpathy egy szoftvermérnöki analógiát használt — a fordítást.</span>
+          <span lang="en">The insight in one sentence: instead of having the LLM re-read your raw documents every time you ask a question, build a persistent, structured wiki once and keep it updated forever. Karpathy used an analogy from software engineering — compilation.</span>
+        </p>
+        <div class="code-block">
+          <div class="code-block__head">
+            <span>compilation</span>
+          </div>
+          <pre><code>┌─────────────────────────────────────────────────────────────┐
+│                  SOFTWARE ENGINEERING                       │
+│                                                             │
+│     Source Code  ──[ compile once ]──►  Binary              │
+│     (readable)                          (runs fast every    │
+│                                          single call)       │
+└─────────────────────────────────────────────────────────────┘
+                          ⇕  same idea  ⇕
+┌─────────────────────────────────────────────────────────────┐
+│                      LLM WIKI                               │
+│                                                             │
+│     Raw Sources  ──[ LLM compiles ]──►  Wiki                │
+│     (PDFs, notes,                       (pre-synthesized,   │
+│      articles)                           interlinked,       │
+│                                          always ready)      │
+└─────────────────────────────────────────────────────────────┘
+</code></pre>
+        </div>
+        <p class="section__desc">
+          <span lang="hu">A programot sem futtatod le forráskódként minden alkalommal — egyszer lefordítod binárissá, és azt futtatod. Karpathy szerint a tudást is így kell kezelni: a PDF-jeid és jegyzeteid a forráskód, a wiki a bináris.</span>
+          <span lang="en">You don't execute source code every time you want to run a program — you compile it once into a binary and run that. Karpathy says: treat knowledge the same way. Your PDFs and notes are the source code. The wiki is the binary.</span>
+        </p>
+        <p class="section__desc">
+          <span lang="hu">Minden új dokumentumnál az LLM nem csupán indexel: elolvassa, kinyeri a kulcsinformációt, frissíti a meglévő oldalakat, átírja az összefoglalókat, megjelöli az ellentmondásokat, és erősíti a kereszthivatkozásokat. A wiki tartós, tömörödő alkotás.</span>
+          <span lang="en">Every time you add a new document, the LLM doesn't just index it. It reads it, extracts the key information, updates existing pages, revises summaries, flags contradictions, and strengthens cross-links. The wiki is a persistent, compounding artifact.</span>
+        </p>
+        <div class="info-box">
+          <p class="info-box__title"><span lang="hu">Karpathy szavaival</span><span lang="en">In Karpathy's words</span></p>
+          <p class="info-box__body">
+            <span lang="hu">„Az Obsidian a fejlesztőkörnyezet; az LLM a programozó; a wiki a kódbázis.” A wikit ritkán írod te magad — te a forrásokat válogatod, kérdezel és gondolkodsz. Az LLM végzi a teljes munkát: összegez, kereszthivatkoz, iktat és könyvel.</span>
+            <span lang="en">"Obsidian is the IDE; the LLM is the programmer; the wiki is the codebase." You rarely write the wiki yourself — you curate sources, ask questions, and think. The LLM handles the whole job: summarizing, cross-referencing, filing and bookkeeping.</span>
+          </p>
+        </div>
+      </section>
+
+      <!-- 14 The three-layer architecture -->
+      <section class="section">
+        <div class="section__head">
+          <span class="section__num">14</span>
+          <h2 class="section__title"><span lang="hu">A háromrétegű architektúra</span><span lang="en">The three-layer architecture</span></h2>
+        </div>
+        <p class="section__desc">
+          <span lang="hu">Az LLM Wiki három rétegből áll; mindegyiket más birtokolja, és más a változékonysága.</span>
+          <span lang="en">The LLM Wiki is built from three layers; each is owned by someone different and has a different mutability.</span>
+        </p>
+        <div class="code-block">
+          <div class="code-block__head">
+            <span>three-layer architecture</span>
+          </div>
+          <pre><code>╔══════════════════════════════════════════════════════════════╗
+║                   LAYER 3 — THE SCHEMA                       ║
+║                    (CLAUDE.md / AGENTS.md)                   ║
+║                                                              ║
+║   Rules · Conventions · Workflows · How to ingest/query      ║
+║                                                              ║
+║             ↕  tells the LLM HOW to behave                   ║
+╠══════════════════════════════════════════════════════════════╣
+║                   LAYER 2 — THE WIKI                         ║
+║                 (LLM owns this entirely)                     ║
+║                                                              ║
+║   ┌──────────┐  ┌──────────┐  ┌──────────┐                   ║
+║   │ Entity   │──│ Concept  │──│ Overview │   index.md        ║
+║   │ pages    │  │ pages    │  │ pages    │   log.md          ║
+║   └──────────┘  └──────────┘  └──────────┘                   ║
+║       ↑ LLM creates, links, updates, maintains               ║
+╠══════════════════════════════════════════════════════════════╣
+║                 LAYER 1 — RAW SOURCES                        ║
+║                      (IMMUTABLE)                             ║
+║                                                              ║
+║    📄 PDFs     📰 Articles    🎧 Podcast notes   🖼️ Images   ║
+║                                                              ║
+║         LLM reads · NEVER modifies · source of truth         ║
+╚══════════════════════════════════════════════════════════════╝
+</code></pre>
+        </div>
+        <div class="grid grid-3">
+          <div class="info-box">
+            <p class="info-box__title"><span lang="hu">1. réteg — Nyers források</span><span lang="en">Layer 1 — Raw sources</span></p>
+            <p class="info-box__body">
+              <span lang="hu">A gondosan válogatott gyűjteményed: cikkek, tanulmányok, jegyzetek, képek. Megváltoztathatatlan. Az LLM olvassa, de sosem módosítja — ez a végső igazság. A sérthetetlenség tudatos tervezési döntés: a wiki bármikor a nulláról újrafordítható.</span>
+              <span lang="en">Your curated collection: articles, papers, meeting notes, images. Immutable. The LLM reads them but never modifies them — this is your ground truth. The immutability is a deliberate design choice: you can always re-compile the wiki from scratch.</span>
+            </p>
+          </div>
+          <div class="info-box">
+            <p class="info-box__title"><span lang="hu">2. réteg — A wiki</span><span lang="en">Layer 2 — The wiki</span></p>
+            <p class="info-box__body">
+              <span lang="hu">Markdown fájlok könyvtára, amelyet az LLM teljes egészében birtokol: entitás- és fogalmi oldalak, összefoglalók, egy index és egy napló. Te olvasod, az LLM írja.</span>
+              <span lang="en">A directory of markdown files the LLM owns completely: entity pages, concept pages, summaries, an index and a log. You read it, the LLM writes it.</span>
+            </p>
+          </div>
+          <div class="info-box">
+            <p class="info-box__title"><span lang="hu">3. réteg — A séma</span><span lang="en">Layer 3 — The schema</span></p>
+            <p class="info-box__body">
+              <span lang="hu">Egy <code>CLAUDE.md</code> (a Claude Code-hoz) vagy <code>AGENTS.md</code> (a Codexhez) fájl. Ez a konfiguráció teszi az általános ágenst fegyelmezett wiki-karbantartóvá: meghatározza az oldalak felépítését, a források betöltését és a válaszok formázását.</span>
+              <span lang="en">A <code>CLAUDE.md</code> (for Claude Code) or <code>AGENTS.md</code> (for Codex) file. It is the config that turns a generic agent into a disciplined wiki maintainer: it defines how pages are structured, how new sources get ingested, and how answers get formatted.</span>
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- 15 The three operations -->
+      <section class="section">
+        <div class="section__head">
+          <span class="section__num">15</span>
+          <h2 class="section__title"><span lang="hu">A három művelet</span><span lang="en">The three operations</span></h2>
+        </div>
+        <p class="section__desc">
+          <span lang="hu">A wikivel három művelet végezhető; mindegyik visszacsatol, és minden lépéssel gazdagabbá teszi a wikit.</span>
+          <span lang="en">Three operations run against the wiki; each feeds back and makes the wiki richer with every step.</span>
+        </p>
+        <div class="code-block">
+          <div class="code-block__head">
+            <span>the three operations</span>
+          </div>
+          <pre><code>                    ┌──────────────────────┐
+                    │      YOU (Human)     │
+                    │   curates · asks     │
+                    └──────────┬───────────┘
+                               │
+          ┌────────────────────┼────────────────────┐
+          │                    │                    │
+          ▼                    ▼                    ▼
+   ┌────────────┐       ┌────────────┐       ┌────────────┐
+   │ 1. INGEST  │       │  2. QUERY  │       │  3. LINT   │
+   ├────────────┤       ├────────────┤       ├────────────┤
+   │ Drop new   │       │ Ask a      │       │ Health-    │
+   │ source,    │       │ question,  │       │ check wiki │
+   │ LLM reads, │       │ LLM reads  │       │ to find    │
+   │ summarises,│       │ wiki and   │       │ contra-    │
+   │ updates    │       │ synthesises│       │ dictions,  │
+   │ 10-15 wiki │       │ answer     │       │ orphans,   │
+   │ pages      │       │ w/ cites   │       │ stale data │
+   └─────┬──────┘       └─────┬──────┘       └─────┬──────┘
+         │                    │                    │
+         └────────────────────┴────────────────────┘
+                              │
+                              ▼
+                    ┌──────────────────────┐
+                    │   WIKI COMPOUNDS     │
+                    │  every op makes it   │
+                    │   richer over time   │
+                    └──────────────────────┘
+</code></pre>
+        </div>
+        <div class="grid grid-3">
+          <div class="info-box">
+            <p class="info-box__title"><span lang="hu">Betöltés</span><span lang="en">Ingest</span></p>
+            <p class="info-box__body">
+              <span lang="hu">Beejtesz egy forrást a <code>raw</code> mappába. Az LLM elolvassa, összefoglaló oldalt ír, és több kapcsolódó oldalt is megérint — frissít, kereszthivatkoz, ellentmondásokat jelöl. Egyetlen cikkből frissítések hálója lesz a teljes tudásbázison.</span>
+              <span lang="en">You drop a source into the <code>raw</code> folder. The LLM reads it, writes a summary page, and touches several related pages — updating, cross-linking, flagging contradictions. A single article becomes a web of updates across your entire knowledge base.</span>
+            </p>
+          </div>
+          <div class="info-box">
+            <p class="info-box__title"><span lang="hu">Lekérdezés</span><span lang="en">Query</span></p>
+            <p class="info-box__body">
+              <span lang="hu">Kérdést teszel fel. Az LLM nem a nyers dokumentumokban keres — a már megszintetizált wikit olvassa, és abból válaszol. A tömörödés trükkje: a jó válaszok új oldalként visszakerülnek a wikibe. A felfedezéseidből tartós tudás lesz.</span>
+              <span lang="en">You ask a question. The LLM doesn't search the raw documents — it reads the already-synthesized wiki and answers from it. And here is the compounding trick: good answers can be filed back into the wiki as new pages. Your explorations become permanent knowledge.</span>
+            </p>
+          </div>
+          <div class="info-box">
+            <p class="info-box__title"><span lang="hu">Ellenőrzés</span><span lang="en">Lint</span></p>
+            <p class="info-box__body">
+              <span lang="hu">Időről időre megkéred az LLM-et, hogy auditálja az egész wikit: keressen ellentmondásokat, árva oldalakat (amelyekre nem mutat hivatkozás) és olyan fogalmakat, amelyeknek hiányzik a saját oldaluk. A wiki egészséges marad, mert az LLM végzi a karbantartást, amit egyetlen ember sem szívesen csinál.</span>
+              <span lang="en">Periodically you ask the LLM to audit the whole wiki: find contradictions, find orphan pages with no links pointing in, and find concepts that are mentioned but missing their own page. The wiki stays healthy because the LLM does the maintenance no human ever wants to do.</span>
+            </p>
+          </div>
+        </div>
+      </section>
+
       <nav class="pager" aria-label="Architecture pager">
         <a class="pager__link pager__link--raptor" href="raptor.html">
           <div class="pager__dir">← <span lang="hu">Előző</span><span lang="en">Previous</span></div>
