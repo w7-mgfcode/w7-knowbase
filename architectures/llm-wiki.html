@@ -531,6 +531,129 @@ flowchart TD
         </div>
       </section>
 
+      <!-- 12 Build one -->
+      <section class="section">
+        <div class="section__head">
+          <span class="section__num">12</span>
+          <h2 class="section__title"><span lang="hu">Építsünk egyet</span><span lang="en">Build one</span></h2>
+        </div>
+        <p class="section__desc">
+          <span lang="hu">Eddig az elmélet — most építsünk egy működő LLM Wikit. A teljes folyamathoz három dolog kell: egy ágens (Claude Code vagy Codex) az „agy”, az Obsidian a megjelenítő, és egy mappa a gépeden, ez a vault.</span>
+          <span lang="en">That was the theory — now let's build a working LLM Wiki. The whole flow needs three things: an agent (Claude Code or Codex) as the "brain", Obsidian as the viewer, and a folder on your machine, the vault.</span>
+        </p>
+        <div class="grid grid-3">
+          <div class="card">
+            <div class="card__title"><span lang="hu">Claude Code</span><span lang="en">Claude Code</span></div>
+            <p class="card__body">
+              <span lang="hu">Az ágens — ez olvas, összegez, kapcsol és könyvel. Bármely ágens megfelel, az OpenAI Codex is.</span>
+              <span lang="en">The agent — it reads, summarizes, links and bookkeeps. Any agent works, OpenAI Codex included.</span>
+            </p>
+          </div>
+          <div class="card">
+            <div class="card__title"><span lang="hu">Obsidian</span><span lang="en">Obsidian</span></div>
+            <p class="card__body">
+              <span lang="hu">Ingyenes markdown-megjelenítő (obsidian.md). A gráfnézet teszi láthatóvá a wiki kapcsolathálóját.</span>
+              <span lang="en">A free markdown viewer (obsidian.md). Its graph view makes the wiki's web of links visible.</span>
+            </p>
+          </div>
+          <div class="card">
+            <div class="card__title"><span lang="hu">Egy mappa</span><span lang="en">A folder</span></div>
+            <p class="card__body">
+              <span lang="hu">Egy könyvtár a gépeden — ez a vault. Ebben él a megváltoztathatatlan <code>raw/</code> és az LLM-tulajdonú <code>wiki/</code>.</span>
+              <span lang="en">A directory on your machine — the vault. It holds the immutable <code>raw/</code> and the LLM-owned <code>wiki/</code>.</span>
+            </p>
+          </div>
+        </div>
+        <div class="info-box">
+          <p class="info-box__title"><span lang="hu">1. lépés — A mappaszerkezet</span><span lang="en">Step 1 — The folder structure</span></p>
+          <p class="info-box__body">
+            <span lang="hu">Hozz létre egy mappát, benne egy <code>raw/</code> alkönyvtárral a forrásoknak. Ennyi az alap — a <code>wiki/</code> könyvtárat majd az ágens építi fel.</span>
+            <span lang="en">Create a folder with a <code>raw/</code> subdirectory for the sources. That is the whole starting point — the agent will build the <code>wiki/</code> directory itself.</span>
+          </p>
+        </div>
+        <div class="code-block">
+          <div class="code-block__head">
+            <span>terminal</span>
+          </div>
+          <pre><code>mkdir llm-wiki-demo &amp;&amp; cd llm-wiki-demo
+mkdir raw
+</code></pre>
+        </div>
+        <div class="info-box">
+          <p class="info-box__title"><span lang="hu">2. lépés — Indítsd el az ágenst</span><span lang="en">Step 2 — Start the agent</span></p>
+          <p class="info-box__body">
+            <span lang="hu">Nyisd meg a Claude Code-ot ebben a mappában, és kérd meg: olvassa el Karpathy eredeti leírását, és segítsen beállítani az LLM Wikit. A kulcsutasítás: előbb kérdezzen rá, miről szól a wiki és milyen forrásokat tervezel — csak utána írja meg a <code>CLAUDE.md</code> sémát.</span>
+            <span lang="en">Open Claude Code in that folder and ask it to read Karpathy's original write-up and help set up the LLM Wiki. The key instruction: have it first ask what the wiki is about and what sources you plan to feed it — only then write the <code>CLAUDE.md</code> schema.</span>
+          </p>
+        </div>
+        <div class="info-box">
+          <p class="info-box__title"><span lang="hu">3. lépés — Tisztázó kérdések</span><span lang="en">Step 3 — Clarifying questions</span></p>
+          <p class="info-box__body">
+            <span lang="hu">Az ágens néhány kérdéssel válaszol: milyen témát fed le a wiki? Milyen forrásokat töltesz be? Körülbelül hányat? Milyen oldaltípusokat szeretnél?</span>
+            <span lang="en">The agent responds with a few questions: what topic will the wiki cover? What kinds of sources will you feed it? Roughly how many? What page types do you want?</span>
+          </p>
+        </div>
+        <div class="info-box">
+          <p class="info-box__title"><span lang="hu">4. lépés — Válaszolj őszintén</span><span lang="en">Step 4 — Answer honestly</span></p>
+          <p class="info-box__body">
+            <span lang="hu">Példánkban a wiki az MI-kutatásról és a szoftver filozófiájáról szól: rövid esszéket töltünk be Rich Suttontól és Andrej Karpathytól, nagyjából 10–20 forrást, fogalom-, esszé-összefoglaló- és szerzői oldalakkal. Az ágens ezután megírja a testreszabott <code>CLAUDE.md</code>-t, és létrehozza az <code>index.md</code> és <code>log.md</code> fájlokat — egyetlen sornyi kód nélkül.</span>
+            <span lang="en">In our example the wiki covers AI research and the philosophy of software: we feed it short essays from Rich Sutton and Andrej Karpathy, roughly 10–20 sources, with concept, essay-summary and author pages. The agent then writes the tailored <code>CLAUDE.md</code> and creates <code>index.md</code> and <code>log.md</code> — without a single line of code from you.</span>
+          </p>
+        </div>
+        <div class="info-box">
+          <p class="info-box__title"><span lang="hu">5. lépés — Források betöltése</span><span lang="en">Step 5 — Ingest sources</span></p>
+          <p class="info-box__body">
+            <span lang="hu">Tedd a <code>raw/</code> mappába Rich Sutton „The Bitter Lesson” esszéjét, és kérd a betöltését — az ágens a kétoldalas esszéből mintegy 10 összekapcsolt oldalt épít (lásd lent). Töltsd be ezután Karpathy „Software 2.0” cikkét: az ágens először elolvassa a meglévő wikit, felismeri a fogalmi rokonságot, frissíti a meglévő oldalakat, és <code>[[bitter-lesson]]</code> visszahivatkozást ad hozzá — amelyet senki sem írt kézzel. A wiki sűrűbb lett, nem csak nagyobb.</span>
+            <span lang="en">Drop Rich Sutton's "The Bitter Lesson" into <code>raw/</code> and ask for it to be ingested — the agent builds about 10 interlinked pages from the two-page essay (see below). Then ingest Karpathy's "Software 2.0": the agent first reads the existing wiki, recognizes the conceptual kinship, updates the existing pages, and adds a <code>[[bitter-lesson]]</code> backlink that no one wrote by hand. The wiki got denser, not just bigger.</span>
+          </p>
+        </div>
+        <div class="code-block">
+          <div class="code-block__head">
+            <span>wiki/ — after ingesting one 2-page essay</span>
+          </div>
+          <pre><code>wiki/
+├── index.md                       updated
+├── log.md                         new entry appended
+├── sources/
+│   └── bitter-lesson.md           summary page
+├── concepts/
+│   ├── search.md
+│   ├── learning.md
+│   ├── moores-law.md
+│   ├── general-methods.md
+│   └── human-knowledge-approaches.md
+├── examples/
+│   ├── computer-chess.md
+│   ├── computer-go.md
+│   ├── speech-recognition.md
+│   └── computer-vision.md
+└── people/
+    └── rich-sutton.md
+</code></pre>
+        </div>
+        <div class="info-box">
+          <p class="info-box__title"><span lang="hu">6. lépés — Szintézis-kérdés</span><span lang="en">Step 6 — A synthesis question</span></p>
+          <p class="info-box__body">
+            <span lang="hu">Tedd fel a kérdést: miben értenek egyet Sutton és Karpathy a szoftver jövőjéről, és hol térhetnek el? Az ágens nem nyitja meg újra a PDF-eket — a most felépített wiki-oldalakból és a köztük lévő <code>[[hivatkozásokból]]</code> válaszol, másodpercek alatt. Maga a válasz is tartós fájlként a vaultban marad.</span>
+            <span lang="en">Ask: how do Sutton and Karpathy agree about the future of software, and where might they disagree? The agent does not reopen the PDFs — it answers from the wiki pages just built and the <code>[[links]]</code> between them, in seconds. The answer itself stays in the vault as a permanent file.</span>
+          </p>
+        </div>
+        <div class="info-box">
+          <p class="info-box__title"><span lang="hu">7. lépés — Nyisd meg az Obsidianban</span><span lang="en">Step 7 — Open it in Obsidian</span></p>
+          <p class="info-box__body">
+            <span lang="hu">Telepítsd az Obsidiant, hozz létre egy új vaultot a mappádra, és nyisd meg a gráfnézetet. A tudásod most hálózatként jelenik meg: a csomópontok az oldalak, az élek a hivatkozások, amelyeket az ágens automatikusan húzott. Minden új forrás sűríti a gráfot.</span>
+            <span lang="en">Install Obsidian, create a new vault pointing at your folder, and open the graph view. Your knowledge now appears as a network: nodes are pages, edges are the links the agent drew automatically. Every new source densifies the graph.</span>
+          </p>
+        </div>
+        <div class="info-box">
+          <p class="info-box__title"><span lang="hu">A lényeg</span><span lang="en">The takeaway</span></p>
+          <p class="info-box__body">
+            <span lang="hu">A séma és a fegyelmezett munkafolyamat nélkül ez csak egy mappa. Velük együtt a wiki minden betöltéssel és kérdéssel önműködően gazdagszik — pontosan ez a 07. fejezetben leírt tömörödő tulajdonság a gyakorlatban.</span>
+            <span lang="en">Without the schema and the disciplined workflow this is just a folder. With them, the wiki enriches itself with every ingest and question — exactly the compounding property from section 07, in practice.</span>
+          </p>
+        </div>
+      </section>
+
       <nav class="pager" aria-label="Architecture pager">
         <a class="pager__link pager__link--raptor" href="raptor.html">
           <div class="pager__dir">← <span lang="hu">Előző</span><span lang="en">Previous</span></div>
