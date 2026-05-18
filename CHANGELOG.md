@@ -8,6 +8,8 @@ project follows [Semantic Versioning](https://semver.org/) — see
 
 ## [Unreleased]
 
+## [0.2.0] - 2026-05-18
+
 ### Added
 - Landing page (`index.html`): RAG comparison table, decision flow, and a
   card grid for the seven architectures.
