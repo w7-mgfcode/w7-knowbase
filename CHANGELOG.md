@@ -23,6 +23,11 @@ project follows [Semantic Versioning](https://semver.org/) — see
   `.stitch/DESIGN.md` tokens.
 - `assets/js/knowbase.js` — sidebar generation, bilingual HU/EN toggle
   (persisted to `localStorage`), mobile navigation, and Mermaid rendering.
+- OpenAI API compatibility reference page
+  (`reference/openai-compatibility.html`) — Chat Completions vs Responses API,
+  the 2026 model lineup, streaming, function calling, structured outputs,
+  built-in tools/MCP, the OpenAI-compatible server ecosystem, and best
+  practices. Wired into the sidebar nav and the reference pager chain.
 
 ### Changed
 - Embedding Models reference page deep-refreshed with mid-2026 data: MMTEB
