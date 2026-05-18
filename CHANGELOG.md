@@ -33,6 +33,17 @@ project follows [Semantic Versioning](https://semver.org/) — see
   Evaluation — with content refreshed to mid-2026 practice (named frameworks,
   cited benchmark numbers, 2025-2026 developments such as LazyGraphRAG,
   LightRAG, HippoRAG2, and RAGRouter-Bench).
+- LLM Wiki page (`architectures/llm-wiki.html`) — a 15-section bilingual
+  deep-dive on Karpathy's "compile, don't retrieve" knowledge pattern: the
+  compilation analogy, the three-layer architecture, the three operations
+  (ingest / query / lint), the compounding property, a head-to-head
+  *LLM Wiki vs RAG* comparison with when-to-use-which guidance, a hands-on
+  step-by-step walkthrough for building one, and a closing trio of sections
+  restating the core idea, the three layers and the three operations with
+  diagram blocks. Presented as an architecture page — explicitly framed as an
+  alternative to RAG, not a RAG variant. Adds a new `--wiki-*` accent token
+  family (lime `#a3e635`) to `assets/css/knowbase.css`; wired into the sidebar
+  nav, the landing page, and the architecture pager chain.
 
 ### Changed
 - Embedding Models reference page deep-refreshed with mid-2026 data: MMTEB

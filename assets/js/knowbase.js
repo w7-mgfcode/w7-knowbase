@@ -33,7 +33,8 @@
         { id: "agentic-rag", page: "agentic-rag", href: "architectures/agentic-rag.html", dot: "agent", label: { hu: "Ágensalapú RAG", en: "Agentic RAG" } },
         { id: "self-rag-crag", page: "self-rag-crag", href: "architectures/self-rag-crag.html", dot: "self", label: { hu: "Self-RAG / CRAG", en: "Self-RAG / CRAG" } },
         { id: "adaptive-rag", page: "adaptive-rag", href: "architectures/adaptive-rag.html", dot: "adapt", label: { hu: "Adaptív RAG", en: "Adaptive RAG" } },
-        { id: "raptor", page: "raptor", href: "architectures/raptor.html", dot: "raptor", label: { hu: "RAPTOR", en: "RAPTOR" } }
+        { id: "raptor", page: "raptor", href: "architectures/raptor.html", dot: "raptor", label: { hu: "RAPTOR", en: "RAPTOR" } },
+        { id: "llm-wiki", page: "llm-wiki", href: "architectures/llm-wiki.html", dot: "wiki", label: { hu: "LLM Wiki", en: "LLM Wiki" } }
       ]
     },
     {
