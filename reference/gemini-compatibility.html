@@ -1,0 +1,715 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Gemini API kompatibilitás — w7-knowbase</title>
+<meta name="description" content="Gemini API kompatibilitás referencia: a natív google-genai SDK, az OpenAI-kompatibilitási réteg, a 2026-os Gemini 3.x modellkínálat, streaming, function calling, strukturált kimenetek, hosszú kontextus, gyorsítótárazás és grounding, valamint az OpenAI→Gemini migráció.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300..700&family=Space+Grotesk:wght@400..700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/css/knowbase.css">
+</head>
+<body class="accent-cyan" data-page="gemini-compatibility">
+<script>try{if(localStorage.getItem('knowbase-lang')==='en')document.body.classList.add('lang-en');}catch(e){}</script>
+
+<div class="layout">
+  <aside class="sidebar" id="sidebar" data-base="../"></aside>
+  <div class="sidebar-backdrop" id="navBackdrop"></div>
+
+  <div class="main">
+    <div class="mobile-header">
+      <a class="mobile-header__brand" href="../index.html"><span>w7</span>-knowbase</a>
+      <div style="display:flex;gap:8px;align-items:center;">
+        <div class="lang-toggle" role="group" aria-label="Language">
+          <button class="lang-toggle__btn" type="button" data-lang-btn="hu" aria-pressed="true">HU</button>
+          <button class="lang-toggle__btn" type="button" data-lang-btn="en" aria-pressed="false">EN</button>
+        </div>
+        <button class="menu-btn" id="menuBtn" type="button" aria-label="Open navigation" aria-controls="sidebar" aria-expanded="false"></button>
+      </div>
+    </div>
+
+    <header class="topbar">
+      <nav class="breadcrumb" aria-label="Breadcrumb">
+        <span><span lang="hu">Referencia</span><span lang="en">Reference</span></span>
+        <span class="breadcrumb__sep" aria-hidden="true">/</span>
+        <span class="breadcrumb__current"><span lang="hu">Gemini kompatibilitás</span><span lang="en">Gemini Compatibility</span></span>
+      </nav>
+      <div class="lang-toggle" role="group" aria-label="Language">
+        <button class="lang-toggle__btn" type="button" data-lang-btn="hu" aria-pressed="true">HU</button>
+        <button class="lang-toggle__btn" type="button" data-lang-btn="en" aria-pressed="false">EN</button>
+      </div>
+    </header>
+
+    <main class="content">
+      <div class="page-header">
+        <span class="tag"><span lang="hu">Referencia</span><span lang="en">Reference</span></span>
+        <h1 class="page-header__title tinted"><span lang="hu">Gemini API kompatibilitás</span><span lang="en">Gemini API Compatibility</span></h1>
+        <p class="page-header__subtitle">
+          <span lang="hu">Két út a Gemini API-hoz — a natív <code>google-genai</code> SDK és az OpenAI-kompatibilitási réteg —, a 2026-os Gemini 3.x modellkínálat, streaming, function calling, strukturált kimenetek, a RAG-szempontból fontos képességek (hosszú kontextus, gyorsítótárazás, grounding, embeddings, Batch API), valamint az OpenAI→Gemini migráció. Adatpillanat: 2026. május.</span>
+          <span lang="en">Two ways into the Gemini API — the native <code>google-genai</code> SDK and the OpenAI-compatibility layer —, the 2026 Gemini 3.x model lineup, streaming, function calling, structured outputs, the RAG-relevant features (long context, caching, grounding, embeddings, Batch API), plus an OpenAI→Gemini migration. Data snapshot: May 2026.</span>
+        </p>
+        <div class="stat-row">
+          <div class="stat-pill">
+            <div class="stat-pill__label"><span lang="hu">Belépési pontok</span><span lang="en">Entry points</span></div>
+            <div class="stat-pill__value"><span lang="hu">Natív + OpenAI-kompat</span><span lang="en">Native + OpenAI-compat</span></div>
+          </div>
+          <div class="stat-pill">
+            <div class="stat-pill__label"><span lang="hu">Aktuális modell</span><span lang="en">Current model</span></div>
+            <div class="stat-pill__value">Gemini 3.1 Pro</div>
+          </div>
+          <div class="stat-pill">
+            <div class="stat-pill__label"><span lang="hu">Frissítve</span><span lang="en">Updated</span></div>
+            <div class="stat-pill__value">2026-05</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 01 Overview -->
+      <section class="section">
+        <div class="section__head">
+          <span class="section__num">01</span>
+          <h2 class="section__title"><span lang="hu">Áttekintés</span><span lang="en">Overview</span></h2>
+        </div>
+        <div class="grid grid-2">
+          <p class="section__desc">
+            <span lang="hu">A Google Gemini API két úton érhető el. A <strong>natív API</strong> az egységes <code>google-genai</code> SDK-n keresztül a teljes felületet adja — <code>contents</code> / <code>parts</code> struktúra, külön <code>system_instruction</code>, és minden produkciós képesség (grounding, kontextus-gyorsítótár, Live API). Az <strong>OpenAI-kompatibilitási réteg</strong> ezzel szemben az OpenAI kérés/válasz sémáját tükrözi: egy meglévő OpenAI-SDK-s kódbázis pár soros változtatással Geminire állítható.</span>
+            <span lang="en">Google's Gemini API is reachable two ways. The <strong>native API</strong>, through the unified <code>google-genai</code> SDK, exposes the full surface — the <code>contents</code> / <code>parts</code> structure, a separate <code>system_instruction</code>, and every production capability (grounding, context caching, the Live API). The <strong>OpenAI-compatibility layer</strong>, in contrast, mirrors OpenAI's request/response schema: an existing OpenAI-SDK codebase can be pointed at Gemini with a few-line diff.</span>
+          </p>
+          <p class="section__desc">
+            <span lang="hu">Ugyanaz az SDK két backendet szolgál ki: a <strong>Gemini Developer API</strong>-t (API-kulcs, ingyenes szint, AI Studio — prototípushoz) és a <strong>Vertex AI</strong>-t (GCP service account + IAM — vállalati SLA-hoz és megfeleléshez). Ez az oldal a Developer API-ra fókuszál, végigveszi a 2026-os modellkínálatot, a kompat réteget és a RAG-szempontból fontos képességeket, és egy OpenAI→Gemini migrációval zár.</span>
+            <span lang="en">The same SDK serves two backends: the <strong>Gemini Developer API</strong> (API key, free tier, AI Studio — for prototyping) and <strong>Vertex AI</strong> (a GCP service account + IAM — for enterprise SLAs and compliance). This page focuses on the Developer API, walks through the 2026 model lineup, the compat layer and the RAG-relevant features, and closes with an OpenAI→Gemini migration.</span>
+          </p>
+        </div>
+      </section>
+
+      <!-- 02 Endpoints & Authentication -->
+      <section class="section">
+        <div class="section__head">
+          <span class="section__num">02</span>
+          <h2 class="section__title"><span lang="hu">Végpontok és hitelesítés</span><span lang="en">Endpoints &amp; Authentication</span></h2>
+        </div>
+        <p class="section__desc">
+          <span lang="hu">Az API REST-alapú, HTTPS-en, JSON kérés- és válasz-törzzsel. A két belépési pont ugyanazt az API-kulcsot használja; a különbség a kérés alakjában és az elérhető képességekben van.</span>
+          <span lang="en">The API is REST-based over HTTPS, with JSON request and response bodies. The two entry points share the same API key; the difference is in the request shape and the capabilities available.</span>
+        </p>
+        <div class="grid grid-2">
+          <div class="card card--rich card--agent">
+            <span class="card__tag">google-genai</span>
+            <div class="card__title"><span lang="hu">Natív Gemini API</span><span lang="en">Native Gemini API</span></div>
+            <p class="card__spec">POST /v1beta/models/{model}:generateContent</p>
+            <p class="card__body">
+              <span lang="hu">A teljes felület az egységes <code>google-genai</code> SDK-n át. Minden produkciós képesség itt érhető el. Új kódhoz ez az ajánlott út.</span>
+              <span lang="en">The full surface through the unified <code>google-genai</code> SDK. Every production capability lives here. The recommended path for new code.</span>
+            </p>
+            <ul class="feature-list">
+              <li><span lang="hu"><code>contents</code> / <code>parts</code> struktúra, <code>user</code> / <code>model</code> szerepek.</span><span lang="en"><code>contents</code> / <code>parts</code> structure, <code>user</code> / <code>model</code> roles.</span></li>
+              <li><span lang="hu">Külön <code>system_instruction</code> mező a rendszerpromptnak.</span><span lang="en">A separate <code>system_instruction</code> field for the system prompt.</span></li>
+              <li><span lang="hu">Grounding, kontextus-gyorsítótár, thinking, Live API.</span><span lang="en">Grounding, context caching, thinking, the Live API.</span></li>
+              <li><span lang="hu">Streaming és többfordulós <code>chats</code> segédfelület.</span><span lang="en">Streaming and a multi-turn <code>chats</code> helper.</span></li>
+            </ul>
+          </div>
+          <div class="card card--rich card--flat">
+            <span class="card__tag">OpenAI-compat</span>
+            <div class="card__title"><span lang="hu">OpenAI-kompatibilitási réteg</span><span lang="en">OpenAI-compatibility layer</span></div>
+            <p class="card__spec">.../v1beta/openai/chat/completions</p>
+            <p class="card__body">
+              <span lang="hu">Az OpenAI sémáját tükröző réteg — bármely OpenAI SDK működik vele, ha csak a <code>base_url</code>-t és az <code>api_key</code>-t cseréljük. Hivatalosan béta.</span>
+              <span lang="en">A layer mirroring OpenAI's schema — any OpenAI SDK works with it by changing only <code>base_url</code> and <code>api_key</code>. Officially beta.</span>
+            </p>
+            <ul class="feature-list">
+              <li><span lang="hu">Bázis URL: <code>generativelanguage.googleapis.com/v1beta/openai/</code>.</span><span lang="en">Base URL: <code>generativelanguage.googleapis.com/v1beta/openai/</code>.</span></li>
+              <li><span lang="hu">Csak a <code>/chat/completions</code> — nincs <code>/responses</code> végpont.</span><span lang="en">Only <code>/chat/completions</code> — no <code>/responses</code> endpoint.</span></li>
+              <li><span lang="hu">Gemini-extrák az <code>extra_body</code> → <code>{"google": …}</code> mezőn.</span><span lang="en">Gemini extras ride in <code>extra_body</code> → <code>{"google": …}</code>.</span></li>
+              <li><span lang="hu">Migrációs / hordozhatósági réteg, nem teljes felület.</span><span lang="en">A migration / portability layer, not the full surface.</span></li>
+            </ul>
+          </div>
+        </div>
+        <div class="info-box">
+          <p class="info-box__title"><span lang="hu">Hitelesítés</span><span lang="en">Authentication</span></p>
+          <p class="info-box__body">
+            <span lang="hu">A kulcsot a <strong>Google AI Studio</strong> adja. A REST-hívások az <code>x-goog-api-key: YOUR_KEY</code> fejlécet várják; a <code>google-genai</code> SDK automatikusan beolvassa a <code>GEMINI_API_KEY</code> vagy a <code>GOOGLE_API_KEY</code> környezeti változót (ha mindkettő be van állítva, a <code>GOOGLE_API_KEY</code> nyer). A kulcs sosem kerül kliensoldali kódba — környezeti változó a fejlesztéshez, titokkezelő (secret manager) az éles környezethez, és sosem logoljuk.</span>
+            <span lang="en">The key comes from <strong>Google AI Studio</strong>. REST calls expect the <code>x-goog-api-key: YOUR_KEY</code> header; the <code>google-genai</code> SDK auto-reads the <code>GEMINI_API_KEY</code> or <code>GOOGLE_API_KEY</code> environment variable (if both are set, <code>GOOGLE_API_KEY</code> wins). The key never goes into client-side code — an environment variable for development, a secret manager for production, and it is never logged.</span>
+          </p>
+        </div>
+      </section>
+
+      <!-- 03 API flow -->
+      <section class="section">
+        <div class="section__head">
+          <span class="section__num">03</span>
+          <h2 class="section__title"><span lang="hu">API-folyamat</span><span lang="en">API flow</span></h2>
+        </div>
+        <div class="diagram-box">
+<pre class="mermaid" lang="hu">
+flowchart LR
+  KEY[API kulcs - x-goog-api-key] --&gt; GEM[Gemini API]
+  GEM --&gt; NAT[Nativ API - google-genai SDK]
+  GEM --&gt; CMP[OpenAI-kompat reteg - /v1beta/openai/]
+  NAT --&gt; OUT[Valasz - JSON vagy folyam]
+  CMP --&gt; OUT
+  NAT --&gt; RAG[RAG-eszkozok - grounding, gyorsitotar, embeddings]
+</pre>
+<pre class="mermaid" lang="en">
+flowchart LR
+  KEY[API key - x-goog-api-key] --&gt; GEM[Gemini API]
+  GEM --&gt; NAT[Native API - google-genai SDK]
+  GEM --&gt; CMP[OpenAI-compat layer - /v1beta/openai/]
+  NAT --&gt; OUT[Response - JSON or stream]
+  CMP --&gt; OUT
+  NAT --&gt; RAG[RAG tools - grounding, caching, embeddings]
+</pre>
+          <p class="mermaid__caption">
+            <span lang="hu">Egy API-kulcs két belépési pontot ér el; mindkettő JSON-t vagy folyamot ad vissza, a natív API ezen felül a RAG-szempontból fontos eszközöket — groundingot, gyorsítótárat, embeddingseket — is kiszolgálja.</span>
+            <span lang="en">One API key reaches two entry points; both return JSON or a stream, and the native API additionally serves the RAG-relevant tools — grounding, caching, embeddings.</span>
+          </p>
+        </div>
+      </section>
+
+      <!-- 04 Models 2026 -->
+      <section class="section">
+        <div class="section__head">
+          <span class="section__num">04</span>
+          <h2 class="section__title"><span lang="hu">Modellek 2026</span><span lang="en">Models 2026</span></h2>
+        </div>
+        <p class="section__desc">
+          <span lang="hu">A jelenlegi generáció a <strong>Gemini 3.x</strong>; a 2.5 család a bevált, olcsóbb réteg. A modell-azonosító mintája <code>gemini-&lt;verzió&gt;-&lt;szint&gt;[-preview]</code> — a <code>-preview</code> nyilvános, de törő változásokra hajlamos, a suffix nélküli ID stabil (GA). A preview-azonosítók rotálódnak; a minta a tartós tudnivaló.</span>
+          <span lang="en">The current generation is <strong>Gemini 3.x</strong>; the 2.5 family is the proven, cheaper tier. The model-ID pattern is <code>gemini-&lt;version&gt;-&lt;tier&gt;[-preview]</code> — <code>-preview</code> is public but breaking-change-prone, a suffix-free ID is stable (GA). Preview IDs rotate; the pattern is the durable takeaway.</span>
+        </p>
+        <div class="compare-table-wrap">
+          <table class="compare-table">
+            <thead>
+              <tr>
+                <th><span lang="hu">Modell</span><span lang="en">Model</span></th>
+                <th><span lang="hu">Pozicionálás</span><span lang="en">Positioning</span></th>
+                <th><span lang="hu">Kontextus</span><span lang="en">Context</span></th>
+                <th><span lang="hu">Állapot</span><span lang="en">Status</span></th>
+                <th><span lang="hu">Ár (be / ki, 1M)</span><span lang="en">Price (in / out, 1M)</span></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="arch-name">Gemini 3.1 Pro</td>
+                <td><span lang="hu">Legképesebb — érvelés, ágensek, kód · <code>gemini-3.1-pro-preview</code></span><span lang="en">Most capable — reasoning, agents, coding · <code>gemini-3.1-pro-preview</code></span></td>
+                <td class="mono">1M / 64k</td>
+                <td><span lang="hu">Preview</span><span lang="en">Preview</span></td>
+                <td class="mono">$2 / $12 · 200k+: $4 / $18</td>
+              </tr>
+              <tr>
+                <td class="arch-name">Gemini 3 Flash</td>
+                <td><span lang="hu">Kiegyensúlyozott — Flash-áron, frontvonalbeli · <code>gemini-3-flash-preview</code></span><span lang="en">Balanced — frontier-class at Flash cost · <code>gemini-3-flash-preview</code></span></td>
+                <td class="mono">1M / 64k</td>
+                <td><span lang="hu">Preview</span><span lang="en">Preview</span></td>
+                <td class="mono">$0.50 / $3.00</td>
+              </tr>
+              <tr>
+                <td class="arch-name">Gemini 3.1 Flash-Lite</td>
+                <td><span lang="hu">Leggyorsabb / legolcsóbb 3.x · <code>gemini-3.1-flash-lite</code></span><span lang="en">Fastest / cheapest 3.x · <code>gemini-3.1-flash-lite</code></span></td>
+                <td class="mono">1M / 64k</td>
+                <td><span lang="hu">Stabil (GA)</span><span lang="en">Stable (GA)</span></td>
+                <td class="mono">$0.25 / $1.50</td>
+              </tr>
+              <tr>
+                <td class="arch-name">Gemini 2.5 Pro</td>
+                <td><span lang="hu">Bevált mély érvelés és kódolás · <code>gemini-2.5-pro</code></span><span lang="en">Proven deep reasoning &amp; coding · <code>gemini-2.5-pro</code></span></td>
+                <td class="mono">~1M / 64k</td>
+                <td><span lang="hu">Stabil</span><span lang="en">Stable</span></td>
+                <td class="mono">$1.25 / $10 · 200k+: $2.50 / $15</td>
+              </tr>
+              <tr>
+                <td class="arch-name">Gemini 2.5 Flash</td>
+                <td><span lang="hu">Legjobb ár-érték, nagy volumen · <code>gemini-2.5-flash</code></span><span lang="en">Best price-performance, high volume · <code>gemini-2.5-flash</code></span></td>
+                <td class="mono">~1M</td>
+                <td><span lang="hu">Stabil</span><span lang="en">Stable</span></td>
+                <td class="mono">$0.30 / $2.50</td>
+              </tr>
+              <tr>
+                <td class="arch-name">Gemini 2.5 Flash-Lite</td>
+                <td><span lang="hu">Leginkább költséghatékony 2.5 · <code>gemini-2.5-flash-lite</code></span><span lang="en">Most cost-efficient 2.5 tier · <code>gemini-2.5-flash-lite</code></span></td>
+                <td class="mono">~1M</td>
+                <td><span lang="hu">Stabil</span><span lang="en">Stable</span></td>
+                <td class="mono">$0.10 / $0.40</td>
+              </tr>
+              <tr style="opacity:.55;">
+                <td class="arch-name">Gemini 1.5 / 2.0</td>
+                <td><span lang="hu">Korábbi generáció</span><span lang="en">Legacy</span></td>
+                <td class="mono">—</td>
+                <td><span lang="hu">1.5 leállítva (2025-09); 2.0 Flash leáll 2026-06-01</span><span lang="en">1.5 retired (Sept 2025); 2.0 Flash sunsets 2026-06-01</span></td>
+                <td class="mono">—</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="info-box">
+          <p class="info-box__title"><span lang="hu">Fontos változások</span><span lang="en">Important changes</span></p>
+          <p class="info-box__body">
+            <span lang="hu">A 3.1 Pro és a 2.5 Pro <strong>rétegelt árazású</strong>: ha egy kérés promptja meghaladja a <strong>200 000 tokent</strong>, a token-ár nagyjából megduplázódik (az egész kérésre). A Flash / Flash-Lite szintek egységárasak. A <strong>Batch API kb. 50%-kal olcsóbb</strong>, a <strong>kontextus-gyorsítótárból</strong> érkező input a sztenderd ár kb. <strong>10%-a</strong> (a tárolás ≈ $1 / 1M token / óra). Tudásküszöb: 2025. január (3.x és 2.5 Pro). Megszűnt: a Gemini 1.5 család (2025-09), a 2.0 Flash leállítása 2026-06-01; a <code>gemini-3-pro-preview</code>-t a <code>gemini-3.1-pro-preview</code> váltotta.</span>
+            <span lang="en">Gemini 3.1 Pro and 2.5 Pro are <strong>tier-priced</strong>: when a request's prompt exceeds <strong>200,000 tokens</strong>, the per-token price roughly doubles (across the whole request). Flash / Flash-Lite tiers are flat-priced. The <strong>Batch API is ~50% cheaper</strong>, and input served from the <strong>context cache</strong> costs about <strong>10%</strong> of the standard price (storage ≈ $1 / 1M tokens / hour). Knowledge cutoff: January 2025 (3.x and 2.5 Pro). Retired: the Gemini 1.5 family (Sept 2025), 2.0 Flash sunsetting 2026-06-01; <code>gemini-3-pro-preview</code> was superseded by <code>gemini-3.1-pro-preview</code>.</span>
+          </p>
+        </div>
+      </section>
+
+      <!-- 05 Native SDK vs OpenAI compatibility -->
+      <section class="section">
+        <div class="section__head">
+          <span class="section__num">05</span>
+          <h2 class="section__title"><span lang="hu">Natív SDK vs OpenAI-kompatibilitás</span><span lang="en">Native SDK vs OpenAI compatibility</span></h2>
+        </div>
+        <p class="section__desc">
+          <span lang="hu">A két belépési pont nem egyenrangú. A natív SDK a teljes Gemini felületet adja; az OpenAI-kompat réteg egy hordozhatósági réteg, amellyel egy meglévő OpenAI-pipeline gyorsan átköltöztethető.</span>
+          <span lang="en">The two entry points are not equals. The native SDK exposes the full Gemini surface; the OpenAI-compat layer is a portability shim that moves an existing OpenAI pipeline over fast.</span>
+        </p>
+        <div class="grid grid-2">
+          <div class="card card--rich card--agent">
+            <span class="card__tag"><span lang="hu">Ajánlott</span><span lang="en">Recommended</span></span>
+            <div class="card__title"><span lang="hu">Natív google-genai SDK</span><span lang="en">Native google-genai SDK</span></div>
+            <p class="card__body">
+              <span lang="hu">A <code>google-genai</code> (<code>pip install google-genai</code>; <code>from google import genai</code>) az egységes, aktív SDK. A régi <code>google-generativeai</code> 2025-11-30 óta elavult — új kód ne használja.</span>
+              <span lang="en">The <code>google-genai</code> package (<code>pip install google-genai</code>; <code>from google import genai</code>) is the unified, active SDK. The old <code>google-generativeai</code> has been deprecated since 2025-11-30 — new code must not use it.</span>
+            </p>
+            <ul class="feature-list">
+              <li><span lang="hu">Teljes felület: grounding, kontextus-gyorsítótár, Live API.</span><span lang="en">Full surface: grounding, context caching, the Live API.</span></li>
+              <li><span lang="hu">Automatikus function calling (Python típusos függvényekből).</span><span lang="en">Automatic function calling (from typed Python functions).</span></li>
+              <li><span lang="hu">Ugyanaz az SDK a Developer API-hoz és a Vertex AI-hoz.</span><span lang="en">The same SDK for the Developer API and for Vertex AI.</span></li>
+            </ul>
+          </div>
+          <div class="card card--rich card--flat">
+            <span class="card__tag"><span lang="hu">Migrációs réteg</span><span lang="en">Migration shim</span></span>
+            <div class="card__title"><span lang="hu">OpenAI-kompatibilitási réteg</span><span lang="en">OpenAI-compatibility layer</span></div>
+            <p class="card__body">
+              <span lang="hu">Az OpenAI SDK-t a Gemini bázis URL-jére állítva azonnal hív Geminit. Kiváló egy meglévő pipeline gyors áthelyezésére — de hivatalosan béta.</span>
+              <span lang="en">Pointing the OpenAI SDK at the Gemini base URL calls Gemini immediately. Excellent for moving an existing pipeline fast — but officially beta.</span>
+            </p>
+            <ul class="feature-list">
+              <li><span lang="hu">Működik: chat completions, streaming, tool calling, embeddings.</span><span lang="en">Works: chat completions, streaming, tool calling, embeddings.</span></li>
+              <li><span lang="hu">Strukturált kimenet a <code>beta.chat.completions.parse</code>-szal.</span><span lang="en">Structured output via <code>beta.chat.completions.parse</code>.</span></li>
+              <li><span lang="hu">Gemini-extrák (thinking, gyorsítótár) az <code>extra_body</code>-n át.</span><span lang="en">Gemini extras (thinking, caching) ride in <code>extra_body</code>.</span></li>
+            </ul>
+          </div>
+        </div>
+        <div class="info-box">
+          <p class="info-box__title"><span lang="hu">Kompatibilis ≠ teljes</span><span lang="en">Compatible ≠ complete</span></p>
+          <p class="info-box__body">
+            <span lang="hu">Az OpenAI-kompat réteg hivatalosan <strong>béta</strong>; csak a <code>/chat/completions</code> támogatott — az OpenAI <code>/responses</code> végpontja <strong>nem</strong> (404-et ad). Az ismeretlen paramétereket a réteg csendben eldobja (a <code>seed</code> például nem érvényesül), egyes válaszmezők (<code>system_fingerprint</code>, <code>service_tier</code>) hiányoznak, a JSON Schema csak részhalmazként támogatott, és az érvelés a Pro / 3.x modelleken nem kapcsolható ki teljesen. Produkciós Gemini-munkához — grounding, natív gyorsítótárazás, teljes thinking-vezérlés, Live API — a natív <code>google-genai</code> SDK kell.</span>
+            <span lang="en">The OpenAI-compat layer is officially <strong>beta</strong>; only <code>/chat/completions</code> is supported — OpenAI's <code>/responses</code> endpoint is <strong>not</strong> (it 404s). Unknown parameters are silently dropped (<code>seed</code>, for instance, is not honored), some response fields (<code>system_fingerprint</code>, <code>service_tier</code>) are omitted, JSON Schema is supported only as a subset, and reasoning cannot be fully disabled on the Pro / 3.x models. Production Gemini work — grounding, native caching, full thinking control, the Live API — needs the native <code>google-genai</code> SDK.</span>
+          </p>
+        </div>
+      </section>
+
+      <!-- 06 Streaming -->
+      <section class="section">
+        <div class="section__head">
+          <span class="section__num">06</span>
+          <h2 class="section__title"><span lang="hu">Streaming</span><span lang="en">Streaming</span></h2>
+        </div>
+        <p class="section__desc">
+          <span lang="hu">A streaming a választ tokenekre bontva, valós időben adja vissza — a felhasználó az első tokent töredék idő alatt látja. A natív SDK egy dedikált <code>generate_content_stream</code> metódust ad; iteráláskor a <code>chunk.text</code> hordozza a szövegtöredéket.</span>
+          <span lang="en">Streaming returns the response in real time, broken into tokens — the user sees the first token in a fraction of the time. The native SDK provides a dedicated <code>generate_content_stream</code> method; while iterating, <code>chunk.text</code> carries the text fragment.</span>
+        </p>
+        <div class="code-block">
+          <div class="code-block__head"><span>gemini_streaming.py</span></div>
+          <pre><code><span class="tok-comment"># pip install google-genai</span>
+from google import genai
+
+client = genai.Client()  <span class="tok-comment"># reads GEMINI_API_KEY / GOOGLE_API_KEY</span>
+
+stream = client.models.generate_content_stream(
+    model="gemini-3-flash-preview",
+    contents="Explain RAG in three short sentences.",
+)
+for chunk in stream:
+    print(chunk.text, end="", flush=True)
+</code></pre>
+        </div>
+        <div class="info-box">
+          <p class="info-box__title"><span lang="hu">REST és többfordulós chat</span><span lang="en">REST &amp; multi-turn chat</span></p>
+          <p class="info-box__body">
+            <span lang="hu">REST-en a streaming a <code>:streamGenerateContent?alt=sse</code> végponton érhető el, Server-Sent Events formában. Többfordulós beszélgetéshez a <code>client.chats.create(...)</code> + <code>chat.send_message(...)</code> segédfelület tartja a kontextust; ennek is van streamelő változata. A streaming hibakezelése nehezebb: a folyam közben fellépő hibára is fel kell készülni.</span>
+            <span lang="en">Over REST, streaming is available on the <code>:streamGenerateContent?alt=sse</code> endpoint as Server-Sent Events. For multi-turn conversations the <code>client.chats.create(...)</code> + <code>chat.send_message(...)</code> helper holds the context; it has a streaming variant too. Error handling is harder when streaming: a failure mid-stream must also be handled.</span>
+          </p>
+        </div>
+      </section>
+
+      <!-- 07 Function calling & tools -->
+      <section class="section">
+        <div class="section__head">
+          <span class="section__num">07</span>
+          <h2 class="section__title"><span lang="hu">Function calling és eszközök</span><span lang="en">Function calling &amp; tools</span></h2>
+        </div>
+        <p class="section__desc">
+          <span lang="hu">A function calling során a modell strukturált JSON-t állít elő egy általunk leírt függvény meghívásához. A deklarációk az OpenAPI 3.0.3 egy részhalmazát használják; a Python SDK ezen felül automatikus function callingot is kínál.</span>
+          <span lang="en">In function calling the model produces structured JSON to invoke a function we describe. Declarations use a subset of OpenAPI 3.0.3; the Python SDK additionally offers automatic function calling.</span>
+        </p>
+        <div class="diagram-box">
+          <div class="pipeline">
+            <div class="pipeline__step">
+              <span class="pipeline__node">1</span>
+              <span class="pipeline__label"><span lang="hu">Kérés + <code>tools</code></span><span lang="en">Request + <code>tools</code></span></span>
+            </div>
+            <span class="pipeline__arrow" aria-hidden="true">→</span>
+            <div class="pipeline__step">
+              <span class="pipeline__node">2</span>
+              <span class="pipeline__label"><span lang="hu">A modell dönt</span><span lang="en">Model decides</span></span>
+            </div>
+            <span class="pipeline__arrow" aria-hidden="true">→</span>
+            <div class="pipeline__step">
+              <span class="pipeline__node">3</span>
+              <span class="pipeline__label"><span lang="hu"><code>function_call</code> rész</span><span lang="en"><code>function_call</code> part</span></span>
+            </div>
+            <span class="pipeline__arrow" aria-hidden="true">→</span>
+            <div class="pipeline__step">
+              <span class="pipeline__node">4</span>
+              <span class="pipeline__label"><span lang="hu">Végrehajtás</span><span lang="en">Execute</span></span>
+            </div>
+            <span class="pipeline__arrow" aria-hidden="true">→</span>
+            <div class="pipeline__step">
+              <span class="pipeline__node">5</span>
+              <span class="pipeline__label"><span lang="hu"><code>function_response</code></span><span lang="en"><code>function_response</code></span></span>
+            </div>
+          </div>
+        </div>
+        <div class="grid grid-2">
+          <div class="code-block">
+            <div class="code-block__head"><span>function_declaration.json</span></div>
+            <pre><code><span class="tok-comment">// OpenAPI 3.0.3 subset — one tool declaration</span>
+{
+  "name": "get_weather",
+  "description": "Get current weather for a city",
+  "parameters": {
+    "type": "object",
+    "properties": {
+      "location": { "type": "string" }
+    },
+    "required": ["location"]
+  }
+}
+</code></pre>
+          </div>
+          <div class="code-block">
+            <div class="code-block__head"><span>automatic_fc.py</span></div>
+            <pre><code><span class="tok-comment"># Automatic function calling — Python SDK only</span>
+def get_weather(location: str) -&gt; dict:
+    """Get current weather for a city."""
+    return {"location": location, "tempC": 21}
+
+resp = client.models.generate_content(
+    model="gemini-3-flash-preview",
+    contents="Weather in Budapest?",
+    config={"tools": [get_weather]},  <span class="tok-comment"># SDK runs the loop</span>
+)
+print(resp.text)
+</code></pre>
+          </div>
+        </div>
+        <div class="info-box">
+          <p class="info-box__title"><span lang="hu">Hívási módok</span><span lang="en">Calling modes</span></p>
+          <p class="info-box__body">
+            <span lang="hu">A <code>tool_config.function_calling_config</code> mód lehet <code>AUTO</code> (a modell dönt), <code>ANY</code> (kötelező hívnia), <code>VALIDATED</code> (alapértelmezett eszközkombinációknál; kikényszeríti a sémát) vagy <code>NONE</code>. Az <strong>automatikus function calling</strong> csak a Python SDK-ban: sima, típusozott, docstringgel ellátott függvényeket adunk át <code>tools</code>-ként, és az SDK generálja a deklarációt és lefuttatja a hívás→válasz kört (<code>AutomaticFunctionCallingConfig(disable=True)</code> kapcsolja ki). Kézi körben a modell egy <code>function_call</code> részt ad vissza, amire egy <code>types.Part.from_function_response(...)</code>-szel válaszolunk.</span>
+            <span lang="en">The <code>tool_config.function_calling_config</code> mode can be <code>AUTO</code> (the model decides), <code>ANY</code> (it must call), <code>VALIDATED</code> (the default for tool combinations; it enforces the schema) or <code>NONE</code>. <strong>Automatic function calling</strong> is Python-SDK-only: pass plain typed functions with docstrings as <code>tools</code>, and the SDK generates the declaration and runs the call→response loop (<code>AutomaticFunctionCallingConfig(disable=True)</code> turns it off). In a manual loop the model returns a <code>function_call</code> part, which you answer with a <code>types.Part.from_function_response(...)</code>.</span>
+          </p>
+        </div>
+      </section>
+
+      <!-- 08 Structured outputs -->
+      <section class="section">
+        <div class="section__head">
+          <span class="section__num">08</span>
+          <h2 class="section__title"><span lang="hu">Strukturált kimenetek</span><span lang="en">Structured outputs</span></h2>
+        </div>
+        <p class="section__desc">
+          <span lang="hu">A strukturált kimenet egy megadott sémához köti a modell válaszát. A Geminiben ezt a <code>response_mime_type</code> és a <code>response_schema</code> konfigurációs mezők vezérlik; a Python SDK Pydantic-modellt vagy típusannotációt is elfogad sémaként.</span>
+          <span lang="en">Structured output binds the model's response to a supplied schema. In Gemini this is driven by the <code>response_mime_type</code> and <code>response_schema</code> config fields; the Python SDK also accepts a Pydantic model or a type annotation as the schema.</span>
+        </p>
+        <div class="code-block">
+          <div class="code-block__head"><span>structured_output.py</span></div>
+          <pre><code>from pydantic import BaseModel
+
+class Cat(BaseModel):
+    name: str
+    colour: str
+
+resp = client.models.generate_content(
+    model="gemini-3-flash-preview",
+    contents="Generate 3 cats.",
+    config={
+        "response_mime_type": "application/json",
+        "response_schema": list[Cat],
+    },
+)
+my_cats = resp.parsed  <span class="tok-comment"># typed objects; resp.text is raw JSON</span>
+</code></pre>
+        </div>
+        <div class="info-box">
+          <p class="info-box__title"><span lang="hu">Sémaszabályok</span><span lang="en">Schema rules</span></p>
+          <p class="info-box__body">
+            <span lang="hu">A lapos <code>response_mime_type</code> / <code>response_schema</code> alak a régóta bevált, széles körben használt forma. A <code>resp.parsed</code> a típusos objektumokat adja, a <code>resp.text</code> a nyers JSON-stringet. Enum-kimenethez a <code>response_mime_type="text/x.enum"</code> használható. Támogatott típusok: string / number / integer / boolean / object / array / null, plusz enum, format, min/max stb. — de <strong>nem minden JSON Schema-jellemző támogatott</strong>: a nem támogatott tulajdonságokat a modell figyelmen kívül hagyja.</span>
+            <span lang="en">The flat <code>response_mime_type</code> / <code>response_schema</code> form is the long-standing, widely used shape. <code>resp.parsed</code> yields the typed objects, <code>resp.text</code> the raw JSON string. For enum output, use <code>response_mime_type="text/x.enum"</code>. Supported types: string / number / integer / boolean / object / array / null, plus enum, format, min/max, etc. — but <strong>not all JSON Schema features are supported</strong>: the model ignores unsupported properties.</span>
+          </p>
+        </div>
+      </section>
+
+      <!-- 09 RAG-relevant features -->
+      <section class="section">
+        <div class="section__head">
+          <span class="section__num">09</span>
+          <h2 class="section__title"><span lang="hu">RAG-szempontból fontos képességek</span><span lang="en">RAG-relevant features</span></h2>
+        </div>
+        <p class="section__desc">
+          <span lang="hu">A Gemini API néhány olyan képessége közvetlenül érinti a RAG-rendszerek tervezését — a hosszú kontextustól a gyorsítótárazáson át a search groundingig és az embeddingsig.</span>
+          <span lang="en">A handful of Gemini API capabilities bear directly on how RAG systems are designed — from long context through caching to search grounding and embeddings.</span>
+        </p>
+        <div class="grid grid-3">
+          <div class="card">
+            <div class="card__title"><span lang="hu">Hosszú kontextus</span><span lang="en">Long context</span></div>
+            <p class="card__body">
+              <span lang="hu">1M+ tokenes ablakok (a 3.1 Pro akár ~2M-ig). Megengedi a „kontextusba töltést” retrieval helyett — de a többtűs visszakeresés romlik, és a 200k feletti prompt a Pro árszintet hozza. A kérdést tedd a prompt végére.</span>
+              <span lang="en">1M+ token windows (3.1 Pro up to ~2M). Allows "stuffing the context" instead of retrieval — but multi-needle recall degrades, and a prompt above 200k triggers the Pro price tier. Put the question at the end of the prompt.</span>
+            </p>
+          </div>
+          <div class="card">
+            <div class="card__title"><span lang="hu">Kontextus-gyorsítótár</span><span lang="en">Context caching</span></div>
+            <p class="card__body">
+              <span lang="hu">Implicit (automatikus a 2.5+ modelleken, prefix-egyezés) vagy explicit (<code>client.caches.create(...)</code>, garantált kedvezmény). A gyorsítótárazott input ≈ 10% ár; ez a hosszú kontextusú RAG fő költségkarja.</span>
+              <span lang="en">Implicit (automatic on 2.5+ models, prefix-match) or explicit (<code>client.caches.create(...)</code>, a guaranteed discount). Cached input costs ≈ 10%; this is the main cost lever for long-context RAG.</span>
+            </p>
+          </div>
+          <div class="card">
+            <div class="card__title"><span lang="hu">Grounding + URL-kontextus</span><span lang="en">Grounding + URL context</span></div>
+            <p class="card__body">
+              <span lang="hu">A Google Search grounding eszköz <code>grounding_metadata</code>-t ad (forrás-URL-ek, idézet-térkép). A friss, nyilvános webes kérdéseknél kiválthat egy vektortárat — privát korpuszhoz nem. Plusz egy URL-kontextus eszköz (≤20 URL).</span>
+              <span lang="en">The Google Search grounding tool returns <code>grounding_metadata</code> (source URLs, a citation map). For fresh, public-web questions it can replace a vector store — not for a private corpus. Plus a URL-context tool (≤20 URLs).</span>
+            </p>
+          </div>
+          <div class="card">
+            <div class="card__title"><span lang="hu">Embeddings</span><span lang="en">Embeddings</span></div>
+            <p class="card__body">
+              <span lang="hu"><code>gemini-embedding-001</code> (szöveg) és <code>gemini-embedding-2</code> (multimodális). Matryoshka (MRL) dimenziók — alapból 3072, levágható 768/1536-ra. Illeszd a feladattípust: <code>RETRIEVAL_DOCUMENT</code> a chunkokhoz, <code>RETRIEVAL_QUERY</code> a lekérdezésekhez.</span>
+              <span lang="en"><code>gemini-embedding-001</code> (text) and <code>gemini-embedding-2</code> (multimodal). Matryoshka (MRL) dimensions — 3072 by default, truncatable to 768/1536. Match the task type: <code>RETRIEVAL_DOCUMENT</code> for chunks, <code>RETRIEVAL_QUERY</code> for queries.</span>
+            </p>
+          </div>
+          <div class="card">
+            <div class="card__title"><span lang="hu">Batch API</span><span lang="en">Batch API</span></div>
+            <p class="card__body">
+              <span lang="hu">Aszinkron feldolgozás, kb. 50%-os költség, ~24 órás átfutás. Korpusz-embeddinghez, újra-összegzéshez és RAG-kiértékelő futtatásokhoz való — nem interaktív kiszolgáláshoz.</span>
+              <span lang="en">Asynchronous processing, ~50% cost, ~24h turnaround. For corpus embedding, re-summarization and RAG eval runs — not for interactive serving.</span>
+            </p>
+          </div>
+          <div class="card">
+            <div class="card__title"><span lang="hu">Thinking</span><span lang="en">Thinking</span></div>
+            <p class="card__body">
+              <span lang="hu">A <code>thinking_config</code> a <code>thinking_budget</code>-tel szabályozza a gondolkodást (<code>-1</code> = dinamikus; <code>0</code> csak Flashen tiltja). A thinking-tokenek <strong>kimenetként</strong> számláznak — extraktív RAG-hoz korlátozd, többlépcsős szintézishez tartsd meg.</span>
+              <span lang="en">The <code>thinking_config</code> governs reasoning via <code>thinking_budget</code> (<code>-1</code> = dynamic; <code>0</code> disables on Flash only). Thinking tokens bill as <strong>output</strong> — cap them for extractive RAG, keep them for multi-hop synthesis.</span>
+            </p>
+          </div>
+        </div>
+        <div class="info-box">
+          <p class="info-box__title"><span lang="hu">Hosszú kontextus vs retrieval</span><span lang="en">Long context vs retrieval</span></p>
+          <p class="info-box__body">
+            <span lang="hu">A milliós ablak nem szünteti meg a retrievalt. Egytűs keresésben a pontosság ~99%, de <strong>többtűs</strong> visszakeresésnél romlik, a hosszú input növeli az első tokenig tartó időt, és 200k token felett belép a drágább árszint. A bevált minta: szűkíts retrievallel, majd a kiválasztott kontextust töltsd be — a gyorsítótárral a stabil prefixet ≈ 10% áron tartva. A multimodális bemenethez a nagy/újrahasznált fájlokat a File API-n keresztül töltsd fel (fájlonként ≤2 GB, 48 órás megőrzés).</span>
+            <span lang="en">A million-token window does not remove retrieval. Single-needle accuracy is ~99%, but <strong>multi-needle</strong> recall degrades, long input raises time-to-first-token, and above 200k tokens the costlier price tier kicks in. The proven pattern: narrow with retrieval, then load the selected context — keeping the stable prefix at ≈ 10% cost via caching. For multimodal input, upload large/reused files through the File API (≤2 GB per file, 48h retention).</span>
+          </p>
+        </div>
+      </section>
+
+      <!-- 10 Migrating from the OpenAI API -->
+      <section class="section">
+        <div class="section__head">
+          <span class="section__num">10</span>
+          <h2 class="section__title"><span lang="hu">Áttérés az OpenAI API-ról</span><span lang="en">Migrating from the OpenAI API</span></h2>
+        </div>
+        <p class="section__desc">
+          <span lang="hu">A natív Gemini API alakja több ponton eltér az OpenAI-étól. A kompat réteg ezeket elfedi a gyors migrációhoz; a natív felület átvételekor viszont számolni kell velük.</span>
+          <span lang="en">The native Gemini API differs from OpenAI's in several places. The compat layer hides these for a fast migration; when adopting the native surface, they must be accounted for.</span>
+        </p>
+        <div class="compare-table-wrap">
+          <table class="compare-table">
+            <thead>
+              <tr>
+                <th><span lang="hu">Jellemző</span><span lang="en">Feature</span></th>
+                <th>OpenAI API</th>
+                <th>Gemini API</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><span lang="hu">Szerepek</span><span lang="en">Roles</span></td>
+                <td class="mono">user / assistant / tool</td>
+                <td class="mono">user / model</td>
+              </tr>
+              <tr>
+                <td><span lang="hu">Rendszerprompt</span><span lang="en">System prompt</span></td>
+                <td><span lang="hu">Első <code>messages</code> elem</span><span lang="en">First <code>messages</code> item</span></td>
+                <td><span lang="hu">Külön <code>system_instruction</code> mező</span><span lang="en">A separate <code>system_instruction</code> field</span></td>
+              </tr>
+              <tr>
+                <td><span lang="hu">Eszközeredmény</span><span lang="en">Tool result</span></td>
+                <td><span lang="hu"><code>tool</code> szerepű üzenet</span><span lang="en">A <code>tool</code>-role message</span></td>
+                <td><span lang="hu"><code>function_response</code> rész</span><span lang="en">A <code>function_response</code> part</span></td>
+              </tr>
+              <tr>
+                <td><span lang="hu">Multimodális</span><span lang="en">Multimodal</span></td>
+                <td><span lang="hu">Beágyazott content-tömbök</span><span lang="en">Nested content arrays</span></td>
+                <td><span lang="hu"><code>parts</code> lista (inline vagy File API)</span><span lang="en">A <code>parts</code> list (inline or File API)</span></td>
+              </tr>
+              <tr>
+                <td><span lang="hu">Kimeneti korlát</span><span lang="en">Output cap</span></td>
+                <td class="mono">max_tokens</td>
+                <td class="mono">max_output_tokens</td>
+              </tr>
+              <tr>
+                <td><span lang="hu">Biztonsági beállítás</span><span lang="en">Safety settings</span></td>
+                <td><span lang="hu">Nincs megfelelője</span><span lang="en">No equivalent</span></td>
+                <td><span lang="hu">Elsőrendű <code>safetySettings</code> mező</span><span lang="en">First-class <code>safetySettings</code> field</span></td>
+              </tr>
+              <tr>
+                <td><span lang="hu">JSON Schema</span><span lang="en">JSON Schema</span></td>
+                <td><span lang="hu">Szigorú séma (<code>strict</code>)</span><span lang="en">Strict schema (<code>strict</code>)</span></td>
+                <td><span lang="hu">Részhalmaz — a nem támogatott mezők kimaradnak</span><span lang="en">A subset — unsupported fields are ignored</span></td>
+              </tr>
+              <tr>
+                <td><span lang="hu">Kompat végpont</span><span lang="en">Compat endpoint</span></td>
+                <td class="mono">/chat/completions + /responses</td>
+                <td class="mono">/chat/completions only</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="info-box">
+          <p class="info-box__title"><span lang="hu">Migrációs tipp</span><span lang="en">Migration tip</span></p>
+          <p class="info-box__body">
+            <span lang="hu">A gyors út: állítsd az OpenAI SDK <code>base_url</code>-jét a Gemini kompat rétegre, és a meglévő pipeline pár soros változtatással fut. Ez azonban béta, és a <code>/responses</code>-re épülő kód nem hordozható. A második lépésben térj át a natív <code>google-genai</code> SDK-ra ott, ahol produkciós képesség kell — grounding, natív gyorsítótár, teljes thinking-vezérlés. Az érvelés a Pro / 3.x modelleken nem kapcsolható ki teljesen; a <code>thinking_budget</code>-tel hangolható.</span>
+            <span lang="en">The fast path: set the OpenAI SDK's <code>base_url</code> to the Gemini compat layer, and the existing pipeline runs with a few-line diff. That layer is beta, though, and code built on <code>/responses</code> is not portable. As a second step, move to the native <code>google-genai</code> SDK wherever a production capability is needed — grounding, native caching, full thinking control. Reasoning cannot be fully disabled on the Pro / 3.x models; it is tuned with <code>thinking_budget</code>.</span>
+          </p>
+        </div>
+      </section>
+
+      <!-- 11 Best practices -->
+      <section class="section">
+        <div class="section__head">
+          <span class="section__num">11</span>
+          <h2 class="section__title"><span lang="hu">Best practices és gyakori hibák</span><span lang="en">Best practices &amp; common pitfalls</span></h2>
+        </div>
+        <div class="grid grid-2">
+          <div class="panel panel--ok">
+            <h3 class="panel__title"><span lang="hu">Ajánlott gyakorlatok</span><span lang="en">Best practices</span></h3>
+            <ul class="feature-list feature-list--ok">
+              <li><span lang="hu">Új kódhoz a natív <code>google-genai</code> SDK — a kompat réteg csak migrációra.</span><span lang="en">Use the native <code>google-genai</code> SDK for new code — the compat layer is for migration only.</span></li>
+              <li><span lang="hu">Hosszú, ismételt kontextust tegyél explicit gyorsítótárba (≈ 10% input-ár).</span><span lang="en">Put long, repeated context into an explicit cache (≈ 10% input price).</span></li>
+              <li><span lang="hu">A stabil prefixet (rendszerprompt, eszköz-definíciók) tartsd a prompt elején.</span><span lang="en">Keep the stable prefix (system prompt, tool defs) at the front of the prompt.</span></li>
+              <li><span lang="hu">Illeszd az embedding feladattípusokat: <code>RETRIEVAL_DOCUMENT</code> / <code>RETRIEVAL_QUERY</code>.</span><span lang="en">Match the embedding task types: <code>RETRIEVAL_DOCUMENT</code> / <code>RETRIEVAL_QUERY</code>.</span></li>
+              <li><span lang="hu">Extraktív RAG-hoz korlátozd a <code>thinking_budget</code>-et — a thinking kimenetként számláz.</span><span lang="en">Cap the <code>thinking_budget</code> for extractive RAG — thinking bills as output.</span></li>
+              <li><span lang="hu">Mindig ellenőrizd a <code>finishReason</code> / <code>blockReason</code> mezőt.</span><span lang="en">Always check the <code>finishReason</code> / <code>blockReason</code> field.</span></li>
+              <li><span lang="hu">API-kulcs környezeti változóban (fejlesztés), titokkezelőben (éles).</span><span lang="en">Keep the API key in an environment variable (dev), a secret manager (prod).</span></li>
+            </ul>
+          </div>
+          <div class="panel panel--warn">
+            <h3 class="panel__title"><span lang="hu">Gyakori hibák</span><span lang="en">Common pitfalls</span></h3>
+            <ul class="feature-list feature-list--warn">
+              <li><span lang="hu">A megszűnt <code>google-generativeai</code> SDK-ra építeni új kódot.</span><span lang="en">Building new code on the deprecated <code>google-generativeai</code> SDK.</span></li>
+              <li><span lang="hu">Azt feltételezni, hogy a kompat réteg a <code>/responses</code> végpontot is kiszolgálja.</span><span lang="en">Assuming the compat layer also serves the <code>/responses</code> endpoint.</span></li>
+              <li><span lang="hu">A rendszerpromptot az első üzenetbe tenni a <code>system_instruction</code> helyett.</span><span lang="en">Putting the system prompt in the first message instead of <code>system_instruction</code>.</span></li>
+              <li><span lang="hu">Egy biztonsági blokkot hibának venni — üres tartalom jön, nem kivétel.</span><span lang="en">Treating a safety block as an error — it returns empty content, not an exception.</span></li>
+              <li><span lang="hu">A 200k tokenes árszint-küszöböt figyelmen kívül hagyni a Pro modelleknél.</span><span lang="en">Ignoring the 200k-token price-tier threshold on the Pro models.</span></li>
+              <li><span lang="hu">A milliós ablakra hagyatkozni többtűs visszakereséshez retrieval nélkül.</span><span lang="en">Relying on the million-token window for multi-needle recall without retrieval.</span></li>
+              <li><span lang="hu">API-kulcs beégetése forráskódba vagy kliensoldali kódba.</span><span lang="en">Hardcoding the API key in source or client-side code.</span></li>
+            </ul>
+          </div>
+        </div>
+        <div class="grid grid-3">
+          <div class="info-box">
+            <p class="info-box__title"><span lang="hu">Költségkarok</span><span lang="en">Cost levers</span></p>
+            <p class="info-box__body">
+              <span lang="hu">A kontextus-gyorsítótárazott input ≈ 10% ár; a Batch API ≈ 50%-kal olcsóbb; a 3.1 / 2.5 Pro 200k token felett dupla árú. Hosszú, ismételt kontextust gyorsítótárazz, kötegelhető munkát a Batch API-ra tegyél.</span>
+              <span lang="en">Context-cached input costs ≈ 10%; the Batch API is ≈ 50% cheaper; 3.1 / 2.5 Pro double in price above 200k tokens. Cache long, repeated context, and route batchable work to the Batch API.</span>
+            </p>
+          </div>
+          <div class="info-box">
+            <p class="info-box__title"><span lang="hu">RAG-útmutató</span><span lang="en">RAG guidance</span></p>
+            <p class="info-box__body">
+              <span lang="hu">Szűkíts retrievallel, majd töltsd be a kiválasztott kontextust; a friss, nyilvános webes kérdéseket grounding fedi, a privát korpuszt vektortár. Embeddinghez illeszd a feladattípust, korpusz-feldolgozáshoz használj Batch API-t.</span>
+              <span lang="en">Narrow with retrieval, then load the selected context; cover fresh public-web questions with grounding, a private corpus with a vector store. Match the task type for embeddings, and use the Batch API for corpus processing.</span>
+            </p>
+          </div>
+          <div class="info-box">
+            <p class="info-box__title"><span lang="hu">Biztonság</span><span lang="en">Security</span></p>
+            <p class="info-box__body">
+              <span lang="hu">Soha ne égess be kulcsot, és ne küldd kliensre. Fejlesztéshez környezeti változó, éleshez titokkezelő. A kulcsot sose logold. Egy biztonsági blokk üres tartalmat ad — mindig nézd a <code>finishReason</code>-t.</span>
+              <span lang="en">Never hardcode a key, never ship it to the client. An environment variable for dev, a secret manager for prod. Never log the key. A safety block returns empty content — always inspect <code>finishReason</code>.</span>
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- 12 Code example -->
+      <section class="section">
+        <div class="section__head">
+          <span class="section__num">12</span>
+          <h2 class="section__title"><span lang="hu">Kódpélda</span><span lang="en">Code example</span></h2>
+        </div>
+        <p class="section__desc">
+          <span lang="hu">A natív <code>google-genai</code> SDK adja a teljes felületet; ugyanakkor a sztenderd OpenAI SDK is hív Geminit, ha a <code>base_url</code>-t a kompat rétegre állítjuk — ez a migráció gyors útja.</span>
+          <span lang="en">The native <code>google-genai</code> SDK gives the full surface; the standard OpenAI SDK also calls Gemini when <code>base_url</code> is set to the compat layer — the fast path for migration.</span>
+        </p>
+        <div class="code-block">
+          <div class="code-block__head">
+            <span>gemini_quickstart.py</span>
+          </div>
+          <pre><code><span class="tok-comment"># pip install google-genai openai</span>
+
+<span class="tok-comment"># --- Native API: the full Gemini surface ---------------------------</span>
+from google import genai
+
+client = genai.Client()  <span class="tok-comment"># reads GEMINI_API_KEY / GOOGLE_API_KEY</span>
+resp = client.models.generate_content(
+    model="gemini-3-flash-preview",
+    contents="Explain RAG in one sentence.",
+    config={"system_instruction": "You are a concise assistant."},
+)
+print(resp.text)
+
+<span class="tok-comment"># --- Native streaming ----------------------------------------------</span>
+for chunk in client.models.generate_content_stream(
+    model="gemini-3-flash-preview",
+    contents="List three RAG architectures.",
+):
+    print(chunk.text, end="", flush=True)
+
+<span class="tok-comment"># --- Same OpenAI SDK, pointed at the Gemini compat layer -----------</span>
+<span class="tok-comment"># Only base_url + api_key change; great for a fast migration.</span>
+from openai import OpenAI
+
+compat = OpenAI(
+    api_key="GEMINI_API_KEY",
+    base_url="https://generativelanguage.googleapis.com/v1beta/openai/",
+)
+chat = compat.chat.completions.create(
+    model="gemini-3-flash-preview",
+    messages=[{"role": "user", "content": "Hello from the compat layer!"}],
+)
+print(chat.choices[0].message.content)
+</code></pre>
+        </div>
+      </section>
+
+      <nav class="pager" aria-label="Reference pager">
+        <a class="pager__link" href="openai-compatibility.html">
+          <div class="pager__dir">← <span lang="hu">Előző</span><span lang="en">Previous</span></div>
+          <div class="pager__name"><span lang="hu">OpenAI kompatibilitás</span><span lang="en">OpenAI Compatibility</span></div>
+        </a>
+      </nav>
+
+      <footer class="site-footer">
+        <p class="site-footer__copy">© 2026 w7-knowbase</p>
+        <nav class="site-footer__links" aria-label="Footer">
+          <a href="https://github.com/w7-mgfcode/w7-knowbase">GitHub</a>
+          <a href="../CHANGELOG.md">Changelog</a>
+        </nav>
+      </footer>
+    </main>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/mermaid@11.15.0/dist/mermaid.min.js" integrity="sha384-yQ4mmBBT+vhTAwjFH0toJXNYJ6O4usWnt6EPIdWwrRvx2V/n5lXuDZQwQFeSFydF" crossorigin="anonymous" defer></script>
+<script src="../assets/js/knowbase.js" defer></script>
+</body>
+</html>
