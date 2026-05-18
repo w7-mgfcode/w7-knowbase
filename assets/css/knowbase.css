@@ -25,6 +25,7 @@
   --self-color: #f25c54;
   --adapt-color: #f472b6;
   --raptor-color: #fbbf24;
+  --wiki-color: #a3e635;
   --cyan: #36d6c3;
 
   /* Dim variants (~12% opacity) for tinted backgrounds */
@@ -35,6 +36,7 @@
   --self-dim: #f25c541f;
   --adapt-dim: #f472b61f;
   --raptor-dim: #fbbf241f;
+  --wiki-dim: #a3e6351f;
   --cyan-dim: #36d6c31f;
 
   /* Semantic feedback */
@@ -81,6 +83,7 @@ body.accent-agent  { --accent: var(--agent-color);  --accent-dim: var(--agent-di
 body.accent-self   { --accent: var(--self-color);   --accent-dim: var(--self-dim); }
 body.accent-adapt  { --accent: var(--adapt-color);  --accent-dim: var(--adapt-dim); }
 body.accent-raptor { --accent: var(--raptor-color); --accent-dim: var(--raptor-dim); }
+body.accent-wiki   { --accent: var(--wiki-color);   --accent-dim: var(--wiki-dim); }
 body.accent-cyan   { --accent: var(--cyan);         --accent-dim: var(--cyan-dim); }
 
 /* ---- 2. Reset & base ----------------------------------------- */
@@ -223,6 +226,7 @@ body.lang-en [lang="hu"] { display: none; }
 .nav-dot--self   { --dot: var(--self-color); }
 .nav-dot--adapt  { --dot: var(--adapt-color); }
 .nav-dot--raptor { --dot: var(--raptor-color); }
+.nav-dot--wiki   { --dot: var(--wiki-color); }
 .nav-dot--cyan   { --dot: var(--cyan); }
 
 .sidebar__footer {
@@ -458,6 +462,7 @@ a.card:hover {
 .card--self   { --accent: var(--self-color);   --accent-dim: var(--self-dim); }
 .card--adapt  { --accent: var(--adapt-color);  --accent-dim: var(--adapt-dim); }
 .card--raptor { --accent: var(--raptor-color); --accent-dim: var(--raptor-dim); }
+.card--wiki   { --accent: var(--wiki-color);   --accent-dim: var(--wiki-dim); }
 
 /* Rich card — used on reference-page card grids. A rich card stacks its
    children, lets the body grow so a stat footer sinks to the bottom, and
@@ -660,6 +665,7 @@ a.arch-chip:hover { text-decoration: none; filter: brightness(1.15); }
 .arch-chip--self   { --chip: var(--self-color); }
 .arch-chip--adapt  { --chip: var(--adapt-color); }
 .arch-chip--raptor { --chip: var(--raptor-color); }
+.arch-chip--wiki   { --chip: var(--wiki-color); }
 
 /* ---- 13. Pipeline / flow ------------------------------------- */
 .diagram-box {
@@ -856,6 +862,7 @@ body.mermaid-ready .mermaid:not([data-processed]) { visibility: hidden; }
 .pager__link--self   { --link: var(--self-color); }
 .pager__link--adapt  { --link: var(--adapt-color); }
 .pager__link--raptor { --link: var(--raptor-color); }
+.pager__link--wiki   { --link: var(--wiki-color); }
 
 /* ---- 18. Footer ---------------------------------------------- */
 .site-footer {
