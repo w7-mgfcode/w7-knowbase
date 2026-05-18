@@ -152,10 +152,235 @@ flowchart TD
         </div>
       </section>
 
-      <!-- 04 When to use it -->
+      <!-- 04 Core Principles -->
       <section class="section">
         <div class="section__head">
           <span class="section__num">04</span>
+          <h2 class="section__title"><span lang="hu">Alapelvek</span><span lang="en">Core Principles</span></h2>
+        </div>
+        <p class="section__desc">
+          <span lang="hu">A Flat RAG négy egyszerű elvre épül: lineáris, determinisztikus folyamat iteráció, osztályozás vagy útválasztás nélkül.</span>
+          <span lang="en">Flat RAG rests on four simple principles: a linear, deterministic pipeline with no iteration, grading or routing.</span>
+        </p>
+        <div class="grid grid-2">
+          <div class="info-box">
+            <p class="info-box__title"><span lang="hu">Darabolás és tárolás</span><span lang="en">Chunk and store</span></p>
+            <p class="info-box__body">
+              <span lang="hu">A dokumentumokat darabokra (chunk) bontja, embeddinggé alakítja, és egy vektoradatbázisban tárolja.</span>
+              <span lang="en">Documents are split into chunks, turned into embeddings, and stored in a vector database.</span>
+            </p>
+          </div>
+          <div class="info-box">
+            <p class="info-box__title"><span lang="hu">Egylépéses keresés</span><span lang="en">Single-shot retrieval</span></p>
+            <p class="info-box__body">
+              <span lang="hu">Egyetlen, sűrű (bi-encoder) top-k hasonlósági keresés — nincs többszöri lekérdezés.</span>
+              <span lang="en">A single-shot dense (bi-encoder) top-k similarity retrieval — no repeated querying.</span>
+            </p>
+          </div>
+          <div class="info-box">
+            <p class="info-box__title"><span lang="hu">Egyetlen generálás</span><span lang="en">Single generation pass</span></p>
+            <p class="info-box__body">
+              <span lang="hu">A visszakapott darabokat egyetlen promptba fűzi, és egyetlen generálási lépésben adja át a modellnek.</span>
+              <span lang="en">Retrieved chunks are stuffed into one prompt and handed to the model in a single generation pass.</span>
+            </p>
+          </div>
+          <div class="info-box">
+            <p class="info-box__title"><span lang="hu">Determinisztikus folyamat</span><span lang="en">Deterministic pipeline</span></p>
+            <p class="info-box__body">
+              <span lang="hu">A folyamat lineáris és determinisztikus — nincs iteráció, osztályozás vagy útválasztás.</span>
+              <span lang="en">The pipeline is linear and deterministic — no iteration, grading or routing.</span>
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- 05 Use Cases -->
+      <section class="section">
+        <div class="section__head">
+          <span class="section__num">05</span>
+          <h2 class="section__title"><span lang="hu">Felhasználási esetek</span><span lang="en">Use Cases</span></h2>
+        </div>
+        <p class="section__desc">
+          <span lang="hu">A Flat RAG akkor a legjobb, ha a korpusz homogén és kb. 5 000 dokumentum alatt marad.</span>
+          <span lang="en">Flat RAG is at its best when the corpus is homogeneous and stays under ~5,000 documents.</span>
+        </p>
+        <div class="grid grid-3">
+          <div class="card">
+            <div class="card__title"><span lang="hu">FAQ és helpdesk botok</span><span lang="en">FAQ &amp; helpdesk bots</span></div>
+            <p class="card__body">
+              <span lang="hu">Kérdés-válasz botok kis, statikus korpusz felett — gyors, kiszámítható válaszok.</span>
+              <span lang="en">Q&amp;A bots over a small, static corpus — fast, predictable answers.</span>
+            </p>
+          </div>
+          <div class="card">
+            <div class="card__title"><span lang="hu">Termékdokumentáció keresése</span><span lang="en">Product-doc lookup</span></div>
+            <p class="card__body">
+              <span lang="hu">Termékleírások és kézikönyvek lekérdezése, egydokumentumos kérdés-válasz.</span>
+              <span lang="en">Product-doc lookup and single-document Q&amp;A.</span>
+            </p>
+          </div>
+          <div class="card">
+            <div class="card__title"><span lang="hu">MVP és baseline</span><span lang="en">MVP &amp; baseline</span></div>
+            <p class="card__body">
+              <span lang="hu">MVP vagy baseline egy nehezebb architektúra bevezetése előtt — homogén korpuszhoz.</span>
+              <span lang="en">An MVP or baseline before justifying a heavier architecture — for a homogeneous corpus.</span>
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- 06 Routing Strategy -->
+      <section class="section">
+        <div class="section__head">
+          <span class="section__num">06</span>
+          <h2 class="section__title"><span lang="hu">Útválasztási stratégia</span><span lang="en">Routing Strategy</span></h2>
+        </div>
+        <p class="section__desc">
+          <span lang="hu">Egy útválasztó akkor küld egy lekérdezést a Flat RAG-hoz, ha az <strong>egylépéses / ténykérdés</strong>, és a válasz egyetlen darabban (chunk) megtalálható. Az Adaptive-RAG taxonómiájában ez az <em>egylépéses visszakeresés</em> szintje.</span>
+          <span lang="en">A router sends a query to Flat RAG when it is <strong>single-hop / factual</strong> and the answer lives in one chunk. In the Adaptive-RAG taxonomy this is the <em>single-step retrieval</em> tier.</span>
+        </p>
+        <div class="info-box">
+          <p class="info-box__title"><span lang="hu">Mikor irányítson tovább</span><span lang="en">When to route away</span></p>
+          <p class="info-box__body">
+            <span lang="hu">Az egylépéses visszakeresés a visszakeresés nélküli esethez képest kb. 1,4× token-költséggel jár. Több-lépéses (multi-hop) vagy globális kérdéseknél irányíts tovább Graph RAG vagy Agentic RAG felé.</span>
+            <span lang="en">Single-step retrieval costs roughly 1.4× the token cost of no retrieval. Route away to Graph RAG or Agentic RAG for multi-hop or global queries.</span>
+          </p>
+        </div>
+      </section>
+
+      <!-- 07 Recommended Frameworks -->
+      <section class="section">
+        <div class="section__head">
+          <span class="section__num">07</span>
+          <h2 class="section__title"><span lang="hu">Ajánlott keretrendszerek</span><span lang="en">Recommended Frameworks</span></h2>
+        </div>
+        <div class="grid grid-3">
+          <div class="card card--rich card--flat">
+            <span class="card__tag">orchestration</span>
+            <div class="card__title"><span lang="hu">LangChain / LlamaIndex</span><span lang="en">LangChain / LlamaIndex</span></div>
+            <p class="card__spec">pip install langchain llama-index</p>
+            <p class="card__body">
+              <span lang="hu">Néhány soros, naiv-RAG visszakereső láncok — a leggyorsabb út egy működő Flat RAG-hoz.</span>
+              <span lang="en">One-line naive-RAG retrieval chains — the fastest path to a working Flat RAG.</span>
+            </p>
+          </div>
+          <div class="card card--rich card--flat">
+            <span class="card__tag">pipeline</span>
+            <div class="card__title"><span lang="hu">Haystack</span><span lang="en">Haystack</span></div>
+            <p class="card__spec">pip install haystack-ai</p>
+            <p class="card__body">
+              <span lang="hu">A deepset éles használatra szánt RAG-folyamatokat kínál — komponens-alapú, jól tesztelhető pipeline.</span>
+              <span lang="en">deepset's production-grade RAG pipelines — a component-based, testable pipeline.</span>
+            </p>
+          </div>
+          <div class="card card--rich card--flat">
+            <span class="card__tag">all-in-one</span>
+            <div class="card__title"><span lang="hu">txtai</span><span lang="en">txtai</span></div>
+            <p class="card__spec">pip install txtai</p>
+            <p class="card__body">
+              <span lang="hu">Könnyűsúlyú, mindent-egyben embedding-adatbázis — minimális függőséggel.</span>
+              <span lang="en">A lightweight all-in-one embeddings database — minimal dependencies.</span>
+            </p>
+          </div>
+        </div>
+        <div class="info-box">
+          <p class="info-box__title"><span lang="hu">Vektortárak és embedding-modellek</span><span lang="en">Vector stores &amp; embedding models</span></p>
+          <p class="info-box__body">
+            <span lang="hu">Vektortárak: pgvector, Qdrant, Weaviate, Milvus, Chroma, FAISS. Embedding-modellek: OpenAI <code>text-embedding-3-large</code>, Cohere <code>embed-v3</code>, illetve nyílt modellek (<code>bge</code> / <code>e5</code> / <code>gte</code>).</span>
+            <span lang="en">Vector stores: pgvector, Qdrant, Weaviate, Milvus, Chroma, FAISS. Embedding models: OpenAI <code>text-embedding-3-large</code>, Cohere <code>embed-v3</code>, or open models (<code>bge</code> / <code>e5</code> / <code>gte</code>).</span>
+          </p>
+        </div>
+      </section>
+
+      <!-- 08 Expected Results -->
+      <section class="section">
+        <div class="section__head">
+          <span class="section__num">08</span>
+          <h2 class="section__title"><span lang="hu">Várható eredmények</span><span lang="en">Expected Results</span></h2>
+        </div>
+        <p class="section__desc">
+          <span lang="hu">A Flat RAG az a baseline, amelyhez minden más architektúrát mérnek. Egyszerű ténykeresésnél meglepően versenyképes.</span>
+          <span lang="en">Flat RAG is the baseline every other architecture is measured against. On simple fact lookup it is surprisingly competitive.</span>
+        </p>
+        <div class="compare-table-wrap">
+          <table class="compare-table">
+            <thead>
+              <tr>
+                <th><span lang="hu">Mérőszám</span><span lang="en">Metric</span></th>
+                <th><span lang="hu">Érték</span><span lang="en">Value</span></th>
+                <th><span lang="hu">Megjegyzés</span><span lang="en">Note</span></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="arch-name"><span lang="hu">Ténykeresés (GraphRAG-Bench)</span><span lang="en">Fact retrieval (GraphRAG-Bench)</span></td>
+                <td class="mono">60.92%</td>
+                <td><span lang="hu">Reranking-gel; eléri vagy meghaladja a gráf-módszereket</span><span lang="en">With reranking; matches or beats graph methods</span></td>
+              </tr>
+              <tr>
+                <td class="arch-name"><span lang="hu">Késleltetés</span><span lang="en">Latency</span></td>
+                <td class="mono">&lt; 1 s</td>
+                <td><span lang="hu">Másodperc alatti válaszidő</span><span lang="en">Sub-second response time</span></td>
+              </tr>
+              <tr>
+                <td class="arch-name"><span lang="hu">Indexelési költség</span><span lang="en">Indexing cost</span></td>
+                <td class="mono">~$2–5</td>
+                <td><span lang="hu">Egyszeri, vektoros indexeléshez</span><span lang="en">One-time, for vector indexing</span></td>
+              </tr>
+              <tr>
+                <td class="arch-name"><span lang="hu">Kontextus / lekérdezés</span><span lang="en">Context per query</span></td>
+                <td class="mono">~879</td>
+                <td><span lang="hu">Átlagos kontextus-token lekérdezésenként</span><span lang="en">Average context tokens per query</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="info-box">
+          <p class="info-box__title"><span lang="hu">Hibapont: a darabolás</span><span lang="en">Failure mode: chunking</span></p>
+          <p class="info-box__body">
+            <span lang="hu">Iparági tapasztalatok szerint a visszakeresés az esetek nagy részében a hibapont; a fix méretű darabolás (chunking) szétszabdalja a kontextust. Egy klinikai vizsgálat témakör-igazított darabolással 87%-os, fix méretűvel 13%-os pontosságot jelentett.</span>
+            <span lang="en">Industry reports put retrieval as the failure point in a large share of cases; fixed-size chunking destroys context. One clinical study reported 87% accuracy with topic-aligned chunking versus 13% with fixed-size chunking.</span>
+          </p>
+        </div>
+      </section>
+
+      <!-- 09 Evaluation -->
+      <section class="section">
+        <div class="section__head">
+          <span class="section__num">09</span>
+          <h2 class="section__title"><span lang="hu">Kiértékelés</span><span lang="en">Evaluation</span></h2>
+        </div>
+        <p class="section__desc">
+          <span lang="hu">A Flat RAG kiértékelése a RAGAS négy alapmetrikájára és a klasszikus visszakeresési mérőszámokra épül.</span>
+          <span lang="en">Evaluating Flat RAG rests on the four core RAGAS metrics and the classic retrieval scores.</span>
+        </p>
+        <div class="grid grid-2">
+          <ul class="feature-list feature-list--ok">
+            <li><span lang="hu">RAGAS: kontextus-pontosság (context precision).</span><span lang="en">RAGAS: context precision.</span></li>
+            <li><span lang="hu">RAGAS: kontextus-felidézés (context recall).</span><span lang="en">RAGAS: context recall.</span></li>
+            <li><span lang="hu">RAGAS: megalapozottság (faithfulness).</span><span lang="en">RAGAS: faithfulness.</span></li>
+            <li><span lang="hu">RAGAS: válasz-relevancia (answer relevancy).</span><span lang="en">RAGAS: answer relevancy.</span></li>
+          </ul>
+          <ul class="feature-list feature-list--ok">
+            <li><span lang="hu">Visszakeresési metrika: találati arány (hit rate).</span><span lang="en">Retrieval metric: hit rate.</span></li>
+            <li><span lang="hu">Visszakeresési metrika: MRR.</span><span lang="en">Retrieval metric: MRR.</span></li>
+            <li><span lang="hu">Visszakeresési metrika: nDCG.</span><span lang="en">Retrieval metric: nDCG.</span></li>
+            <li><span lang="hu">Visszakeresési metrika: recall@k.</span><span lang="en">Retrieval metric: recall@k.</span></li>
+          </ul>
+        </div>
+        <div class="info-box">
+          <p class="info-box__title"><span lang="hu">Mindig a baseline-hoz mérj</span><span lang="en">Always measure against the baseline</span></p>
+          <p class="info-box__body">
+            <span lang="hu">A gazdagabb architektúrákat mindig egy Flat RAG baseline-hoz mérd ugyanazon az adathalmazon — csak így derül ki, hogy a többletkomplexitás valódi nyereséget hoz-e.</span>
+            <span lang="en">Always evaluate richer architectures against a Flat RAG baseline on the same dataset — only then is it clear whether the extra complexity earns its keep.</span>
+          </p>
+        </div>
+      </section>
+
+      <!-- 10 When to use it -->
+      <section class="section">
+        <div class="section__head">
+          <span class="section__num">10</span>
           <h2 class="section__title"><span lang="hu">Mikor érdemes használni</span><span lang="en">When to use it</span></h2>
         </div>
         <div class="grid grid-2">
@@ -181,16 +406,16 @@ flowchart TD
         <div class="info-box">
           <p class="info-box__title"><span lang="hu">Pro tipp</span><span lang="en">Pro tip</span></p>
           <p class="info-box__body">
-            <span lang="hu">Hybrid keresés (BM25 + vektoros) és egy könnyű reranker (pl. Cohere Rerank vagy cross-encoder) hozzáadásával a Flat RAG pontossága 15–25%-kal javítható anélkül, hogy az architektúra komplexitása számottevően nőne.</span>
-            <span lang="en">Adding hybrid search (BM25 + vector) and a lightweight reranker (e.g. Cohere Rerank or a cross-encoder) can improve Flat RAG accuracy by 15–25% without meaningfully increasing architectural complexity.</span>
+            <span lang="hu">Hybrid keresés (BM25 + vektoros) és egy könnyű reranker (pl. Cohere Rerank vagy cross-encoder) hozzáadásával a Flat RAG pontossága 15–25%-kal javítható anélkül, hogy az architektúra komplexitása számottevően nőne. Iparági irányelv 2026-ra: ha a korpusz kb. 1M token alatt van és statikus, érdemes lehet teljesen elhagyni a visszakeresést, és a korpuszt a kontextusablakba tölteni.</span>
+            <span lang="en">Adding hybrid search (BM25 + vector) and a lightweight reranker (e.g. Cohere Rerank or a cross-encoder) can improve Flat RAG accuracy by 15–25% without meaningfully increasing architectural complexity. As a 2026 industry rule of thumb: if the corpus is under ~1M tokens and static, consider skipping retrieval entirely and loading it into the context window.</span>
           </p>
         </div>
       </section>
 
-      <!-- 05 Code example -->
+      <!-- 11 Code example -->
       <section class="section">
         <div class="section__head">
-          <span class="section__num">05</span>
+          <span class="section__num">11</span>
           <h2 class="section__title"><span lang="hu">Kódpélda</span><span lang="en">Code example</span></h2>
         </div>
         <div class="code-block">
@@ -219,7 +444,7 @@ from langchain_core.runnables import RunnablePassthrough
 prompt = ChatPromptTemplate.from_template(
     "Answer using only the context below.\n\nContext:\n{context}\n\nQuestion: {question}"
 )
-llm = ChatOpenAI(model="gpt-4o-mini")
+llm = ChatOpenAI(model="gpt-5.4-mini")
 
 chain = (
     {"context": retriever, "question": RunnablePassthrough()}
