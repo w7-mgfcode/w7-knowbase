@@ -39,10 +39,10 @@
     {
       label: { hu: "Referencia", en: "Reference" },
       items: [
-        { id: "embedding-models", soon: true, label: { hu: "Embedding modellek", en: "Embedding Models" } },
-        { id: "reranking", soon: true, label: { hu: "Újrarangsorolás", en: "Reranking" } },
-        { id: "hybrid-search", soon: true, label: { hu: "Hibrid keresés", en: "Hybrid Search" } },
-        { id: "evaluation", soon: true, label: { hu: "Kiértékelés", en: "Evaluation" } }
+        { id: "embedding-models", page: "embedding-models", href: "reference/embedding-models.html", dot: "cyan", label: { hu: "Embedding modellek", en: "Embedding Models" } },
+        { id: "reranking", page: "reranking", href: "reference/reranking.html", dot: "cyan", label: { hu: "Újrarangsorolás", en: "Reranking" } },
+        { id: "hybrid-search", page: "hybrid-search", href: "reference/hybrid-search.html", dot: "cyan", label: { hu: "Hibrid keresés", en: "Hybrid Search" } },
+        { id: "evaluation", page: "evaluation", href: "reference/evaluation.html", dot: "cyan", label: { hu: "Kiértékelés", en: "Evaluation" } }
       ]
     }
   ];
@@ -255,6 +255,56 @@
   function setLang(lang) {
     applyLang(lang);
     try { localStorage.setItem(LANG_KEY, lang); } catch (e) { /* ignore */ }
+    /* The newly-visible language's diagrams may not be rendered yet. */
+    renderMermaid();
+  }
+
+  /* ---- Mermaid diagrams -------------------------------------- */
+  /* Mermaid is an optional, version-pinned CDN script loaded before this
+     file. If it failed to load, every helper here no-ops and the raw
+     diagram source stays visible as a fallback. */
+  function initMermaid() {
+    if (!window.mermaid) return;
+    var styles = getComputedStyle(document.body);
+    var accent = (styles.getPropertyValue("--accent") || "#36d6c3").trim();
+    window.mermaid.initialize({
+      startOnLoad: false,
+      securityLevel: "strict",
+      theme: "base",
+      themeVariables: {
+        darkMode: true,
+        background: "#111827",
+        mainBkg: "#1a2035",
+        primaryColor: "#1a2035",
+        primaryBorderColor: accent,
+        primaryTextColor: "#e8edf5",
+        secondaryColor: "#1e2640",
+        tertiaryColor: "#0a0e17",
+        lineColor: "#5a6580",
+        textColor: "#8b97b0",
+        fontFamily: "JetBrains Mono, ui-monospace, monospace",
+        fontSize: "14px"
+      }
+    });
+    /* Confirmed loaded — let CSS hide unrendered source. */
+    document.body.classList.add("mermaid-ready");
+    renderMermaid();
+  }
+
+  /* Render only the diagrams the user can actually see. Mermaid mis-measures
+     display:none nodes, so the inactive-language blocks are skipped until a
+     language switch makes them visible. */
+  function renderMermaid() {
+    if (!window.mermaid) return;
+    var nodes = document.querySelectorAll(".mermaid:not([data-processed])");
+    var visible = [];
+    for (var i = 0; i < nodes.length; i++) {
+      if (nodes[i].offsetParent !== null) visible.push(nodes[i]);
+    }
+    if (!visible.length) return;
+    try {
+      window.mermaid.run({ nodes: visible });
+    } catch (e) { /* leave raw source visible on failure */ }
   }
 
   /* ---- Init -------------------------------------------------- */
@@ -290,6 +340,9 @@
         setLang(this.getAttribute("data-lang-btn"));
       });
     }
+
+    /* Mermaid diagrams (no-op on pages without any) */
+    initMermaid();
   }
 
   if (document.readyState === "loading") {
