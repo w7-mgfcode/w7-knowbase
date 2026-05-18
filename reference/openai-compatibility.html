@@ -1,0 +1,795 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OpenAI API kompatibilitás — w7-knowbase</title>
+<meta name="description" content="OpenAI API kompatibilitás referencia: Chat Completions és Responses API, 2026-os modellek, streaming, function calling, strukturált kimenetek, beépített eszközök és MCP, valamint az OpenAI-kompatibilis szerverek ökoszisztémája.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300..700&family=Space+Grotesk:wght@400..700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/css/knowbase.css">
+</head>
+<body class="accent-cyan" data-page="openai-compatibility">
+<script>try{if(localStorage.getItem('knowbase-lang')==='en')document.body.classList.add('lang-en');}catch(e){}</script>
+
+<div class="layout">
+  <aside class="sidebar" id="sidebar" data-base="../"></aside>
+  <div class="sidebar-backdrop" id="navBackdrop"></div>
+
+  <div class="main">
+    <div class="mobile-header">
+      <a class="mobile-header__brand" href="../index.html"><span>w7</span>-knowbase</a>
+      <div style="display:flex;gap:8px;align-items:center;">
+        <div class="lang-toggle" role="group" aria-label="Language">
+          <button class="lang-toggle__btn" type="button" data-lang-btn="hu" aria-pressed="true">HU</button>
+          <button class="lang-toggle__btn" type="button" data-lang-btn="en" aria-pressed="false">EN</button>
+        </div>
+        <button class="menu-btn" id="menuBtn" type="button" aria-label="Open navigation" aria-controls="sidebar" aria-expanded="false"></button>
+      </div>
+    </div>
+
+    <header class="topbar">
+      <nav class="breadcrumb" aria-label="Breadcrumb">
+        <span><span lang="hu">Referencia</span><span lang="en">Reference</span></span>
+        <span class="breadcrumb__sep" aria-hidden="true">/</span>
+        <span class="breadcrumb__current"><span lang="hu">OpenAI kompatibilitás</span><span lang="en">OpenAI Compatibility</span></span>
+      </nav>
+      <div class="lang-toggle" role="group" aria-label="Language">
+        <button class="lang-toggle__btn" type="button" data-lang-btn="hu" aria-pressed="true">HU</button>
+        <button class="lang-toggle__btn" type="button" data-lang-btn="en" aria-pressed="false">EN</button>
+      </div>
+    </header>
+
+    <main class="content">
+      <div class="page-header">
+        <span class="tag"><span lang="hu">Referencia</span><span lang="en">Reference</span></span>
+        <h1 class="page-header__title tinted"><span lang="hu">OpenAI API kompatibilitás</span><span lang="en">OpenAI API Compatibility</span></h1>
+        <p class="page-header__subtitle">
+          <span lang="hu">Két szöveges API egymás mellett — Chat Completions és Responses —, a 2026-os modellkínálat, streaming, function calling, strukturált kimenetek, beépített eszközök és MCP, valamint a tágabb OpenAI-kompatibilis szerver-ökoszisztéma. Adatpillanat: 2026. május.</span>
+          <span lang="en">Two coexisting text APIs — Chat Completions and Responses —, the 2026 model lineup, streaming, function calling, structured outputs, built-in tools and MCP, plus the broader OpenAI-compatible server ecosystem. Data snapshot: May 2026.</span>
+        </p>
+        <div class="stat-row">
+          <div class="stat-pill">
+            <div class="stat-pill__label"><span lang="hu">Végpontok</span><span lang="en">Endpoints</span></div>
+            <div class="stat-pill__value"><span lang="hu">Chat + Responses</span><span lang="en">Chat + Responses</span></div>
+          </div>
+          <div class="stat-pill">
+            <div class="stat-pill__label"><span lang="hu">Aktuális modell</span><span lang="en">Current model</span></div>
+            <div class="stat-pill__value">GPT-5.5</div>
+          </div>
+          <div class="stat-pill">
+            <div class="stat-pill__label"><span lang="hu">Frissítve</span><span lang="en">Updated</span></div>
+            <div class="stat-pill__value">2026-05</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 01 Overview -->
+      <section class="section">
+        <div class="section__head">
+          <span class="section__num">01</span>
+          <h2 class="section__title"><span lang="hu">Áttekintés</span><span lang="en">Overview</span></h2>
+        </div>
+        <div class="grid grid-2">
+          <p class="section__desc">
+            <span lang="hu">Az OpenAI API két, egymás mellett élő szöveges végpontcsaládot kínál. A <strong>Chat Completions API</strong> (<code>POST /v1/chat/completions</code>) a klasszikus, állapotmentes végpont: minden kérésben el kell küldeni a teljes üzenet-előzményt. Nincs megszüntetési dátuma — teljes körűen támogatott, és ez adja a legnagyobb hordozhatóságot a nem OpenAI, OpenAI-kompatibilis szerverek felé. A <strong>Responses API</strong> (<code>POST /v1/responses</code>) az újabb, állapottartó szuperhalmaz, amely a beépített eszközöket és az MCP-t is kiszolgálja; új projektekhez ezt ajánlják.</span>
+            <span lang="en">The OpenAI API offers two coexisting text endpoint families. The <strong>Chat Completions API</strong> (<code>POST /v1/chat/completions</code>) is the classic, stateless endpoint: every request must carry the full message history. It has no deprecation date — fully supported, and it gives the most portability toward non-OpenAI, OpenAI-compatible servers. The <strong>Responses API</strong> (<code>POST /v1/responses</code>) is the newer, stateful superset that also hosts the built-in tools and MCP; it is the recommendation for new projects.</span>
+          </p>
+          <p class="section__desc">
+            <span lang="hu">A Responses API mellé az OpenAI két új társvégpontot is bevezetett: a <strong>Conversations API</strong>-t (állapottartó beszélgetésszálak, az Assistants-szálak utódja) és egy <code>/compact</code> végpontot a kontextus tömörítéséhez. A választás nem kötelező: a Chat Completions hosszú távon is marad. A Responses API viszont érvelő modelleknél kb. +3%-os SWE-bench eredményt és 40–80%-kal jobb prompt-gyorsítótár-kihasználtságot hoz. Ez az oldal mindkét felületet végigveszi, majd kitér a tágabb OpenAI-kompatibilis ökoszisztémára is.</span>
+            <span lang="en">Alongside the Responses API, OpenAI also introduced two companion endpoints: the <strong>Conversations API</strong> (stateful conversation threads, the successor to Assistants threads) and a <code>/compact</code> endpoint for context compaction. The choice is not mandatory: Chat Completions stays for the long run. The Responses API, however, delivers roughly +3% on SWE-bench with reasoning models and 40–80% better prompt-cache utilization. This page walks through both interfaces, then covers the broader OpenAI-compatible ecosystem.</span>
+          </p>
+        </div>
+      </section>
+
+      <!-- 02 Endpoints & Authentication -->
+      <section class="section">
+        <div class="section__head">
+          <span class="section__num">02</span>
+          <h2 class="section__title"><span lang="hu">Végpontok és hitelesítés</span><span lang="en">Endpoints &amp; Authentication</span></h2>
+        </div>
+        <p class="section__desc">
+          <span lang="hu">Az API REST-alapú, HTTPS-en, JSON kérés- és válasz-törzzsel. A két szöveges végpont ugyanazt a hitelesítést használja; a különbség az állapotkezelésben és a beépített képességekben van.</span>
+          <span lang="en">The API is REST-based over HTTPS, with JSON request and response bodies. The two text endpoints share the same authentication; the difference is in state handling and built-in capabilities.</span>
+        </p>
+        <div class="grid grid-2">
+          <div class="card card--rich card--flat">
+            <span class="card__tag">Chat Completions</span>
+            <div class="card__title"><span lang="hu">Chat Completions API</span><span lang="en">Chat Completions API</span></div>
+            <p class="card__spec">POST /v1/chat/completions</p>
+            <p class="card__body">
+              <span lang="hu">A klasszikus, állapotmentes végpont és de facto iparági szabvány. Minden kérés önálló: a teljes <code>messages</code> tömböt újra el kell küldeni. Nincs megszüntetési dátuma.</span>
+              <span lang="en">The classic, stateless endpoint and de facto industry standard. Every request stands alone: the full <code>messages</code> array must be re-sent. It has no deprecation date.</span>
+            </p>
+            <ul class="feature-list">
+              <li><span lang="hu"><code>messages</code> tömb: <code>system</code> / <code>user</code> / <code>assistant</code> szerepek.</span><span lang="en"><code>messages</code> array: <code>system</code> / <code>user</code> / <code>assistant</code> roles.</span></li>
+              <li><span lang="hu">Streaming SSE-vel, a literál <code>data: [DONE]</code> lezárással.</span><span lang="en">Streaming via SSE, terminated by the literal <code>data: [DONE]</code>.</span></li>
+              <li><span lang="hu">Function calling, JSON mode és strukturált kimenetek.</span><span lang="en">Function calling, JSON mode and structured outputs.</span></li>
+              <li><span lang="hu">Maximális hordozhatóság OpenAI-kompatibilis szerverekre.</span><span lang="en">Maximum portability to OpenAI-compatible servers.</span></li>
+            </ul>
+          </div>
+          <div class="card card--rich card--agent">
+            <span class="card__tag">Responses API</span>
+            <div class="card__title"><span lang="hu">Responses API</span><span lang="en">Responses API</span></div>
+            <p class="card__spec">POST /v1/responses</p>
+            <p class="card__body">
+              <span lang="hu">A Chat Completions állapottartó szuperhalmaza. Alapból elmenti a kontextust (<code>store: true</code>), a folytatás a <code>previous_response_id</code>-vel hivatkozik rá. Új projektekhez ezt ajánlják.</span>
+              <span lang="en">A stateful superset of Chat Completions. It stores context by default (<code>store: true</code>); a follow-up references it via <code>previous_response_id</code>. Recommended for new projects.</span>
+            </p>
+            <ul class="feature-list">
+              <li><span lang="hu">Állapottartó: <code>store: true</code> + <code>previous_response_id</code>.</span><span lang="en">Stateful: <code>store: true</code> + <code>previous_response_id</code>.</span></li>
+              <li><span lang="hu">Beépített eszközök: web search, file search, code interpreter.</span><span lang="en">Built-in tools: web search, file search, code interpreter.</span></li>
+              <li><span lang="hu">Computer use, képgenerálás és MCP-eszközök.</span><span lang="en">Computer use, image generation and MCP tools.</span></li>
+              <li><span lang="hu">Típusos streaming események, titkosított érvelés (ZDR).</span><span lang="en">Typed streaming events, encrypted reasoning (ZDR).</span></li>
+            </ul>
+          </div>
+        </div>
+        <div class="info-box">
+          <p class="info-box__title"><span lang="hu">Hitelesítés</span><span lang="en">Authentication</span></p>
+          <p class="info-box__body">
+            <span lang="hu">Minden kérés egy <code>Authorization: Bearer &lt;kulcs&gt;</code> fejlécet igényel. A modern kulcsok projekt-hatókörűek (<code>sk-proj-</code> előtag); opcionálisan az <code>OpenAI-Organization</code> és <code>OpenAI-Project</code> fejlécekkel szűkíthető a hatókör. A kulcs sosem kerül kliensoldali kódba — környezeti változó a fejlesztéshez, titokkezelő (secret manager) az éles környezethez.</span>
+            <span lang="en">Every request requires an <code>Authorization: Bearer &lt;key&gt;</code> header. Modern keys are project-scoped (the <code>sk-proj-</code> prefix); the optional <code>OpenAI-Organization</code> and <code>OpenAI-Project</code> headers narrow the scope further. The key never goes into client-side code — an environment variable for development, a secret manager for production.</span>
+          </p>
+        </div>
+      </section>
+
+      <!-- 03 API flow -->
+      <section class="section">
+        <div class="section__head">
+          <span class="section__num">03</span>
+          <h2 class="section__title"><span lang="hu">API-folyamat</span><span lang="en">API flow</span></h2>
+        </div>
+        <div class="diagram-box">
+<pre class="mermaid" lang="hu">
+flowchart LR
+  KEY[API kulcs - Bearer token] --&gt; API[OpenAI API]
+  API --&gt; CC[Chat Completions - /v1/chat/completions]
+  API --&gt; RESP[Responses API - /v1/responses]
+  CC --&gt; OUT[Válasz - JSON vagy SSE folyam]
+  RESP --&gt; OUT
+  RESP --&gt; TOOLS[Beépített eszközök és MCP]
+</pre>
+<pre class="mermaid" lang="en">
+flowchart LR
+  KEY[API key - Bearer token] --&gt; API[OpenAI API]
+  API --&gt; CC[Chat Completions - /v1/chat/completions]
+  API --&gt; RESP[Responses API - /v1/responses]
+  CC --&gt; OUT[Response - JSON or SSE stream]
+  RESP --&gt; OUT
+  RESP --&gt; TOOLS[Built-in tools and MCP]
+</pre>
+          <p class="mermaid__caption">
+            <span lang="hu">Egy API-kulcs két szöveges végpontot ér el; mindkettő JSON-t vagy SSE-folyamot ad vissza, a Responses API ezen felül a beépített eszközöket és az MCP-t is kiszolgálja.</span>
+            <span lang="en">One API key reaches two text endpoints; both return JSON or an SSE stream, and the Responses API additionally serves the built-in tools and MCP.</span>
+          </p>
+        </div>
+      </section>
+
+      <!-- 04 Models 2026 -->
+      <section class="section">
+        <div class="section__head">
+          <span class="section__num">04</span>
+          <h2 class="section__title"><span lang="hu">Modellek 2026</span><span lang="en">Models 2026</span></h2>
+        </div>
+        <p class="section__desc">
+          <span lang="hu">A jelenlegi zászlóshajó a GPT-5.5; a GPT-5.4 család az olcsóbb, még mindig erős réteg. A gyorsítótárazott input kb. 90%-kal, a Batch / Flex feldolgozás kb. fél áron érhető el.</span>
+          <span lang="en">The current flagship is GPT-5.5; the GPT-5.4 family is the cheaper, still-strong tier. Cached input is roughly 90% cheaper, and Batch / Flex processing runs at about half price.</span>
+        </p>
+        <div class="compare-table-wrap">
+          <table class="compare-table">
+            <thead>
+              <tr>
+                <th><span lang="hu">Modell</span><span lang="en">Model</span></th>
+                <th><span lang="hu">Típus</span><span lang="en">Type</span></th>
+                <th><span lang="hu">Kontextus</span><span lang="en">Context</span></th>
+                <th><span lang="hu">Állapot</span><span lang="en">Status</span></th>
+                <th><span lang="hu">Ár (be / ki, 1M)</span><span lang="en">Price (in / out, 1M)</span></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="arch-name">GPT-5.5</td>
+                <td><span lang="hu">Zászlóshajó, kódolás és profi munka</span><span lang="en">Flagship, coding &amp; pro work</span></td>
+                <td class="mono">1M / 128K</td>
+                <td><span lang="hu">GA (2026-04-23)</span><span lang="en">GA (2026-04-23)</span></td>
+                <td class="mono">$5.00 / $30.00</td>
+              </tr>
+              <tr>
+                <td class="arch-name">GPT-5.5-pro</td>
+                <td><span lang="hu">Maximális mélységű érvelés</span><span lang="en">Max-depth reasoning</span></td>
+                <td class="mono">~1M</td>
+                <td>GA</td>
+                <td class="mono">$30.00 / $180.00</td>
+              </tr>
+              <tr>
+                <td class="arch-name">GPT-5.4</td>
+                <td><span lang="hu">Korábbi zászlóshajó, olcsóbb</span><span lang="en">Prior flagship, lower cost</span></td>
+                <td class="mono">1M</td>
+                <td>GA</td>
+                <td class="mono">$2.50 / $15.00</td>
+              </tr>
+              <tr>
+                <td class="arch-name">GPT-5.4-mini</td>
+                <td><span lang="hu">Erős mini — kódolás, ágensek</span><span lang="en">Strong mini — coding, agents</span></td>
+                <td class="mono">400K</td>
+                <td><span lang="hu">GA (az o4-mini utódja)</span><span lang="en">GA (replaces o4-mini)</span></td>
+                <td class="mono">$0.75 / $4.50</td>
+              </tr>
+              <tr>
+                <td class="arch-name">GPT-5.4-nano</td>
+                <td><span lang="hu">Legkisebb / legolcsóbb</span><span lang="en">Smallest / cheapest</span></td>
+                <td class="mono">large</td>
+                <td>GA</td>
+                <td class="mono">$0.20 / $1.25</td>
+              </tr>
+              <tr>
+                <td class="arch-name">GPT-5.3-Codex</td>
+                <td><span lang="hu">Ágensalapú kódolás</span><span lang="en">Agentic coding</span></td>
+                <td class="mono">large</td>
+                <td>GA</td>
+                <td class="mono">$1.75 / $14.00</td>
+              </tr>
+              <tr>
+                <td class="arch-name">o3</td>
+                <td><span lang="hu">o-sorozatú érvelés</span><span lang="en">o-series reasoning</span></td>
+                <td class="mono">200K</td>
+                <td><span lang="hu">Elérhető az API-ban</span><span lang="en">Available in API</span></td>
+                <td class="mono">$2.00 / $8.00</td>
+              </tr>
+              <tr>
+                <td class="arch-name">o4-mini</td>
+                <td><span lang="hu">Gyors, olcsó érvelés</span><span lang="en">Fast, cheap reasoning</span></td>
+                <td class="mono">200K</td>
+                <td><span lang="hu">API-megszűnés: 2026-10-23</span><span lang="en">API shutdown: 2026-10-23</span></td>
+                <td class="mono">$0.55 / $2.20</td>
+              </tr>
+              <tr style="opacity:.55;">
+                <td class="arch-name">GPT-4o / GPT-4.1</td>
+                <td><span lang="hu">Korábbi generáció</span><span lang="en">Legacy</span></td>
+                <td class="mono">128K</td>
+                <td><span lang="hu">ChatGPT-ből kivonva 2026-02-13; API-ban él</span><span lang="en">Retired from ChatGPT 2026-02-13; still in API</span></td>
+                <td class="mono">—</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="info-box">
+          <p class="info-box__title"><span lang="hu">Fontos változások</span><span lang="en">Important changes</span></p>
+          <p class="info-box__body">
+            <span lang="hu">A 2026-02-13-i visszavonás <strong>csak a ChatGPT-et</strong> érintette: a GPT-4o és a GPT-4.1 továbbra is hívható az API-ból — az OpenAI megfogalmazásában „az API-ban egyelőre nincs változás”. Az <strong>Assistants API</strong> elavult (2025-08-26), végleges megszűnése 2026-08-26 — a migráció a Responses API + Conversations API felé vezet. Az <strong>o4-mini</strong> API-elérése 2026-10-23-án szűnik meg.</span>
+            <span lang="en">The 2026-02-13 retirement affected <strong>ChatGPT only</strong>: GPT-4o and GPT-4.1 remain callable from the API — in OpenAI's wording, "in the API, there are no changes at this time." The <strong>Assistants API</strong> is deprecated (2025-08-26), with sunset on 2026-08-26 — migration goes to the Responses API + Conversations API. The <strong>o4-mini</strong> API access is shut down on 2026-10-23.</span>
+          </p>
+        </div>
+      </section>
+
+      <!-- 05 Streaming & SSE -->
+      <section class="section">
+        <div class="section__head">
+          <span class="section__num">05</span>
+          <h2 class="section__title"><span lang="hu">Streaming és SSE</span><span lang="en">Streaming &amp; SSE</span></h2>
+        </div>
+        <p class="section__desc">
+          <span lang="hu">A streaming a választ tokenekre bontva, valós időben adja vissza — a felhasználó az első tokent töredék idő alatt látja. A két végpont eltérő folyamformátumot használ.</span>
+          <span lang="en">Streaming returns the response in real time, broken into tokens — the user sees the first token in a fraction of the time. The two endpoints use different stream formats.</span>
+        </p>
+        <div class="grid grid-2">
+          <div class="card card--rich card--flat">
+            <span class="card__tag">Chat Completions</span>
+            <div class="card__title"><span lang="hu">SSE adatfolyam</span><span lang="en">SSE stream</span></div>
+            <p class="card__body">
+              <span lang="hu">A <code>stream: true</code> hatására Server-Sent Events érkezik: minden esemény egy <code>data:</code> sorral kezdődik, és egy <code>chat.completion.chunk</code> objektumot szállít.</span>
+              <span lang="en">With <code>stream: true</code>, Server-Sent Events arrive: every event begins with a <code>data:</code> line and carries a <code>chat.completion.chunk</code> object.</span>
+            </p>
+            <ul class="feature-list">
+              <li><span lang="hu">Minden chunk egy <code>choices[].delta</code> töredék.</span><span lang="en">Each chunk is a <code>choices[].delta</code> fragment.</span></li>
+              <li><span lang="hu">Lezárás: a literál <code>data: [DONE]</code> sor.</span><span lang="en">Termination: the literal <code>data: [DONE]</code> line.</span></li>
+              <li><span lang="hu"><code>stream_options: {"include_usage": true}</code> → záró, csak token-felhasználást tartalmazó chunk.</span><span lang="en"><code>stream_options: {"include_usage": true}</code> → a final usage-only chunk.</span></li>
+            </ul>
+          </div>
+          <div class="card card--rich card--agent">
+            <span class="card__tag">Responses API</span>
+            <div class="card__title"><span lang="hu">Típusos események</span><span lang="en">Typed events</span></div>
+            <p class="card__body">
+              <span lang="hu">A Responses API szemantikus, típusos eseményeket küld — nincs <code>[DONE]</code>. Minden eseménynek van <code>sequence_number</code>-e.</span>
+              <span lang="en">The Responses API emits semantic, typed events — there is no <code>[DONE]</code>. Every event has a <code>sequence_number</code>.</span>
+            </p>
+            <ul class="feature-list">
+              <li><span lang="hu"><code>response.created</code> — a folyam kezdete.</span><span lang="en"><code>response.created</code> — the start of the stream.</span></li>
+              <li><span lang="hu"><code>response.output_text.delta</code> — szövegtöredékek; <code>response.function_call_arguments.delta</code> — eszközargumentumok.</span><span lang="en"><code>response.output_text.delta</code> — text fragments; <code>response.function_call_arguments.delta</code> — tool arguments.</span></li>
+              <li><span lang="hu"><code>response.completed</code> — záró esemény, benne a teljes <code>response</code> és <code>usage</code>.</span><span lang="en"><code>response.completed</code> — the terminal event, embedding the final <code>response</code> and <code>usage</code>.</span></li>
+            </ul>
+          </div>
+        </div>
+        <div class="info-box">
+          <p class="info-box__title"><span lang="hu">Streaming tipp</span><span lang="en">Streaming tip</span></p>
+          <p class="info-box__body">
+            <span lang="hu">Streameléskor a hibakezelés nehezebb: a HTTP-státusz már a hibatartalom előtt megérkezik, így a folyam közben fellépő hibát is kezelni kell. A Responses API <code>error</code> eseménye, illetve a Chat Completions csonka (a <code>[DONE]</code> nélkül záruló) folyama jelzi a megszakadást — a kliensnek mindkettőre fel kell készülnie.</span>
+            <span lang="en">Error handling is harder when streaming: the HTTP status arrives before the error body, so failures mid-stream must also be handled. The Responses API <code>error</code> event, and a truncated Chat Completions stream (one ending without <code>[DONE]</code>), both signal a break — the client must be ready for either.</span>
+          </p>
+        </div>
+      </section>
+
+      <!-- 06 Function calling & tools -->
+      <section class="section">
+        <div class="section__head">
+          <span class="section__num">06</span>
+          <h2 class="section__title"><span lang="hu">Function calling és eszközök</span><span lang="en">Function calling &amp; tools</span></h2>
+        </div>
+        <p class="section__desc">
+          <span lang="hu">A function calling során a modell strukturált JSON-t állít elő egy általunk leírt függvény meghívásához. A futtatást a saját kódunk végzi; az eredményt visszaadva a modell befejezi a választ.</span>
+          <span lang="en">In function calling the model produces structured JSON to invoke a function we describe. Our own code runs it; returning the result lets the model finish the answer.</span>
+        </p>
+        <div class="diagram-box">
+          <div class="pipeline">
+            <div class="pipeline__step">
+              <span class="pipeline__node">1</span>
+              <span class="pipeline__label"><span lang="hu">Kérés + <code>tools</code></span><span lang="en">Request + <code>tools</code></span></span>
+            </div>
+            <span class="pipeline__arrow" aria-hidden="true">→</span>
+            <div class="pipeline__step">
+              <span class="pipeline__node">2</span>
+              <span class="pipeline__label"><span lang="hu">A modell dönt</span><span lang="en">Model decides</span></span>
+            </div>
+            <span class="pipeline__arrow" aria-hidden="true">→</span>
+            <div class="pipeline__step">
+              <span class="pipeline__node">3</span>
+              <span class="pipeline__label"><span lang="hu"><code>tool_calls</code> JSON</span><span lang="en"><code>tool_calls</code> JSON</span></span>
+            </div>
+            <span class="pipeline__arrow" aria-hidden="true">→</span>
+            <div class="pipeline__step">
+              <span class="pipeline__node">4</span>
+              <span class="pipeline__label"><span lang="hu">Végrehajtás</span><span lang="en">Execute</span></span>
+            </div>
+            <span class="pipeline__arrow" aria-hidden="true">→</span>
+            <div class="pipeline__step">
+              <span class="pipeline__node">5</span>
+              <span class="pipeline__label"><span lang="hu">Válasz</span><span lang="en">Response</span></span>
+            </div>
+          </div>
+        </div>
+        <div class="grid grid-2">
+          <div class="code-block">
+            <div class="code-block__head"><span>tool_definition.json</span></div>
+            <pre><code><span class="tok-comment">// A tools tomb egy eleme — Responses API alak</span>
+{
+  "type": "function",
+  "name": "get_weather",
+  "description": "Get current weather for a city",
+  "parameters": {
+    "type": "object",
+    "properties": {
+      "location": { "type": "string" }
+    },
+    "required": ["location"],
+    "additionalProperties": false
+  },
+  "strict": true
+}
+</code></pre>
+          </div>
+          <div class="code-block">
+            <div class="code-block__head"><span>tool_call.json</span></div>
+            <pre><code><span class="tok-comment">// Chat Completions valasz: message.tool_calls[]</span>
+{
+  "role": "assistant",
+  "tool_calls": [{
+    "id": "call_abc123",
+    "type": "function",
+    "function": {
+      "name": "get_weather",
+      "arguments": "{\"location\":\"Budapest\"}"
+    }
+  }]
+}
+</code></pre>
+          </div>
+        </div>
+        <div class="info-box">
+          <p class="info-box__title"><span lang="hu"><code>strict</code> mód és <code>tool_choice</code></span><span lang="en"><code>strict</code> mode &amp; <code>tool_choice</code></span></p>
+          <p class="info-box__body">
+            <span lang="hu">A <code>strict: true</code> a függvény-sémát a dekódolási rétegen kényszeríti ki. A <code>tool_choice</code> szabályozza a hívást: <code>auto</code> (alapértelmezett), <code>required</code>, <code>none</code>, egy megnevezett függvény vagy <code>allowed_tools</code>. A <code>parallel_tool_calls</code> alapból igaz — de párhuzamos hívásoknál a <code>strict</code> séma-betartás nem garantált. A válaszalak eltér: a Chat Completions a <code>message.tool_calls[]</code>-ot adja, a Responses API az <code>output[]</code> tömbben <code>type: "function_call"</code> elemeket <code>call_id</code>-vel — az <code>arguments</code> mindig JSON-kódolt string. 2026-os újdonság a <strong>Tool Search</strong> (<code>gpt-5.4</code>+, lusta eszközbetöltés) és a kontextusmentes nyelvtannal definiált egyéni eszközök.</span>
+            <span lang="en"><code>strict: true</code> enforces the function schema at the decoding layer. <code>tool_choice</code> governs the call: <code>auto</code> (default), <code>required</code>, <code>none</code>, a named function, or <code>allowed_tools</code>. <code>parallel_tool_calls</code> defaults to true — but with parallel calls <code>strict</code> schema enforcement is not guaranteed. The response shape differs: Chat Completions returns <code>message.tool_calls[]</code>, the Responses API returns <code>type: "function_call"</code> items with a <code>call_id</code> in the <code>output[]</code> array — and <code>arguments</code> is always a JSON-encoded string. New in 2026: <strong>Tool Search</strong> (<code>gpt-5.4</code>+, lazy tool loading) and custom tools defined with context-free grammars.</span>
+          </p>
+        </div>
+      </section>
+
+      <!-- 07 Structured Outputs -->
+      <section class="section">
+        <div class="section__head">
+          <span class="section__num">07</span>
+          <h2 class="section__title"><span lang="hu">Strukturált kimenetek</span><span lang="en">Structured Outputs</span></h2>
+        </div>
+        <p class="section__desc">
+          <span lang="hu">A strukturált kimenet garantálja, hogy a modell válasza egy megadott JSON-sémát követ. Ez a régi JSON mode utódja — és élesben az alapértelmezett választás.</span>
+          <span lang="en">Structured Outputs guarantees that the model's response follows a supplied JSON schema. It is the successor to the legacy JSON mode — and the production default.</span>
+        </p>
+        <div class="compare-table-wrap">
+          <table class="compare-table">
+            <thead>
+              <tr>
+                <th><span lang="hu">Jellemző</span><span lang="en">Aspect</span></th>
+                <th>Structured Outputs</th>
+                <th><span lang="hu">JSON mode (régi)</span><span lang="en">JSON mode (legacy)</span></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><span lang="hu">Paraméter</span><span lang="en">Parameter</span></td>
+                <td class="mono">json_schema, strict:true</td>
+                <td class="mono">json_object</td>
+              </tr>
+              <tr>
+                <td><span lang="hu">Garancia</span><span lang="en">Guarantee</span></td>
+                <td><span lang="hu">Séma betartása a dekódolási rétegen</span><span lang="en">Schema adherence at the decoding layer</span></td>
+                <td><span lang="hu">Csak annyi: a kimenet érvényes JSON</span><span lang="en">Only that the output parses as JSON</span></td>
+              </tr>
+              <tr>
+                <td><span lang="hu">Kötelező mezők</span><span lang="en">Required fields</span></td>
+                <td><span lang="hu">Nem hagyhatók ki</span><span lang="en">Cannot be omitted</span></td>
+                <td><span lang="hu">Nem garantált</span><span lang="en">Not guaranteed</span></td>
+              </tr>
+              <tr>
+                <td><span lang="hu">Enumok</span><span lang="en">Enums</span></td>
+                <td><span lang="hu">Nem sérthetők</span><span lang="en">Cannot be violated</span></td>
+                <td><span lang="hu">Nem garantált</span><span lang="en">Not guaranteed</span></td>
+              </tr>
+              <tr>
+                <td><span lang="hu">Elutasítás</span><span lang="en">Refusal</span></td>
+                <td><span lang="hu">Külön <code>refusal</code> mező</span><span lang="en">A distinct <code>refusal</code> field</span></td>
+                <td><span lang="hu">Nincs</span><span lang="en">None</span></td>
+              </tr>
+              <tr>
+                <td><span lang="hu">Ajánlás</span><span lang="en">Recommendation</span></td>
+                <td><span lang="hu">Éles rendszerek alapértelmezése</span><span lang="en">The production default</span></td>
+                <td><span lang="hu">Új kódban kerülendő</span><span lang="en">Avoid in new code</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="info-box">
+          <p class="info-box__title"><span lang="hu">Sémaszabályok</span><span lang="en">Schema rules</span></p>
+          <p class="info-box__body">
+            <span lang="hu">A kérésben: <code>response_format: {type: "json_schema", json_schema: {name, strict: true, schema}}</code>. <code>strict: true</code> esetén minden objektumon kötelező az <code>additionalProperties: false</code>, és minden mezőnek szerepelnie kell a <code>required</code> tömbben — az „opcionális” mezőt nullable unióként kell modellezni. Így a kötelező mezők nem maradhatnak ki és az enumok nem sérülhetnek; a modell elutasítását külön <code>refusal</code> mező jelzi.</span>
+            <span lang="en">In the request: <code>response_format: {type: "json_schema", json_schema: {name, strict: true, schema}}</code>. With <code>strict: true</code>, every object must carry <code>additionalProperties: false</code>, and every field must appear in <code>required</code> — model an "optional" field as a nullable union. This way required fields cannot be omitted and enums cannot be violated; a model refusal surfaces in a distinct <code>refusal</code> field.</span>
+          </p>
+        </div>
+      </section>
+
+      <!-- 08 Built-in tools & MCP -->
+      <section class="section">
+        <div class="section__head">
+          <span class="section__num">08</span>
+          <h2 class="section__title"><span lang="hu">Beépített eszközök és MCP</span><span lang="en">Built-in tools &amp; MCP</span></h2>
+        </div>
+        <p class="section__desc">
+          <span lang="hu">A Responses API beépített (hosztolt) eszközöket tesz ugyanabba a <code>tools</code> tömbbe, mint a saját függvényeinket. Egy részük token-en felüli díjat is felszámol.</span>
+          <span lang="en">The Responses API places built-in (hosted) tools into the same <code>tools</code> array as our own functions. Some of them also carry billing beyond tokens.</span>
+        </p>
+        <div class="grid grid-3">
+          <div class="card">
+            <div class="card__title"><span lang="hu">Web Search</span><span lang="en">Web Search</span></div>
+            <p class="card__body">
+              <span lang="hu"><code>{type: "web_search"}</code> — a modell élő webes keresést futtat, és a találatokat a válaszba építi.</span>
+              <span lang="en"><code>{type: "web_search"}</code> — the model runs a live web search and grounds the answer in the results.</span>
+            </p>
+          </div>
+          <div class="card">
+            <div class="card__title"><span lang="hu">File Search</span><span lang="en">File Search</span></div>
+            <p class="card__body">
+              <span lang="hu"><code>{type: "file_search", vector_store_ids: [...]}</code> — hosztolt vektortárból keres (kezelt RAG).</span>
+              <span lang="en"><code>{type: "file_search", vector_store_ids: [...]}</code> — searches a hosted vector store (managed RAG).</span>
+            </p>
+          </div>
+          <div class="card">
+            <div class="card__title"><span lang="hu">Code Interpreter</span><span lang="en">Code Interpreter</span></div>
+            <p class="card__body">
+              <span lang="hu"><code>{type: "code_interpreter"}</code> — sandboxban Python-kódot futtat számoláshoz, adatfeldolgozáshoz.</span>
+              <span lang="en"><code>{type: "code_interpreter"}</code> — runs Python in a sandbox for computation and data work.</span>
+            </p>
+          </div>
+          <div class="card">
+            <div class="card__title"><span lang="hu">Computer Use</span><span lang="en">Computer Use</span></div>
+            <p class="card__body">
+              <span lang="hu">A modell egy virtuális gépet vezérel — kattint, gépel, navigál — felhasználói felületeken.</span>
+              <span lang="en">The model drives a virtual machine — clicking, typing, navigating — across user interfaces.</span>
+            </p>
+          </div>
+          <div class="card">
+            <div class="card__title"><span lang="hu">Image Generation</span><span lang="en">Image Generation</span></div>
+            <p class="card__body">
+              <span lang="hu">A modell képet állít elő a válasz részeként, külön képgeneráló hívás nélkül.</span>
+              <span lang="en">The model produces an image as part of the response, with no separate image call.</span>
+            </p>
+          </div>
+        </div>
+        <div class="info-box">
+          <p class="info-box__title"><span lang="hu">MCP-eszközök</span><span lang="en">MCP tools</span></p>
+          <p class="info-box__body">
+            <span lang="hu">Az MCP-eszköz — <code>{type: "mcp", server_label, server_url, require_approval}</code> — egy távoli MCP-szerver eszközeit importálja az API-ba; egy <code>mcp_list_tools</code> kimeneti elem sorolja fel őket. Ugyanez a mechanizmus hajtja az OpenAI Connectorokat. A jóváhagyás alapból kért.</span>
+            <span lang="en">The MCP tool — <code>{type: "mcp", server_label, server_url, require_approval}</code> — imports a remote MCP server's tools into the API; an <code>mcp_list_tools</code> output item lists them. The same mechanism powers OpenAI Connectors. Approval is requested by default.</span>
+          </p>
+        </div>
+      </section>
+
+      <!-- 09 Responses API vs Chat Completions -->
+      <section class="section">
+        <div class="section__head">
+          <span class="section__num">09</span>
+          <h2 class="section__title"><span lang="hu">Responses API vs Chat Completions</span><span lang="en">Responses API vs Chat Completions</span></h2>
+        </div>
+        <p class="section__desc">
+          <span lang="hu">A Responses API a Chat Completions szuperhalmaza — ami a régivel működik, az az újjal is. Az inkrementális, végpontonkénti migráció ajánlott.</span>
+          <span lang="en">The Responses API is a superset of Chat Completions — whatever works with the old one works with the new one. Incremental, per-endpoint migration is recommended.</span>
+        </p>
+        <div class="compare-table-wrap">
+          <table class="compare-table">
+            <thead>
+              <tr>
+                <th><span lang="hu">Jellemző</span><span lang="en">Feature</span></th>
+                <th>Chat Completions</th>
+                <th>Responses API</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><span lang="hu">Végpont</span><span lang="en">Endpoint</span></td>
+                <td class="mono">/v1/chat/completions</td>
+                <td class="mono">/v1/responses</td>
+              </tr>
+              <tr>
+                <td><span lang="hu">Állapot</span><span lang="en">State</span></td>
+                <td><span lang="hu">Állapotmentes</span><span lang="en">Stateless</span></td>
+                <td><span lang="hu">Állapottartó (<code>store: true</code>)</span><span lang="en">Stateful (<code>store: true</code>)</span></td>
+              </tr>
+              <tr>
+                <td><span lang="hu">Beépített eszközök</span><span lang="en">Built-in tools</span></td>
+                <td><span lang="hu">Nincs</span><span lang="en">None</span></td>
+                <td><span lang="hu">Web/file search, code interpreter, computer use, képgenerálás</span><span lang="en">Web/file search, code interpreter, computer use, image gen</span></td>
+              </tr>
+              <tr>
+                <td>MCP</td>
+                <td><span lang="hu">Nincs</span><span lang="en">No</span></td>
+                <td><span lang="hu">Igen</span><span lang="en">Yes</span></td>
+              </tr>
+              <tr>
+                <td>Streaming</td>
+                <td><span lang="hu">SSE, <code>data: [DONE]</code></span><span lang="en">SSE, <code>data: [DONE]</code></span></td>
+                <td><span lang="hu">Típusos események</span><span lang="en">Typed events</span></td>
+              </tr>
+              <tr>
+                <td><span lang="hu">Kontextus</span><span lang="en">Context</span></td>
+                <td><span lang="hu">Teljes <code>messages</code> tömb minden kérésben</span><span lang="en">Full <code>messages</code> array in every request</span></td>
+                <td><span lang="hu"><code>previous_response_id</code> hivatkozás</span><span lang="en"><code>previous_response_id</code> reference</span></td>
+              </tr>
+              <tr>
+                <td><span lang="hu">Prompt-gyorsítótár</span><span lang="en">Prompt caching</span></td>
+                <td><span lang="hu">Automatikus</span><span lang="en">Automatic</span></td>
+                <td><span lang="hu">Automatikus, 40–80%-kal jobb kihasználtság</span><span lang="en">Automatic, 40–80% better utilization</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="stat-row">
+          <div class="stat-pill">
+            <div class="stat-pill__label">SWE-bench</div>
+            <div class="stat-pill__value">+3%</div>
+          </div>
+          <div class="stat-pill">
+            <div class="stat-pill__label"><span lang="hu">Prompt-gyorsítótár</span><span lang="en">Prompt cache</span></div>
+            <div class="stat-pill__value">40–80%</div>
+          </div>
+          <div class="stat-pill">
+            <div class="stat-pill__label"><span lang="hu">Visszafelé kompatibilis</span><span lang="en">Backward compatible</span></div>
+            <div class="stat-pill__value">100%</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 10 OpenAI-compatible ecosystem -->
+      <section class="section">
+        <div class="section__head">
+          <span class="section__num">10</span>
+          <h2 class="section__title"><span lang="hu">OpenAI-kompatibilis ökoszisztéma</span><span lang="en">OpenAI-compatible ecosystem</span></h2>
+        </div>
+        <p class="section__desc">
+          <span lang="hu">Az „OpenAI-kompatibilis” egy olyan szervert jelent, amely az OpenAI kérés/válasz sémáját és URL-útvonalait (főleg a <code>POST /v1/chat/completions</code>-t) tükrözi — így bármely OpenAI SDK működik vele, ha csak a <code>base_url</code>-t és az <code>api_key</code>-t cseréljük.</span>
+          <span lang="en">"OpenAI-compatible" means a server that mirrors OpenAI's request/response schema and URL paths (chiefly <code>POST /v1/chat/completions</code>) — so any OpenAI SDK works with it by changing only <code>base_url</code> and <code>api_key</code>.</span>
+        </p>
+        <div class="compare-table-wrap">
+          <table class="compare-table">
+            <thead>
+              <tr>
+                <th><span lang="hu">Szerver / szolgáltató</span><span lang="en">Server / provider</span></th>
+                <th><span lang="hu">Mi ez</span><span lang="en">What it is</span></th>
+                <th>base_url</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="arch-name">vLLM</td>
+                <td><span lang="hu">Nagy áteresztőképességű GPU-kiszolgáló nyílt modellekhez; a <code>/v1/responses</code>-t is adja</span><span lang="en">High-throughput GPU server for open models; also serves <code>/v1/responses</code></span></td>
+                <td class="mono">http://localhost:8000/v1</td>
+              </tr>
+              <tr>
+                <td class="arch-name">Ollama</td>
+                <td><span lang="hu">Helyi modellfuttató; kísérleti OpenAI-kompatibilitás (chat, embeddings)</span><span lang="en">Local model runner; experimental OpenAI compat (chat, embeddings)</span></td>
+                <td class="mono">http://localhost:11434/v1/</td>
+              </tr>
+              <tr>
+                <td class="arch-name">llama.cpp</td>
+                <td><span lang="hu">C/C++ inferencia-szerver (<code>llama-server</code>)</span><span lang="en">C/C++ inference server (<code>llama-server</code>)</span></td>
+                <td class="mono">http://localhost:8080/v1</td>
+              </tr>
+              <tr>
+                <td class="arch-name">LM Studio</td>
+                <td><span lang="hu">Asztali alkalmazás beépített kompatibilis szerverrel</span><span lang="en">Desktop app with a built-in compatible server</span></td>
+                <td class="mono">http://localhost:1234/v1</td>
+              </tr>
+              <tr>
+                <td class="arch-name">LiteLLM</td>
+                <td><span lang="hu">OpenAI-kompatibilis átjáró (proxy) 100+ backend felé</span><span lang="en">OpenAI-compatible gateway (proxy) routing to 100+ backends</span></td>
+                <td class="mono">http://0.0.0.0:4000</td>
+              </tr>
+              <tr>
+                <td class="arch-name">OpenRouter</td>
+                <td><span lang="hu">Aggregátor, egy kulcs → sok modell</span><span lang="en">Aggregator, one key → many models</span></td>
+                <td class="mono">https://openrouter.ai/api/v1</td>
+              </tr>
+              <tr>
+                <td class="arch-name">Together AI</td>
+                <td><span lang="hu">Hosztolt inferencia nyílt modellekhez</span><span lang="en">Hosted inference for open models</span></td>
+                <td class="mono">https://api.together.xyz/v1</td>
+              </tr>
+              <tr>
+                <td class="arch-name">Groq</td>
+                <td><span lang="hu">Ultra-alacsony késleltetésű LPU-inferencia</span><span lang="en">Ultra-low-latency LPU inference</span></td>
+                <td class="mono">https://api.groq.com/openai/v1</td>
+              </tr>
+              <tr>
+                <td class="arch-name">Fireworks AI</td>
+                <td><span lang="hu">Gyors hosztolt inferencia nyílt modellekhez</span><span lang="en">Fast hosted inference for open models</span></td>
+                <td class="mono">https://api.fireworks.ai/inference/v1</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="info-box">
+          <p class="info-box__title"><span lang="hu">Kompatibilis ≠ azonos</span><span lang="en">Compatible ≠ identical</span></p>
+          <p class="info-box__body">
+            <span lang="hu">A legtöbb szerver csak a Chat Completionst valósítja meg (a Responses API-t nem); a function calling / <code>tool_choice</code> / strukturált kimenet támogatása szerverenként eltér; a streaming chunk-formátum és a <code>[DONE]</code> kezelése különbözik; a <code>/v1/embeddings</code> nem univerzális; a nem támogatott paramétereket a szerverek gyakran csendben eldobják; a Batch, a prompt-gyorsítótár és a finomhangolás többnyire hiányzik. A helyi szerverek bármilyen nem üres kulcs-stringet elfogadnak; a LiteLLM proxy a kivétel — a csupasz gyökérre kell mutatni, <code>/v1</code> nélkül.</span>
+            <span lang="en">Most servers implement only Chat Completions (not the Responses API); function calling / <code>tool_choice</code> / structured-output support varies per server; the streaming chunk shape and <code>[DONE]</code> handling differ; <code>/v1/embeddings</code> is not universal; unsupported parameters are often silently dropped; Batch, prompt caching and fine-tuning are usually absent. Local servers accept any non-empty key string; the LiteLLM proxy is the exception — point at the bare root, with no <code>/v1</code>.</span>
+          </p>
+        </div>
+      </section>
+
+      <!-- 11 Best practices -->
+      <section class="section">
+        <div class="section__head">
+          <span class="section__num">11</span>
+          <h2 class="section__title"><span lang="hu">Best practices és gyakori hibák</span><span lang="en">Best practices &amp; common pitfalls</span></h2>
+        </div>
+        <div class="grid grid-2">
+          <div class="panel panel--ok">
+            <h3 class="panel__title"><span lang="hu">Ajánlott gyakorlatok</span><span lang="en">Best practices</span></h3>
+            <ul class="feature-list feature-list--ok">
+              <li><span lang="hu">Új projekthez a Responses API-t válaszd — beépített eszközök, jobb gyorsítótár.</span><span lang="en">Choose the Responses API for new projects — built-in tools, better caching.</span></li>
+              <li><span lang="hu">Mindig állíts kimeneti felső korlátot (<code>max_output_tokens</code> / <code>max_completion_tokens</code>).</span><span lang="en">Always set an output cap (<code>max_output_tokens</code> / <code>max_completion_tokens</code>).</span></li>
+              <li><span lang="hu">Token-számláláshoz <code>tiktoken</code>, <code>o200k_base</code> kódolással.</span><span lang="en">Count tokens with <code>tiktoken</code> using the <code>o200k_base</code> encoding.</span></li>
+              <li><span lang="hu">429 és 5xx hibáknál exponenciális backoff + jitter, a <code>Retry-After</code> fejléc figyelembevételével.</span><span lang="en">On 429 and 5xx errors use exponential backoff + jitter, honoring the <code>Retry-After</code> header.</span></li>
+              <li><span lang="hu">Function callingnál <code>strict: true</code> séma.</span><span lang="en">Use a <code>strict: true</code> schema for function calling.</span></li>
+              <li><span lang="hu">A statikus tartalmat (system üzenet, eszköz-definíciók) tartsd a prompt elején — a gyorsítótár prefix-egyezésre épül.</span><span lang="en">Keep static content (system message, tool defs) at the front of the prompt — caching matches on the prefix.</span></li>
+              <li><span lang="hu">API-kulcs környezeti változóban (fejlesztés), titokkezelőben (éles).</span><span lang="en">Keep the API key in an environment variable (dev), in a secret manager (prod).</span></li>
+            </ul>
+          </div>
+          <div class="panel panel--warn">
+            <h3 class="panel__title"><span lang="hu">Gyakori hibák</span><span lang="en">Common pitfalls</span></h3>
+            <ul class="feature-list feature-list--warn">
+              <li><span lang="hu">API-kulcs beégetése forráskódba vagy kliensoldali kódba.</span><span lang="en">Hardcoding the API key in source or in client-side code.</span></li>
+              <li><span lang="hu">Abból kiindulni, hogy a GPT-4o eltűnt az API-ból — csak a ChatGPT-ből vonult vissza.</span><span lang="en">Assuming GPT-4o is gone from the API — it was only retired from ChatGPT.</span></li>
+              <li><span lang="hu">Új projektet az Assistants API-ra építeni (2026-08-26-án megszűnik).</span><span lang="en">Building a new project on the Assistants API (it sunsets 2026-08-26).</span></li>
+              <li><span lang="hu">Hosszú kimenetet streaming nélkül kérni.</span><span lang="en">Requesting long output without streaming.</span></li>
+              <li><span lang="hu">Hiányzó 429 / 5xx hibakezelés és újrapróbálkozási logika.</span><span lang="en">Missing 429 / 5xx error handling and retry logic.</span></li>
+              <li><span lang="hu">4xx hibát újrapróbálni (a 408 és a rate-limit 429 kivételével) — ez kliensoldali hiba.</span><span lang="en">Retrying a 4xx error (except 408 and rate-limit 429) — that is a client fault.</span></li>
+              <li><span lang="hu"><code>cl200k_base</code> kódolást feltételezni — a GPT-4o / o-sorozat / GPT-5 az <code>o200k_base</code>-t használja.</span><span lang="en">Assuming <code>cl200k_base</code> — GPT-4o / o-series / GPT-5 use <code>o200k_base</code>.</span></li>
+            </ul>
+          </div>
+        </div>
+        <div class="grid grid-3">
+          <div class="info-box">
+            <p class="info-box__title"><span lang="hu">Migrációs terv</span><span lang="en">Migration plan</span></p>
+            <p class="info-box__body">
+              <span lang="hu">1. Auditáld a Chat Completions hívásokat → 2. Tesztelj a Responses API-val → 3. Állj át végpontonként. Az Assistants API-projekteket a Responses + Conversations API-ra migráld 2026-08-26 előtt.</span>
+              <span lang="en">1. Audit the Chat Completions calls → 2. Test with the Responses API → 3. Migrate per endpoint. Move Assistants API projects to the Responses + Conversations API before 2026-08-26.</span>
+            </p>
+          </div>
+          <div class="info-box">
+            <p class="info-box__title"><span lang="hu">Token és költség</span><span lang="en">Token &amp; cost</span></p>
+            <p class="info-box__body">
+              <span lang="hu">Token-számlálás <code>tiktoken</code> + <code>o200k_base</code>. A kimeneti korlát paramétere eltér: <code>max_tokens</code> (régi CC), <code>max_completion_tokens</code> (CC érvelő modellek), <code>max_output_tokens</code> (Responses API). A gyorsítótárazott input kb. 90%-kal, a Batch API kb. 50%-kal olcsóbb.</span>
+              <span lang="en">Count tokens with <code>tiktoken</code> + <code>o200k_base</code>. The output-cap parameter differs: <code>max_tokens</code> (legacy CC), <code>max_completion_tokens</code> (CC reasoning models), <code>max_output_tokens</code> (Responses API). Cached input is ~90% cheaper, the Batch API ~50% cheaper.</span>
+            </p>
+          </div>
+          <div class="info-box">
+            <p class="info-box__title"><span lang="hu">Biztonság</span><span lang="en">Security</span></p>
+            <p class="info-box__body">
+              <span lang="hu">Soha ne égess be kulcsot, és ne küldd kliensre. Fejlesztéshez környezeti változó, éleshez titokkezelő. Projekt-hatókörű kulcsot használj, 60–90 naponta rotálva. A kulcsot sose logold.</span>
+              <span lang="en">Never hardcode a key, never ship it to the client. An environment variable for dev, a secret manager for prod. Use a project-scoped key, rotated every 60–90 days. Never log the key.</span>
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- 12 Code example -->
+      <section class="section">
+        <div class="section__head">
+          <span class="section__num">12</span>
+          <h2 class="section__title"><span lang="hu">Kódpélda</span><span lang="en">Code example</span></h2>
+        </div>
+        <p class="section__desc">
+          <span lang="hu">Ugyanaz az SDK kiszolgálja a Chat Completionst, a Responses API-t és bármely OpenAI-kompatibilis szervert — csak a <code>base_url</code> és az <code>api_key</code> változik.</span>
+          <span lang="en">The same SDK serves Chat Completions, the Responses API and any OpenAI-compatible server — only <code>base_url</code> and <code>api_key</code> change.</span>
+        </p>
+        <div class="code-block">
+          <div class="code-block__head">
+            <span>openai_quickstart.py</span>
+          </div>
+          <pre><code><span class="tok-comment"># pip install openai</span>
+from openai import OpenAI
+
+client = OpenAI()  <span class="tok-comment"># reads OPENAI_API_KEY from the environment</span>
+
+<span class="tok-comment"># --- Chat Completions: stateless, maximum portability ---------------</span>
+chat = client.chat.completions.create(
+    model="gpt-5.5",
+    messages=[
+        {"role": "system", "content": "You are a concise assistant."},
+        {"role": "user", "content": "Explain RAG in one sentence."},
+    ],
+    max_completion_tokens=200,
+)
+print(chat.choices[0].message.content)
+
+<span class="tok-comment"># --- Responses API: stateful, with a built-in tool -----------------</span>
+resp = client.responses.create(
+    model="gpt-5.5",
+    input="Summarize today's AI news.",
+    tools=[{"type": "web_search"}],
+    store=True,                       <span class="tok-comment"># keep context server-side</span>
+)
+print(resp.output_text)
+
+<span class="tok-comment"># --- Same SDK, an OpenAI-compatible server (vLLM) -------------------</span>
+<span class="tok-comment"># Only base_url + api_key change; local servers accept any key string.</span>
+local = OpenAI(base_url="http://localhost:8000/v1", api_key="token-abc123")
+vllm = local.chat.completions.create(
+    model="meta-llama/Llama-3.3-70B-Instruct",
+    messages=[{"role": "user", "content": "Hello from vLLM!"}],
+)
+print(vllm.choices[0].message.content)
+</code></pre>
+        </div>
+      </section>
+
+      <nav class="pager" aria-label="Reference pager">
+        <a class="pager__link" href="evaluation.html">
+          <div class="pager__dir">← <span lang="hu">Előző</span><span lang="en">Previous</span></div>
+          <div class="pager__name"><span lang="hu">RAG kiértékelés</span><span lang="en">RAG Evaluation</span></div>
+        </a>
+      </nav>
+
+      <footer class="site-footer">
+        <p class="site-footer__copy">© 2026 w7-knowbase</p>
+        <nav class="site-footer__links" aria-label="Footer">
+          <a href="https://github.com/w7-mgfcode/w7-knowbase">GitHub</a>
+          <a href="../CHANGELOG.md">Changelog</a>
+        </nav>
+      </footer>
+    </main>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/mermaid@11.15.0/dist/mermaid.min.js" integrity="sha384-yQ4mmBBT+vhTAwjFH0toJXNYJ6O4usWnt6EPIdWwrRvx2V/n5lXuDZQwQFeSFydF" crossorigin="anonymous" defer></script>
+<script src="../assets/js/knowbase.js" defer></script>
+</body>
+</html>

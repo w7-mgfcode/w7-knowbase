@@ -42,7 +42,8 @@
         { id: "embedding-models", page: "embedding-models", href: "reference/embedding-models.html", dot: "cyan", label: { hu: "Embedding modellek", en: "Embedding Models" } },
         { id: "reranking", page: "reranking", href: "reference/reranking.html", dot: "cyan", label: { hu: "Újrarangsorolás", en: "Reranking" } },
         { id: "hybrid-search", page: "hybrid-search", href: "reference/hybrid-search.html", dot: "cyan", label: { hu: "Hibrid keresés", en: "Hybrid Search" } },
-        { id: "evaluation", page: "evaluation", href: "reference/evaluation.html", dot: "cyan", label: { hu: "Kiértékelés", en: "Evaluation" } }
+        { id: "evaluation", page: "evaluation", href: "reference/evaluation.html", dot: "cyan", label: { hu: "Kiértékelés", en: "Evaluation" } },
+        { id: "openai-compatibility", page: "openai-compatibility", href: "reference/openai-compatibility.html", dot: "cyan", label: { hu: "OpenAI kompatibilitás", en: "OpenAI Compatibility" } }
       ]
     }
   ];
