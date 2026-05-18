@@ -191,21 +191,21 @@ flowchart LR
               <tr>
                 <td class="arch-name">GPT-5.5</td>
                 <td><span lang="hu">Zászlóshajó, kódolás és profi munka</span><span lang="en">Flagship, coding &amp; pro work</span></td>
-                <td class="mono">1M / 128K</td>
+                <td class="mono">1.05M / 128K</td>
                 <td><span lang="hu">GA (2026-04-23)</span><span lang="en">GA (2026-04-23)</span></td>
                 <td class="mono">$5.00 / $30.00</td>
               </tr>
               <tr>
                 <td class="arch-name">GPT-5.5-pro</td>
                 <td><span lang="hu">Maximális mélységű érvelés</span><span lang="en">Max-depth reasoning</span></td>
-                <td class="mono">~1M</td>
+                <td class="mono">1.05M</td>
                 <td>GA</td>
                 <td class="mono">$30.00 / $180.00</td>
               </tr>
               <tr>
                 <td class="arch-name">GPT-5.4</td>
                 <td><span lang="hu">Korábbi zászlóshajó, olcsóbb</span><span lang="en">Prior flagship, lower cost</span></td>
-                <td class="mono">1M</td>
+                <td class="mono">1.05M</td>
                 <td>GA</td>
                 <td class="mono">$2.50 / $15.00</td>
               </tr>
@@ -219,14 +219,14 @@ flowchart LR
               <tr>
                 <td class="arch-name">GPT-5.4-nano</td>
                 <td><span lang="hu">Legkisebb / legolcsóbb</span><span lang="en">Smallest / cheapest</span></td>
-                <td class="mono">large</td>
+                <td class="mono">400K</td>
                 <td>GA</td>
                 <td class="mono">$0.20 / $1.25</td>
               </tr>
               <tr>
                 <td class="arch-name">GPT-5.3-Codex</td>
                 <td><span lang="hu">Ágensalapú kódolás</span><span lang="en">Agentic coding</span></td>
-                <td class="mono">large</td>
+                <td class="mono">400K</td>
                 <td>GA</td>
                 <td class="mono">$1.75 / $14.00</td>
               </tr>
@@ -253,6 +253,252 @@ flowchart LR
               </tr>
             </tbody>
           </table>
+        </div>
+        <p class="section__desc">
+          <span lang="hu">Modellenkénti adatlap: a modell azonosítója, a támogatott be- és kimenetek, a kontextusablak, a tudásküszöb és a fő képességek. A GPT-5.x modellek beállítható érvelési erőfeszítést kínálnak (none–xhigh); az o-sorozat dedikált érvelő modell. Finomhangolás a GPT-5.x modelleknél nem érhető el.</span>
+          <span lang="en">A per-model detail card: the model ID, supported inputs and outputs, the context window, the knowledge cutoff and the key capabilities. The GPT-5.x models offer a tunable reasoning effort (none–xhigh); the o-series are dedicated reasoning models. Fine-tuning is not available on the GPT-5.x models.</span>
+        </p>
+        <div class="grid grid-3">
+          <div class="card card--rich">
+            <span class="card__tag">gpt-5.5</span>
+            <div class="card__title">GPT-5.5</div>
+            <ul class="model-list">
+              <li class="model-line">
+                <span class="model-line__name"><span lang="hu">Bemenet</span><span lang="en">Input</span></span>
+                <span class="model-line__spec"><span lang="hu">szöveg · kép</span><span lang="en">text · image</span></span>
+              </li>
+              <li class="model-line">
+                <span class="model-line__name"><span lang="hu">Kimenet</span><span lang="en">Output</span></span>
+                <span class="model-line__spec"><span lang="hu">szöveg</span><span lang="en">text</span></span>
+              </li>
+              <li class="model-line">
+                <span class="model-line__name"><span lang="hu">Tokenek</span><span lang="en">Tokens</span></span>
+                <span class="model-line__spec">1.05M → 128K</span>
+              </li>
+              <li class="model-line">
+                <span class="model-line__name"><span lang="hu">Tudásküszöb</span><span lang="en">Cutoff</span></span>
+                <span class="model-line__spec">2025-12</span>
+              </li>
+              <li class="model-line">
+                <span class="model-line__name"><span lang="hu">Érvelés</span><span lang="en">Reasoning</span></span>
+                <span class="model-line__spec"><span lang="hu">beállítható (none–xhigh)</span><span lang="en">tunable (none–xhigh)</span></span>
+              </li>
+            </ul>
+            <ul class="feature-list">
+              <li><span lang="hu">✓ streaming, function calling, strukturált kimenetek, képbemenet (vízió)</span><span lang="en">✓ streaming, function calling, structured outputs, image input (vision)</span></li>
+              <li><span lang="hu">✗ finomhangolás, hang/videó bemenet</span><span lang="en">✗ fine-tuning, audio/video input</span></li>
+            </ul>
+          </div>
+          <div class="card card--rich">
+            <span class="card__tag">gpt-5.5-pro</span>
+            <div class="card__title">GPT-5.5-pro</div>
+            <ul class="model-list">
+              <li class="model-line">
+                <span class="model-line__name"><span lang="hu">Bemenet</span><span lang="en">Input</span></span>
+                <span class="model-line__spec"><span lang="hu">szöveg · kép</span><span lang="en">text · image</span></span>
+              </li>
+              <li class="model-line">
+                <span class="model-line__name"><span lang="hu">Kimenet</span><span lang="en">Output</span></span>
+                <span class="model-line__spec"><span lang="hu">szöveg</span><span lang="en">text</span></span>
+              </li>
+              <li class="model-line">
+                <span class="model-line__name"><span lang="hu">Tokenek</span><span lang="en">Tokens</span></span>
+                <span class="model-line__spec">1.05M → 128K</span>
+              </li>
+              <li class="model-line">
+                <span class="model-line__name"><span lang="hu">Tudásküszöb</span><span lang="en">Cutoff</span></span>
+                <span class="model-line__spec">2025-12</span>
+              </li>
+              <li class="model-line">
+                <span class="model-line__name"><span lang="hu">Érvelés</span><span lang="en">Reasoning</span></span>
+                <span class="model-line__spec"><span lang="hu">beállítható (none–xhigh)</span><span lang="en">tunable (none–xhigh)</span></span>
+              </li>
+            </ul>
+            <ul class="feature-list">
+              <li><span lang="hu">✓ function calling, strukturált kimenetek, képbemenet (vízió)</span><span lang="en">✓ function calling, structured outputs, image input (vision)</span></li>
+              <li><span lang="hu">✗ streaming, finomhangolás, hang/videó</span><span lang="en">✗ streaming, fine-tuning, audio/video</span></li>
+            </ul>
+          </div>
+          <div class="card card--rich">
+            <span class="card__tag">gpt-5.4</span>
+            <div class="card__title">GPT-5.4</div>
+            <ul class="model-list">
+              <li class="model-line">
+                <span class="model-line__name"><span lang="hu">Bemenet</span><span lang="en">Input</span></span>
+                <span class="model-line__spec"><span lang="hu">szöveg · kép</span><span lang="en">text · image</span></span>
+              </li>
+              <li class="model-line">
+                <span class="model-line__name"><span lang="hu">Kimenet</span><span lang="en">Output</span></span>
+                <span class="model-line__spec"><span lang="hu">szöveg</span><span lang="en">text</span></span>
+              </li>
+              <li class="model-line">
+                <span class="model-line__name"><span lang="hu">Tokenek</span><span lang="en">Tokens</span></span>
+                <span class="model-line__spec">1.05M → 128K</span>
+              </li>
+              <li class="model-line">
+                <span class="model-line__name"><span lang="hu">Tudásküszöb</span><span lang="en">Cutoff</span></span>
+                <span class="model-line__spec">2025-08</span>
+              </li>
+              <li class="model-line">
+                <span class="model-line__name"><span lang="hu">Érvelés</span><span lang="en">Reasoning</span></span>
+                <span class="model-line__spec"><span lang="hu">beállítható (none–xhigh)</span><span lang="en">tunable (none–xhigh)</span></span>
+              </li>
+            </ul>
+            <ul class="feature-list">
+              <li><span lang="hu">✓ streaming, function calling, strukturált kimenetek, képbemenet (vízió)</span><span lang="en">✓ streaming, function calling, structured outputs, image input (vision)</span></li>
+              <li><span lang="hu">✗ finomhangolás, hang/videó bemenet</span><span lang="en">✗ fine-tuning, audio/video input</span></li>
+            </ul>
+          </div>
+          <div class="card card--rich">
+            <span class="card__tag">gpt-5.4-mini</span>
+            <div class="card__title">GPT-5.4-mini</div>
+            <ul class="model-list">
+              <li class="model-line">
+                <span class="model-line__name"><span lang="hu">Bemenet</span><span lang="en">Input</span></span>
+                <span class="model-line__spec"><span lang="hu">szöveg · kép</span><span lang="en">text · image</span></span>
+              </li>
+              <li class="model-line">
+                <span class="model-line__name"><span lang="hu">Kimenet</span><span lang="en">Output</span></span>
+                <span class="model-line__spec"><span lang="hu">szöveg</span><span lang="en">text</span></span>
+              </li>
+              <li class="model-line">
+                <span class="model-line__name"><span lang="hu">Tokenek</span><span lang="en">Tokens</span></span>
+                <span class="model-line__spec">400K → 128K</span>
+              </li>
+              <li class="model-line">
+                <span class="model-line__name"><span lang="hu">Tudásküszöb</span><span lang="en">Cutoff</span></span>
+                <span class="model-line__spec">2025-08</span>
+              </li>
+              <li class="model-line">
+                <span class="model-line__name"><span lang="hu">Érvelés</span><span lang="en">Reasoning</span></span>
+                <span class="model-line__spec"><span lang="hu">beállítható (none–xhigh)</span><span lang="en">tunable (none–xhigh)</span></span>
+              </li>
+            </ul>
+            <ul class="feature-list">
+              <li><span lang="hu">✓ streaming, function calling, strukturált kimenetek, képbemenet (vízió)</span><span lang="en">✓ streaming, function calling, structured outputs, image input (vision)</span></li>
+              <li><span lang="hu">✗ finomhangolás, hang/videó bemenet</span><span lang="en">✗ fine-tuning, audio/video input</span></li>
+            </ul>
+          </div>
+          <div class="card card--rich">
+            <span class="card__tag">gpt-5.4-nano</span>
+            <div class="card__title">GPT-5.4-nano</div>
+            <ul class="model-list">
+              <li class="model-line">
+                <span class="model-line__name"><span lang="hu">Bemenet</span><span lang="en">Input</span></span>
+                <span class="model-line__spec"><span lang="hu">szöveg · kép</span><span lang="en">text · image</span></span>
+              </li>
+              <li class="model-line">
+                <span class="model-line__name"><span lang="hu">Kimenet</span><span lang="en">Output</span></span>
+                <span class="model-line__spec"><span lang="hu">szöveg</span><span lang="en">text</span></span>
+              </li>
+              <li class="model-line">
+                <span class="model-line__name"><span lang="hu">Tokenek</span><span lang="en">Tokens</span></span>
+                <span class="model-line__spec">400K → 128K</span>
+              </li>
+              <li class="model-line">
+                <span class="model-line__name"><span lang="hu">Tudásküszöb</span><span lang="en">Cutoff</span></span>
+                <span class="model-line__spec">2025-08</span>
+              </li>
+              <li class="model-line">
+                <span class="model-line__name"><span lang="hu">Érvelés</span><span lang="en">Reasoning</span></span>
+                <span class="model-line__spec"><span lang="hu">beállítható (none–xhigh)</span><span lang="en">tunable (none–xhigh)</span></span>
+              </li>
+            </ul>
+            <ul class="feature-list">
+              <li><span lang="hu">✓ streaming, function calling, strukturált kimenetek, képbemenet (vízió)</span><span lang="en">✓ streaming, function calling, structured outputs, image input (vision)</span></li>
+              <li><span lang="hu">✗ finomhangolás, hang/videó bemenet</span><span lang="en">✗ fine-tuning, audio/video input</span></li>
+            </ul>
+          </div>
+          <div class="card card--rich">
+            <span class="card__tag">gpt-5.3-codex</span>
+            <div class="card__title">GPT-5.3-Codex</div>
+            <ul class="model-list">
+              <li class="model-line">
+                <span class="model-line__name"><span lang="hu">Bemenet</span><span lang="en">Input</span></span>
+                <span class="model-line__spec"><span lang="hu">szöveg · kép</span><span lang="en">text · image</span></span>
+              </li>
+              <li class="model-line">
+                <span class="model-line__name"><span lang="hu">Kimenet</span><span lang="en">Output</span></span>
+                <span class="model-line__spec"><span lang="hu">szöveg</span><span lang="en">text</span></span>
+              </li>
+              <li class="model-line">
+                <span class="model-line__name"><span lang="hu">Tokenek</span><span lang="en">Tokens</span></span>
+                <span class="model-line__spec">400K → 128K</span>
+              </li>
+              <li class="model-line">
+                <span class="model-line__name"><span lang="hu">Tudásküszöb</span><span lang="en">Cutoff</span></span>
+                <span class="model-line__spec">2025-08</span>
+              </li>
+              <li class="model-line">
+                <span class="model-line__name"><span lang="hu">Érvelés</span><span lang="en">Reasoning</span></span>
+                <span class="model-line__spec"><span lang="hu">beállítható (low–xhigh)</span><span lang="en">tunable (low–xhigh)</span></span>
+              </li>
+            </ul>
+            <ul class="feature-list">
+              <li><span lang="hu">✓ streaming, function calling, strukturált kimenetek, képbemenet (vízió)</span><span lang="en">✓ streaming, function calling, structured outputs, image input (vision)</span></li>
+              <li><span lang="hu">✗ finomhangolás, hang/videó bemenet</span><span lang="en">✗ fine-tuning, audio/video input</span></li>
+            </ul>
+          </div>
+          <div class="card card--rich">
+            <span class="card__tag">o3</span>
+            <div class="card__title">o3</div>
+            <ul class="model-list">
+              <li class="model-line">
+                <span class="model-line__name"><span lang="hu">Bemenet</span><span lang="en">Input</span></span>
+                <span class="model-line__spec"><span lang="hu">szöveg · kép</span><span lang="en">text · image</span></span>
+              </li>
+              <li class="model-line">
+                <span class="model-line__name"><span lang="hu">Kimenet</span><span lang="en">Output</span></span>
+                <span class="model-line__spec"><span lang="hu">szöveg</span><span lang="en">text</span></span>
+              </li>
+              <li class="model-line">
+                <span class="model-line__name"><span lang="hu">Tokenek</span><span lang="en">Tokens</span></span>
+                <span class="model-line__spec">200K → 100K</span>
+              </li>
+              <li class="model-line">
+                <span class="model-line__name"><span lang="hu">Tudásküszöb</span><span lang="en">Cutoff</span></span>
+                <span class="model-line__spec">2024-06</span>
+              </li>
+              <li class="model-line">
+                <span class="model-line__name"><span lang="hu">Érvelés</span><span lang="en">Reasoning</span></span>
+                <span class="model-line__spec"><span lang="hu">érvelő modell (o-sorozat)</span><span lang="en">reasoning model (o-series)</span></span>
+              </li>
+            </ul>
+            <ul class="feature-list">
+              <li><span lang="hu">✓ streaming, function calling, strukturált kimenetek, képbemenet (vízió)</span><span lang="en">✓ streaming, function calling, structured outputs, image input (vision)</span></li>
+              <li><span lang="hu">✗ finomhangolás, hang/videó bemenet</span><span lang="en">✗ fine-tuning, audio/video input</span></li>
+            </ul>
+          </div>
+          <div class="card card--rich">
+            <span class="card__tag">o4-mini</span>
+            <div class="card__title">o4-mini</div>
+            <ul class="model-list">
+              <li class="model-line">
+                <span class="model-line__name"><span lang="hu">Bemenet</span><span lang="en">Input</span></span>
+                <span class="model-line__spec"><span lang="hu">szöveg · kép</span><span lang="en">text · image</span></span>
+              </li>
+              <li class="model-line">
+                <span class="model-line__name"><span lang="hu">Kimenet</span><span lang="en">Output</span></span>
+                <span class="model-line__spec"><span lang="hu">szöveg</span><span lang="en">text</span></span>
+              </li>
+              <li class="model-line">
+                <span class="model-line__name"><span lang="hu">Tokenek</span><span lang="en">Tokens</span></span>
+                <span class="model-line__spec">200K → 100K</span>
+              </li>
+              <li class="model-line">
+                <span class="model-line__name"><span lang="hu">Tudásküszöb</span><span lang="en">Cutoff</span></span>
+                <span class="model-line__spec">2024-06</span>
+              </li>
+              <li class="model-line">
+                <span class="model-line__name"><span lang="hu">Érvelés</span><span lang="en">Reasoning</span></span>
+                <span class="model-line__spec"><span lang="hu">érvelő modell (o-sorozat)</span><span lang="en">reasoning model (o-series)</span></span>
+              </li>
+            </ul>
+            <ul class="feature-list">
+              <li><span lang="hu">✓ streaming, function calling, strukturált kimenetek, képbemenet, finomhangolás</span><span lang="en">✓ streaming, function calling, structured outputs, image input, fine-tuning</span></li>
+              <li><span lang="hu">✗ hang/videó bemenet</span><span lang="en">✗ audio/video input</span></li>
+            </ul>
+          </div>
         </div>
         <div class="info-box">
           <p class="info-box__title"><span lang="hu">Fontos változások</span><span lang="en">Important changes</span></p>
