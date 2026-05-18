@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Agentic RAG — w7-knowbase</title>
+<meta name="description" content="Agentic RAG: an LLM agent drives retrieval, tool use, and stopping.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300..700&family=Space+Grotesk:wght@400..700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/css/knowbase.css">
+</head>
+<body class="accent-agent" data-page="agentic-rag">
+<script>try{if(localStorage.getItem('knowbase-lang')==='en')document.body.classList.add('lang-en');}catch(e){}</script>
+
+<div class="layout">
+  <aside class="sidebar" id="sidebar" data-base="../"></aside>
+  <div class="sidebar-backdrop" id="navBackdrop"></div>
+
+  <div class="main">
+    <div class="mobile-header">
+      <a class="mobile-header__brand" href="../index.html"><span>w7</span>-knowbase</a>
+      <div style="display:flex;gap:8px;align-items:center;">
+        <div class="lang-toggle" role="group" aria-label="Language">
+          <button class="lang-toggle__btn" type="button" data-lang-btn="hu" aria-pressed="true">HU</button>
+          <button class="lang-toggle__btn" type="button" data-lang-btn="en" aria-pressed="false">EN</button>
+        </div>
+        <button class="menu-btn" id="menuBtn" type="button" aria-label="Open navigation" aria-controls="sidebar" aria-expanded="false"></button>
+      </div>
+    </div>
+
+    <header class="topbar">
+      <nav class="breadcrumb" aria-label="Breadcrumb">
+        <span><span lang="hu">Architektúrák</span><span lang="en">Architectures</span></span>
+        <span class="breadcrumb__sep" aria-hidden="true">/</span>
+        <span class="breadcrumb__current">Agentic RAG</span>
+      </nav>
+      <div class="lang-toggle" role="group" aria-label="Language">
+        <button class="lang-toggle__btn" type="button" data-lang-btn="hu" aria-pressed="true">HU</button>
+        <button class="lang-toggle__btn" type="button" data-lang-btn="en" aria-pressed="false">EN</button>
+      </div>
+    </header>
+
+    <main class="content">
+      <div class="page-header">
+        <span class="tag"><span lang="hu">Architektúra</span><span lang="en">Architecture</span></span>
+        <h1 class="page-header__title tinted">Agentic RAG</h1>
+        <p class="page-header__subtitle">
+          <span lang="hu">LLM-ágens vezérli a folyamatot: ő dönt a keresésről, az eszközhívásokról és a leállásról.</span>
+          <span lang="en">An LLM agent drives the loop: it decides on retrieval, tool calls, and when to stop.</span>
+        </p>
+        <div class="stat-row">
+          <div class="stat-pill">
+            <div class="stat-pill__label"><span lang="hu">Komplexitás</span><span lang="en">Complexity</span></div>
+            <div class="stat-pill__value"><span lang="hu">Magas</span><span lang="en">High</span></div>
+          </div>
+          <div class="stat-pill">
+            <div class="stat-pill__label"><span lang="hu">Késleltetés</span><span lang="en">Latency</span></div>
+            <div class="stat-pill__value"><span lang="hu">Magas</span><span lang="en">High</span></div>
+          </div>
+          <div class="stat-pill">
+            <div class="stat-pill__label"><span lang="hu">Mire jó</span><span lang="en">Best for</span></div>
+            <div class="stat-pill__value"><span lang="hu">Több lépéses feladatok</span><span lang="en">Multi-step tasks</span></div>
+          </div>
+        </div>
+      </div>
+
+      <section class="section">
+        <div class="section__head">
+          <span class="section__num">01</span>
+          <h2 class="section__title"><span lang="hu">Áttekintés</span><span lang="en">Overview</span></h2>
+        </div>
+        <div class="grid grid-2">
+          <p class="section__desc">
+            <span lang="hu">Az Agentic RAG egy LLM-ágenst helyez a folyamat középpontjába: az ágens dönti el, mikor keressen, milyen eszközt hívjon, és mikor elég az összegyűjtött kontextus a válaszhoz.</span>
+            <span lang="en">Agentic RAG puts an LLM agent at the centre of the loop: the agent decides when to retrieve, which tool to call, and when the gathered context is enough to answer.</span>
+          </p>
+          <p class="section__desc">
+            <span lang="hu">Az ágens több lekérdezési kört is futtathat, eszközöket hívhat és közbenső eredményeket értékelhet, így összetett, több lépéses feladatokat is megold — cserébe magasabb késleltetés és költség mellett.</span>
+            <span lang="en">The agent can run several retrieval rounds, call tools, and evaluate intermediate results, solving complex multi-step tasks — at the cost of higher latency and spend.</span>
+          </p>
+        </div>
+      </section>
+
+      <section class="section">
+        <div class="section__head">
+          <span class="section__num">02</span>
+          <h2 class="section__title"><span lang="hu">Működési folyamat</span><span lang="en">How it works</span></h2>
+        </div>
+        <div class="diagram-box">
+          <div class="pipeline">
+            <div class="pipeline__step">
+              <span class="pipeline__node">1</span>
+              <span class="pipeline__label"><span lang="hu">Lekérdezés</span><span lang="en">Query</span></span>
+            </div>
+            <span class="pipeline__arrow" aria-hidden="true">→</span>
+            <div class="pipeline__step">
+              <span class="pipeline__node">2</span>
+              <span class="pipeline__label"><span lang="hu">Tervezés</span><span lang="en">Planning</span></span>
+            </div>
+            <span class="pipeline__arrow" aria-hidden="true">→</span>
+            <div class="pipeline__step">
+              <span class="pipeline__node">3</span>
+              <span class="pipeline__label"><span lang="hu">Eszköz / keresés</span><span lang="en">Tool / retrieval</span></span>
+            </div>
+            <span class="pipeline__arrow" aria-hidden="true">→</span>
+            <div class="pipeline__step">
+              <span class="pipeline__node">4</span>
+              <span class="pipeline__label"><span lang="hu">Generálás</span><span lang="en">Generation</span></span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section">
+        <div class="section__head">
+          <span class="section__num">03</span>
+          <h2 class="section__title"><span lang="hu">Architektúra-diagram</span><span lang="en">Architecture diagram</span></h2>
+        </div>
+        <div class="diagram-box">
+          <div class="diagram-placeholder">
+            <p class="section__desc" style="text-align:center;">
+              <span lang="hu">Mermaid-diagram helye — a renderelt ábra a tartalommigráció során kerül ide.</span>
+              <span lang="en">Mermaid diagram area — the rendered figure lands here during content migration.</span>
+            </p>
+            <code>graph TD; A[Agent] --&gt; T[Tools]; T --&gt; A; A --&gt; G[Generation];</code>
+          </div>
+        </div>
+        <div class="info-box">
+          <p class="info-box__title"><span lang="hu">Vázlat</span><span lang="en">Draft</span></p>
+          <p class="info-box__body">
+            <span lang="hu">Ez az oldal a Stitch-tervből generált váz. A részletes szakaszok — működési diagram, erősségek és kihívások, kódpélda — a korábbi oldal (oldsite/) tartalmából kerülnek át egy következő feladatban.</span>
+            <span lang="en">This page is a scaffold generated from the Stitch design. The detailed sections — working diagram, strengths and trade-offs, code example — will be migrated from the previous site (oldsite/) in a follow-up task.</span>
+          </p>
+        </div>
+      </section>
+
+      <nav class="pager" aria-label="Architecture pager">
+        <a class="pager__link pager__link--graph" href="graph-rag.html">
+          <div class="pager__dir">← <span lang="hu">Előző</span><span lang="en">Previous</span></div>
+          <div class="pager__name">Graph RAG</div>
+        </a>
+        <a class="pager__link pager__link--self pager__link--next" href="self-rag-crag.html">
+          <div class="pager__dir"><span lang="hu">Következő</span><span lang="en">Next</span> →</div>
+          <div class="pager__name">Self-RAG / CRAG</div>
+        </a>
+      </nav>
+
+      <footer class="site-footer">
+        <p class="site-footer__copy">© 2026 w7-knowbase</p>
+        <nav class="site-footer__links" aria-label="Footer">
+          <a href="https://github.com/w7-mgfcode/w7-knowbase">GitHub</a>
+          <a href="../CHANGELOG.md">Changelog</a>
+        </nav>
+      </footer>
+    </main>
+  </div>
+</div>
+
+<script src="../assets/js/knowbase.js" defer></script>
+</body>
+</html>

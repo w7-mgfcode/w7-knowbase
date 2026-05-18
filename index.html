@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>w7-knowbase — RAG architektúrák / RAG architectures</title>
+<meta name="description" content="Bilingual (HU/EN) static documentation site on Retrieval-Augmented Generation architectures.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300..700&family=Space+Grotesk:wght@400..700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/css/knowbase.css">
+</head>
+<body class="accent-cyan" data-page="home">
+<script>try{if(localStorage.getItem('knowbase-lang')==='en')document.body.classList.add('lang-en');}catch(e){}</script>
+
+<div class="layout">
+  <aside class="sidebar" id="sidebar" data-base=""></aside>
+  <div class="sidebar-backdrop" id="navBackdrop"></div>
+
+  <div class="main">
+    <!-- Mobile header -->
+    <div class="mobile-header">
+      <a class="mobile-header__brand" href="index.html"><span>w7</span>-knowbase</a>
+      <div style="display:flex;gap:8px;align-items:center;">
+        <div class="lang-toggle" role="group" aria-label="Language">
+          <button class="lang-toggle__btn" type="button" data-lang-btn="hu" aria-pressed="true">HU</button>
+          <button class="lang-toggle__btn" type="button" data-lang-btn="en" aria-pressed="false">EN</button>
+        </div>
+        <button class="menu-btn" id="menuBtn" type="button" aria-label="Open navigation" aria-controls="sidebar" aria-expanded="false"></button>
+      </div>
+    </div>
+
+    <!-- Top bar -->
+    <header class="topbar">
+      <nav class="breadcrumb" aria-label="Breadcrumb">
+        <span class="breadcrumb__current">
+          <span lang="hu">Áttekintés</span><span lang="en">Overview</span>
+        </span>
+      </nav>
+      <div class="lang-toggle" role="group" aria-label="Language">
+        <button class="lang-toggle__btn" type="button" data-lang-btn="hu" aria-pressed="true">HU</button>
+        <button class="lang-toggle__btn" type="button" data-lang-btn="en" aria-pressed="false">EN</button>
+      </div>
+    </header>
+
+    <main class="content">
+      <!-- Hero -->
+      <div class="page-header">
+        <span class="tag">
+          <span lang="hu">Dokumentáció</span><span lang="en">Documentation</span>
+        </span>
+        <h1 class="page-header__title">
+          <span lang="hu">RAG architektúrák, közérthetően</span>
+          <span lang="en">RAG architectures, decoded</span>
+        </h1>
+        <p class="page-header__subtitle">
+          <span lang="hu">Technikai útmutató a modern Retrieval-Augmented Generation rendszerekhez — az egyszerű vektoros kereséstől a haladó, ágensalapú folyamatokig.</span>
+          <span lang="en">A technical guide to modern Retrieval-Augmented Generation systems — from simple vector lookups to advanced agentic workflows.</span>
+        </p>
+      </div>
+
+      <!-- Comparison table -->
+      <section class="section" id="compare">
+        <div class="section__head">
+          <span class="section__num">01</span>
+          <h2 class="section__title">
+            <span lang="hu">Összehasonlító elemzés</span>
+            <span lang="en">Comparative analysis</span>
+          </h2>
+        </div>
+        <p class="section__desc">
+          <span lang="hu">A hét architektúra egymás mellett — válassz a pontosság, késleltetés és költség egyensúlya alapján.</span>
+          <span lang="en">The seven architectures side by side — choose by the balance of accuracy, latency and cost.</span>
+        </p>
+        <div class="compare-table-wrap" style="margin-top:24px;">
+          <table class="compare-table">
+            <thead>
+              <tr>
+                <th><span lang="hu">Architektúra</span><span lang="en">Architecture</span></th>
+                <th><span lang="hu">Mire jó</span><span lang="en">Best for</span></th>
+                <th><span lang="hu">Komplexitás</span><span lang="en">Complexity</span></th>
+                <th><span lang="hu">Késleltetés</span><span lang="en">Latency</span></th>
+                <th><span lang="hu">Költség</span><span lang="en">Cost</span></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><a class="arch-name" href="architectures/flat-rag.html"><span class="nav-dot nav-dot--flat"></span>Flat RAG</a></td>
+                <td><span lang="hu">Egyszerű kérdezz-felelek kis korpuszon</span><span lang="en">Simple Q&amp;A over a small corpus</span></td>
+                <td><span lang="hu">Alacsony</span><span lang="en">Low</span></td>
+                <td><span lang="hu">Nagyon alacsony</span><span lang="en">Very low</span></td>
+                <td class="mono">$</td>
+              </tr>
+              <tr>
+                <td><a class="arch-name" href="architectures/hierarchical-rag.html"><span class="nav-dot nav-dot--hier"></span>Hierarchical RAG</a></td>
+                <td><span lang="hu">Hosszú dokumentumok, többszintű keresés</span><span lang="en">Large documents, multi-level retrieval</span></td>
+                <td><span lang="hu">Közepes</span><span lang="en">Medium</span></td>
+                <td><span lang="hu">Alacsony</span><span lang="en">Low</span></td>
+                <td class="mono">$$</td>
+              </tr>
+              <tr>
+                <td><a class="arch-name" href="architectures/graph-rag.html"><span class="nav-dot nav-dot--graph"></span>Graph RAG</a></td>
+                <td><span lang="hu">Összekapcsolt tudás, több-lépéses következtetés</span><span lang="en">Connected knowledge, multi-hop reasoning</span></td>
+                <td><span lang="hu">Magas</span><span lang="en">High</span></td>
+                <td><span lang="hu">Közepes</span><span lang="en">Medium</span></td>
+                <td class="mono">$$$</td>
+              </tr>
+              <tr>
+                <td><a class="arch-name" href="architectures/agentic-rag.html"><span class="nav-dot nav-dot--agent"></span>Agentic RAG</a></td>
+                <td><span lang="hu">Több lépéses feladatok, eszközhasználat</span><span lang="en">Multi-step tasks, tool use</span></td>
+                <td><span lang="hu">Magas</span><span lang="en">High</span></td>
+                <td><span lang="hu">Magas</span><span lang="en">High</span></td>
+                <td class="mono">$$$$</td>
+              </tr>
+              <tr>
+                <td><a class="arch-name" href="architectures/self-rag-crag.html"><span class="nav-dot nav-dot--self"></span>Self-RAG / CRAG</a></td>
+                <td><span lang="hu">Pontosság-kritikus válaszok, önjavítás</span><span lang="en">Accuracy-critical answers, self-correction</span></td>
+                <td><span lang="hu">Közepes–magas</span><span lang="en">Medium–high</span></td>
+                <td><span lang="hu">Közepes–magas</span><span lang="en">Medium–high</span></td>
+                <td class="mono">$$$</td>
+              </tr>
+              <tr>
+                <td><a class="arch-name" href="architectures/adaptive-rag.html"><span class="nav-dot nav-dot--adapt"></span>Adaptive RAG</a></td>
+                <td><span lang="hu">Vegyes nehézségű kérdések, költségkontroll</span><span lang="en">Mixed query difficulty, cost control</span></td>
+                <td><span lang="hu">Közepes</span><span lang="en">Medium</span></td>
+                <td><span lang="hu">Dinamikus</span><span lang="en">Dynamic</span></td>
+                <td class="mono">$$</td>
+              </tr>
+              <tr>
+                <td><a class="arch-name" href="architectures/raptor.html"><span class="nav-dot nav-dot--raptor"></span>RAPTOR</a></td>
+                <td><span lang="hu">Tematikus szintézis a teljes korpuszon</span><span lang="en">Thematic synthesis across a corpus</span></td>
+                <td><span lang="hu">Közepes–magas</span><span lang="en">Medium–high</span></td>
+                <td><span lang="hu">Közepes</span><span lang="en">Medium</span></td>
+                <td class="mono">$$$</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- Decision flow -->
+      <section class="section">
+        <div class="section__head">
+          <span class="section__num">02</span>
+          <h2 class="section__title">
+            <span lang="hu">Melyik RAG-et használjam?</span>
+            <span lang="en">Which RAG should I use?</span>
+          </h2>
+        </div>
+        <p class="section__desc">
+          <span lang="hu">Haladj végig a döntési kérdéseken — az első, amelyre „igen” a válasz, megadja a kiindulási architektúrát.</span>
+          <span lang="en">Walk the decision questions — the first one you answer “yes” to points to your starting architecture.</span>
+        </p>
+        <div class="decision-flow" style="margin-top:24px;">
+          <div class="decision-step">
+            <span class="decision-q">
+              <span class="decision-q__icon">1</span>
+              <span><span lang="hu">Kicsi a korpusz és egyszerűek a kérdések?</span><span lang="en">Is the corpus small and the questions simple?</span></span>
+            </span>
+            <span class="decision-arrow" aria-hidden="true">→</span>
+            <span class="decision-out">
+              <a class="arch-chip arch-chip--flat" href="architectures/flat-rag.html">Flat RAG</a>
+            </span>
+          </div>
+          <div class="decision-step">
+            <span class="decision-q">
+              <span class="decision-q__icon">2</span>
+              <span><span lang="hu">Hosszúak vagy mélyen tagoltak a dokumentumok?</span><span lang="en">Are the documents long or deeply nested?</span></span>
+            </span>
+            <span class="decision-arrow" aria-hidden="true">→</span>
+            <span class="decision-out">
+              <a class="arch-chip arch-chip--hier" href="architectures/hierarchical-rag.html">Hierarchical RAG</a>
+              <a class="arch-chip arch-chip--raptor" href="architectures/raptor.html">RAPTOR</a>
+            </span>
+          </div>
+          <div class="decision-step">
+            <span class="decision-q">
+              <span class="decision-q__icon">3</span>
+              <span><span lang="hu">Összekapcsolt, több-lépéses tényekre van szükség?</span><span lang="en">Do answers need connected, multi-hop facts?</span></span>
+            </span>
+            <span class="decision-arrow" aria-hidden="true">→</span>
+            <span class="decision-out">
+              <a class="arch-chip arch-chip--graph" href="architectures/graph-rag.html">Graph RAG</a>
+            </span>
+          </div>
+          <div class="decision-step">
+            <span class="decision-q">
+              <span class="decision-q__icon">4</span>
+              <span><span lang="hu">Több lépést vagy eszközhasználatot igényel a feladat?</span><span lang="en">Does the task need multiple steps or tools?</span></span>
+            </span>
+            <span class="decision-arrow" aria-hidden="true">→</span>
+            <span class="decision-out">
+              <a class="arch-chip arch-chip--agent" href="architectures/agentic-rag.html">Agentic RAG</a>
+            </span>
+          </div>
+          <div class="decision-step">
+            <span class="decision-q">
+              <span class="decision-q__icon">5</span>
+              <span><span lang="hu">Kritikus a tényszerű pontosság?</span><span lang="en">Is factual accuracy critical?</span></span>
+            </span>
+            <span class="decision-arrow" aria-hidden="true">→</span>
+            <span class="decision-out">
+              <a class="arch-chip arch-chip--self" href="architectures/self-rag-crag.html">Self-RAG / CRAG</a>
+            </span>
+          </div>
+          <div class="decision-step">
+            <span class="decision-q">
+              <span class="decision-q__icon">6</span>
+              <span><span lang="hu">Erősen ingadozik a kérdések nehézsége és a költség?</span><span lang="en">Do query difficulty and cost vary widely?</span></span>
+            </span>
+            <span class="decision-arrow" aria-hidden="true">→</span>
+            <span class="decision-out">
+              <a class="arch-chip arch-chip--adapt" href="architectures/adaptive-rag.html">Adaptive RAG</a>
+            </span>
+          </div>
+        </div>
+      </section>
+
+      <!-- Architecture cards -->
+      <section class="section">
+        <div class="section__head">
+          <span class="section__num">03</span>
+          <h2 class="section__title">
+            <span lang="hu">A hét architektúra</span>
+            <span lang="en">The seven architectures</span>
+          </h2>
+        </div>
+        <div class="grid grid-3" style="margin-top:24px;">
+          <a class="card card--flat" href="architectures/flat-rag.html">
+            <div class="card__head"><span class="tag">Flat</span></div>
+            <h3 class="card__title">Flat RAG</h3>
+            <p class="card__body">
+              <span lang="hu">Egyszeri lekérdezés és válaszgenerálás — a legegyszerűbb RAG-alap.</span>
+              <span lang="en">Single-pass retrieval and generation — the simplest RAG baseline.</span>
+            </p>
+            <span class="card__more"><span lang="hu">Tovább →</span><span lang="en">Read more →</span></span>
+          </a>
+          <a class="card card--hier" href="architectures/hierarchical-rag.html">
+            <div class="card__head"><span class="tag">Hierarchical</span></div>
+            <h3 class="card__title">Hierarchical RAG</h3>
+            <p class="card__body">
+              <span lang="hu">Összefoglalókról részletekre haladó, többszintű keresés nagy dokumentumokhoz.</span>
+              <span lang="en">Multi-level retrieval that drills from summaries to detail for large documents.</span>
+            </p>
+            <span class="card__more"><span lang="hu">Tovább →</span><span lang="en">Read more →</span></span>
+          </a>
+          <a class="card card--graph" href="architectures/graph-rag.html">
+            <div class="card__head"><span class="tag">Graph</span></div>
+            <h3 class="card__title">Graph RAG</h3>
+            <p class="card__body">
+              <span lang="hu">Tudásgráfon bejárt entitás-kapcsolatok több-lépéses következtetéshez.</span>
+              <span lang="en">Entity relationships traversed over a knowledge graph for multi-hop reasoning.</span>
+            </p>
+            <span class="card__more"><span lang="hu">Tovább →</span><span lang="en">Read more →</span></span>
+          </a>
+          <a class="card card--agent" href="architectures/agentic-rag.html">
+            <div class="card__head"><span class="tag">Agentic</span></div>
+            <h3 class="card__title">Agentic RAG</h3>
+            <p class="card__body">
+              <span lang="hu">LLM-vezérelt ciklusok, amelyek önállóan döntik el, mikor és mit keressenek.</span>
+              <span lang="en">LLM-driven loops that autonomously decide when and what to retrieve.</span>
+            </p>
+            <span class="card__more"><span lang="hu">Tovább →</span><span lang="en">Read more →</span></span>
+          </a>
+          <a class="card card--self" href="architectures/self-rag-crag.html">
+            <div class="card__head"><span class="tag">Self-RAG</span></div>
+            <h3 class="card__title">Self-RAG / CRAG</h3>
+            <p class="card__body">
+              <span lang="hu">A modell reflektál a keresés és a válasz minőségére, majd javít rajta.</span>
+              <span lang="en">The model reflects on the quality of retrieval and answer, then corrects it.</span>
+            </p>
+            <span class="card__more"><span lang="hu">Tovább →</span><span lang="en">Read more →</span></span>
+          </a>
+          <a class="card card--adapt" href="architectures/adaptive-rag.html">
+            <div class="card__head"><span class="tag">Adaptive</span></div>
+            <h3 class="card__title">Adaptive RAG</h3>
+            <p class="card__body">
+              <span lang="hu">A keresési stratégiát az egyes kérdések összetettségéhez igazítja.</span>
+              <span lang="en">Adapts the retrieval strategy to the complexity of each query.</span>
+            </p>
+            <span class="card__more"><span lang="hu">Tovább →</span><span lang="en">Read more →</span></span>
+          </a>
+          <a class="card card--raptor" href="architectures/raptor.html">
+            <div class="card__head"><span class="tag">RAPTOR</span></div>
+            <h3 class="card__title">RAPTOR</h3>
+            <p class="card__body">
+              <span lang="hu">Klaszterezett összefoglalók fája tematikus, korpusz-szintű szintézishez.</span>
+              <span lang="en">A tree of clustered summaries for thematic, corpus-level synthesis.</span>
+            </p>
+            <span class="card__more"><span lang="hu">Tovább →</span><span lang="en">Read more →</span></span>
+          </a>
+        </div>
+      </section>
+
+      <footer class="site-footer">
+        <p class="site-footer__copy">© 2026 w7-knowbase</p>
+        <nav class="site-footer__links" aria-label="Footer">
+          <a href="https://github.com/w7-mgfcode/w7-knowbase">GitHub</a>
+          <a href="CHANGELOG.md">Changelog</a>
+        </nav>
+      </footer>
+    </main>
+  </div>
+</div>
+
+<script src="assets/js/knowbase.js" defer></script>
+</body>
+</html>
