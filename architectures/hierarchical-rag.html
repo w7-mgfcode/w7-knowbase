@@ -154,10 +154,280 @@ flowchart TD
         </div>
       </section>
 
-      <!-- 04 When to use it -->
+      <!-- 04 Core Principles -->
       <section class="section">
         <div class="section__head">
           <span class="section__num">04</span>
+          <h2 class="section__title"><span lang="hu">Alapelvek</span><span lang="en">Core Principles</span></h2>
+        </div>
+        <div class="grid grid-2">
+          <div class="info-box">
+            <p class="info-box__title"><span lang="hu">Több granularitási szint</span><span lang="en">Multiple granularities</span></p>
+            <p class="info-box__body">
+              <span lang="hu">Legalább két szemcsézettség: kis gyermek-darabok (~100–500 token) a pontos egyezésért, nagy szülő-darabok (~500–2000 token) a kontextusért.</span>
+              <span lang="en">At least two granularities: small child chunks (~100–500 tokens) for precise matching, large parent chunks (~500–2000 tokens) for context.</span>
+            </p>
+          </div>
+          <div class="info-box">
+            <p class="info-box__title"><span lang="hu">Kicsin keress, nagyon generálj</span><span lang="en">Retrieve on the small, generate on the big</span></p>
+            <p class="info-box__body">
+              <span lang="hu">A vektoros keresés a kis gyermek-darabokon fut a precizitásért, de a generáló modell a hozzá tartozó nagy szülő-darabot kapja meg.</span>
+              <span lang="en">Vector search runs over the small child chunks for precision, but the generation model receives the larger parent chunk they belong to.</span>
+            </p>
+          </div>
+          <div class="info-box">
+            <p class="info-box__title"><span lang="hu">Automatikus összevonás</span><span lang="en">Auto-merging</span></p>
+            <p class="info-box__body">
+              <span lang="hu">Ha egy szülő több gyermek-darabja is bekerül a találatok közé, a rendszer összevonja őket, és a szülő-darabbal helyettesíti a töredékeket.</span>
+              <span lang="en">When many children of one parent are retrieved, the system collapses them and replaces the fragments with the parent chunk.</span>
+            </p>
+          </div>
+          <div class="info-box">
+            <p class="info-box__title"><span lang="hu">Struktúra megőrzése</span><span lang="en">Structure preservation</span></p>
+            <p class="info-box__body">
+              <span lang="hu">A darabolás a dokumentum tényleges szerkezetét (szakaszok, fejezetcímek) követi, nem önkényes, fix méretű vágásokat alkalmaz.</span>
+              <span lang="en">Chunking follows the document's actual structure (sections, headings) instead of arbitrary fixed-size cuts.</span>
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- 05 Use Cases -->
+      <section class="section">
+        <div class="section__head">
+          <span class="section__num">05</span>
+          <h2 class="section__title"><span lang="hu">Felhasználási esetek</span><span lang="en">Use Cases</span></h2>
+        </div>
+        <p class="section__desc">
+          <span lang="hu">A Hierarchical RAG ott a legerősebb, ahol hosszú, strukturált dokumentumokban egy pontos találatot a környező szakasz kontextusával együtt kell megválaszolni.</span>
+          <span lang="en">Hierarchical RAG is strongest where a precise hit in long, structured documents must be answered together with its surrounding section context.</span>
+        </p>
+        <div class="grid grid-3">
+          <div class="card">
+            <div class="card__title"><span lang="hu">Műszaki kézikönyvek</span><span lang="en">Technical manuals</span></div>
+            <p class="card__body">
+              <span lang="hu">Hosszú, fejezetekre tagolt dokumentációk, ahol egy lépés a fejezet egészének kontextusában értelmezendő.</span>
+              <span lang="en">Long, chapter-structured documentation where a step is interpreted in the context of the whole chapter.</span>
+            </p>
+          </div>
+          <div class="card">
+            <div class="card__title"><span lang="hu">Jogi szerződések</span><span lang="en">Legal contracts</span></div>
+            <p class="card__body">
+              <span lang="hu">Szerződések és jogszabályok, ahol egy záradék jelentése a tágabb szakasztól függ.</span>
+              <span lang="en">Contracts and statutes where a clause's meaning depends on the broader section.</span>
+            </p>
+          </div>
+          <div class="card">
+            <div class="card__title"><span lang="hu">Kutatási cikkek</span><span lang="en">Research papers</span></div>
+            <p class="card__body">
+              <span lang="hu">Tudományos cikkek, ahol egy eredmény a módszertani szakasz nélkül félreérthető.</span>
+              <span lang="en">Research papers where a result is ambiguous without its methodology section.</span>
+            </p>
+          </div>
+          <div class="card">
+            <div class="card__title"><span lang="hu">Megfelelőségi dokumentumok</span><span lang="en">Policy &amp; compliance docs</span></div>
+            <p class="card__body">
+              <span lang="hu">Szabályzatok és megfelelőségi anyagok, ahol egy előírás a teljes szakasz hatókörében érvényes.</span>
+              <span lang="en">Policy and compliance material where a rule applies within the scope of an entire section.</span>
+            </p>
+          </div>
+          <div class="card">
+            <div class="card__title"><span lang="hu">Pénzügyi beszámolók</span><span lang="en">Financial filings</span></div>
+            <p class="card__body">
+              <span lang="hu">Éves jelentések és tőzsdei beadványok, ahol egy számadat a kísérő magyarázattal együtt értelmes.</span>
+              <span lang="en">Annual reports and regulatory filings where a figure is meaningful only with its accompanying narrative.</span>
+            </p>
+          </div>
+          <div class="card">
+            <div class="card__title"><span lang="hu">Egy-dokumentumos Q&amp;A</span><span lang="en">Single-document Q&amp;A</span></div>
+            <p class="card__body">
+              <span lang="hu">Egyetlen hosszú, tagolt dokumentum mély lekérdezése, ahol a precíz egyezés és a kontextus egyaránt számít.</span>
+              <span lang="en">Deep querying of a single long, structured document where both a precise hit and its context matter.</span>
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- 06 Routing Strategy -->
+      <section class="section">
+        <div class="section__head">
+          <span class="section__num">06</span>
+          <h2 class="section__title"><span lang="hu">Útválasztási stratégia</span><span lang="en">Routing Strategy</span></h2>
+        </div>
+        <p class="section__desc">
+          <span lang="hu">A Hierarchical RAG jó alapértelmezés közepes komplexitású, egyetlen korpuszon végzett visszakereséshez, ha a dokumentumok hosszúak és strukturáltak. Egy útválasztó akkor irányít ide, amikor a Flat RAG túl zajos lenne, de a Graph RAG túlméretezett.</span>
+          <span lang="en">Hierarchical RAG is a good default for medium-complexity single-corpus retrieval over long, structured documents. A router sends a query here when Flat RAG would be too noisy, but Graph RAG would be overkill.</span>
+        </p>
+        <div class="grid grid-2">
+          <div class="info-box">
+            <p class="info-box__title"><span lang="hu">A Flat RAG helyett</span><span lang="en">Over Flat RAG</span></p>
+            <p class="info-box__body">
+              <span lang="hu">Az útválasztó akkor választja ezt a Flat RAG helyett, ha a dokumentumok hosszúak és tagoltak, így a fix méretű darabolás kontextust veszítene.</span>
+              <span lang="en">A router picks this over Flat RAG when documents are long and structured, so fixed-size chunking would lose context.</span>
+            </p>
+          </div>
+          <div class="info-box">
+            <p class="info-box__title"><span lang="hu">A Graph RAG helyett</span><span lang="en">Over Graph RAG</span></p>
+            <p class="info-box__body">
+              <span lang="hu">A Graph RAG helyett akkor irányít ide, ha nincsenek dokumentumokon átívelő, relációs lekérdezések — egyetlen korpuszon belüli, strukturált keresésről van szó.</span>
+              <span lang="en">It routes here over Graph RAG when there are no cross-document relational queries — the task is structured retrieval within a single corpus.</span>
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- 07 Recommended Frameworks -->
+      <section class="section">
+        <div class="section__head">
+          <span class="section__num">07</span>
+          <h2 class="section__title"><span lang="hu">Ajánlott keretrendszerek</span><span lang="en">Recommended Frameworks</span></h2>
+        </div>
+        <p class="section__desc">
+          <span lang="hu">A hierarchikus visszakereséshez a két nagy keretrendszer kész komponenseket kínál; a darabolási oldalon 2025-ben új, LLM-alapú strukturáló módszerek is megjelentek.</span>
+          <span lang="en">The two major frameworks ship ready components for hierarchical retrieval; on the chunking side, new LLM-based structuring methods emerged in 2025.</span>
+        </p>
+        <div class="grid grid-3">
+          <div class="card card--rich card--hier">
+            <span class="card__tag">retrieval</span>
+            <div class="card__title"><span lang="hu">LangChain ParentDocumentRetriever</span><span lang="en">LangChain ParentDocumentRetriever</span></div>
+            <p class="card__spec">pip install langchain</p>
+            <p class="card__body">
+              <span lang="hu">A kanonikus megvalósítás: a gyermek-darabokat ágyazza be és keresi, de a hozzájuk tartozó szülő dokumentumot adja vissza a generáláshoz.</span>
+              <span lang="en">The canonical implementation: it embeds and searches child chunks, but returns the parent documents they belong to for generation.</span>
+            </p>
+            <ul class="feature-list">
+              <li><span lang="hu">Külön gyermek-beágyazás és szülő-dokumentumtár.</span><span lang="en">Separate child embeddings and a parent doc store.</span></li>
+              <li><span lang="hu">Egyszerű, jól dokumentált alapértelmezés.</span><span lang="en">A simple, well-documented default.</span></li>
+            </ul>
+          </div>
+          <div class="card card--rich card--hier">
+            <span class="card__tag">retrieval</span>
+            <div class="card__title"><span lang="hu">LlamaIndex AutoMergingRetriever</span><span lang="en">LlamaIndex AutoMergingRetriever</span></div>
+            <p class="card__spec">pip install llama-index</p>
+            <p class="card__body">
+              <span lang="hu">A <code>HierarchicalNodeParser</code> többszintű csomópontfát épít, az <code>AutoMergingRetriever</code> pedig small-to-big / sentence-window módon vonja össze a testvér-darabokat.</span>
+              <span lang="en">The <code>HierarchicalNodeParser</code> builds a multi-level node tree, and the <code>AutoMergingRetriever</code> merges sibling chunks small-to-big / sentence-window.</span>
+            </p>
+            <ul class="feature-list">
+              <li><span lang="hu">Konfigurálható, többszintű darabolás.</span><span lang="en">Configurable, multi-level chunking.</span></li>
+              <li><span lang="hu">Beépített automatikus összevonás.</span><span lang="en">Built-in auto-merging.</span></li>
+            </ul>
+          </div>
+          <div class="card card--rich card--hier">
+            <span class="card__tag">chunking</span>
+            <div class="card__title"><span lang="hu">HiChunk</span><span lang="en">HiChunk</span></div>
+            <p class="card__spec">arXiv 2509.11552 (2025)</p>
+            <p class="card__body">
+              <span lang="hu">Felemelkedő, finomhangolt LLM-mel végzett többszintű strukturálás Auto-Merge visszakereséssel — a fix méretű darabolás minőségi alternatívája.</span>
+              <span lang="en">An emerging approach: fine-tuned-LLM multi-level structuring with Auto-Merge retrieval — a quality alternative to fixed-size chunking.</span>
+            </p>
+            <ul class="feature-list">
+              <li><span lang="hu">LLM-vezérelt szakaszhatár-felismerés.</span><span lang="en">LLM-driven section boundary detection.</span></li>
+              <li><span lang="hu">2025-ös kutatás, érlelődő státusz.</span><span lang="en">2025 research, maturing status.</span></li>
+            </ul>
+          </div>
+        </div>
+        <div class="info-box">
+          <p class="info-box__title"><span lang="hu">Tárolási réteg</span><span lang="en">Storage layer</span></p>
+          <p class="info-box__body">
+            <span lang="hu">Bármelyik megvalósításhoz egy <strong>dokumentumtár (docstore) réteggel</strong> kiegészített vektoros adatbázis kell: a gyermek-darabok beágyazásai a vektoros indexbe, a szülő-darabok pedig a dokumentumtárba kerülnek, hogy lekérdezéskor a szülő visszakérhető legyen.</span>
+            <span lang="en">Any implementation needs a vector store paired with a <strong>docstore layer</strong>: child-chunk embeddings go into the vector index, while parent chunks live in the doc store so the parent can be retrieved at query time.</span>
+          </p>
+        </div>
+      </section>
+
+      <!-- 08 Expected Results -->
+      <section class="section">
+        <div class="section__head">
+          <span class="section__num">08</span>
+          <h2 class="section__title"><span lang="hu">Várható eredmények</span><span lang="en">Expected Results</span></h2>
+        </div>
+        <p class="section__desc">
+          <span lang="hu">A hierarchikus visszakeresés a Flat RAG-hoz képest javítja a visszakeresés <strong>precizitását</strong> (kis darabok), miközben nem veszíti el a generálás <strong>kontextusát</strong> (nagy darabok) — mérsékelt többlet tárhely-költség mellett, mert mindkét granularitás tárolódik.</span>
+          <span lang="en">Hierarchical retrieval improves retrieval <strong>precision</strong> (small chunks) over Flat RAG while not losing generation <strong>context</strong> (large chunks) — at a modest extra storage cost, since both granularities are stored.</span>
+        </p>
+        <div class="compare-table-wrap">
+          <table class="compare-table">
+            <thead>
+              <tr>
+                <th><span lang="hu">Szempont</span><span lang="en">Aspect</span></th>
+                <th><span lang="hu">Flat RAG</span><span lang="en">Flat RAG</span></th>
+                <th><span lang="hu">Hierarchical RAG</span><span lang="en">Hierarchical RAG</span></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="arch-name"><span lang="hu">Egyezés szemcsézettsége</span><span lang="en">Match granularity</span></td>
+                <td><span lang="hu">Fix méretű darab</span><span lang="en">Fixed-size chunk</span></td>
+                <td><span lang="hu">Kis gyermek-darab</span><span lang="en">Small child chunk</span></td>
+              </tr>
+              <tr>
+                <td class="arch-name"><span lang="hu">Generálási kontextus</span><span lang="en">Generation context</span></td>
+                <td><span lang="hu">Ugyanaz a fix darab</span><span lang="en">Same fixed chunk</span></td>
+                <td><span lang="hu">Nagy szülő-darab</span><span lang="en">Large parent chunk</span></td>
+              </tr>
+              <tr>
+                <td class="arch-name"><span lang="hu">Visszakeresési precizitás</span><span lang="en">Retrieval precision</span></td>
+                <td><span lang="hu">Alapszint</span><span lang="en">Baseline</span></td>
+                <td><span lang="hu">Magasabb (kevesebb zaj)</span><span lang="en">Higher (less noise)</span></td>
+              </tr>
+              <tr>
+                <td class="arch-name"><span lang="hu">Tárhely-költség</span><span lang="en">Storage cost</span></td>
+                <td><span lang="hu">Egy granularitás</span><span lang="en">One granularity</span></td>
+                <td class="mono"><span lang="hu">2 granularitás</span><span lang="en">2 granularities</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="info-box">
+          <p class="info-box__title"><span lang="hu">Bizonyítottság</span><span lang="en">Evidence base</span></p>
+          <p class="info-box__body">
+            <span lang="hu">Ez egy jól bevált technika, de fej-fej melletti összehasonlító benchmarkokkal gyengén lefedett — az előnyöket ezért minőségileg érdemes bemutatni, nem konkrét százalékokkal. A HiChunk a vonatkozó kutatásban jobb darabolási minőséget jelent ésszerű futási időn belül a fix méretű alapvonalakhoz képest.</span>
+            <span lang="en">This is a well-established technique but weakly covered by head-to-head benchmarks — gains are therefore best presented qualitatively, not with specific percentages. HiChunk, in its paper, reports better chunking quality within reasonable time versus fixed-size baselines.</span>
+          </p>
+        </div>
+      </section>
+
+      <!-- 09 Evaluation -->
+      <section class="section">
+        <div class="section__head">
+          <span class="section__num">09</span>
+          <h2 class="section__title"><span lang="hu">Kiértékelés</span><span lang="en">Evaluation</span></h2>
+        </div>
+        <p class="section__desc">
+          <span lang="hu">A kiértékelés a RAGAS négy alapmetrikájára épül; a hierarchikus felépítés esetén a kulcsjel a precizitás javulása anélkül, hogy a megalapozottság romlana.</span>
+          <span lang="en">Evaluation builds on the four RAGAS core metrics; for a hierarchical setup the key signal is precision improving without faithfulness degrading.</span>
+        </p>
+        <div class="grid grid-2">
+          <div class="panel panel--ok">
+            <h3 class="panel__title"><span lang="hu">Kulcsjelek</span><span lang="en">Key signals</span></h3>
+            <ul class="feature-list feature-list--ok">
+              <li><span lang="hu">Kontextus-precizitás (context precision) javul — kevesebb zaj a kis darabokból.</span><span lang="en">Context precision improves — less noise from the small chunks.</span></li>
+              <li><span lang="hu">Megalapozottság (faithfulness) tartja szintjét — a szülő-kontextus ép marad.</span><span lang="en">Faithfulness holds — the parent context stays intact.</span></li>
+              <li><span lang="hu">Kontextus-visszahívás (context recall) és válasz-relevancia a RAGAS-készlet részeként mérve.</span><span lang="en">Context recall and answer relevancy measured as part of the RAGAS set.</span></li>
+            </ul>
+          </div>
+          <div class="panel panel--warn">
+            <h3 class="panel__title"><span lang="hu">Architektúraspecifikus figyelmeztetés</span><span lang="en">Architecture-specific concern</span></h3>
+            <ul class="feature-list feature-list--warn">
+              <li><span lang="hu">A szülő-darab méretének hangolása kritikus: túl nagy → újra megjelenik a „lost in the middle” hatás.</span><span lang="en">Parent-chunk size tuning is critical: too large → the "lost in the middle" effect reappears.</span></li>
+              <li><span lang="hu">Túl kicsi szülő-darab → elveszik a kontextus-előny, amiért a hierarchia létezik.</span><span lang="en">Too small a parent chunk → the context advantage the hierarchy exists for is lost.</span></li>
+            </ul>
+          </div>
+        </div>
+        <div class="info-box">
+          <p class="info-box__title"><span lang="hu">Eszközök</span><span lang="en">Tooling</span></p>
+          <p class="info-box__body">
+            <span lang="hu">Három szerep: RAGAS a metrikák feltárásához és szintetikus tesztkészletekhez, DeepEval a CI/CD pass/fail kapukhoz, TruLens vagy Langfuse az éles monitorozáshoz; az Arize Phoenix a nyomkövetéshez. A szülő-darab méretét több beállítással is érdemes A/B-tesztelni ugyanazon az adathalmazon.</span>
+            <span lang="en">Three roles: RAGAS for metric exploration and synthetic test sets, DeepEval for CI/CD pass/fail gates, TruLens or Langfuse for production monitoring; Arize Phoenix for tracing. A/B-test the parent-chunk size across several settings on the same dataset.</span>
+          </p>
+        </div>
+      </section>
+
+      <!-- 10 When to use it -->
+      <section class="section">
+        <div class="section__head">
+          <span class="section__num">10</span>
           <h2 class="section__title"><span lang="hu">Mikor érdemes használni</span><span lang="en">When to use it</span></h2>
         </div>
         <div class="grid grid-2">
@@ -182,23 +452,24 @@ flowchart TD
         <div class="info-box">
           <p class="info-box__title"><span lang="hu">Pro tipp</span><span lang="en">Pro tip</span></p>
           <p class="info-box__body">
-            <span lang="hu">Kombináld a strukturális hierarchiát (szülő-levél chunk-ok) a kategória-irányítással: a keresési tér 99%-a is kizárható, mielőtt az első vektoros összehasonlítás megtörténne — ez különösen on-call és incidens-kezelési use case-eknél adja a legjobb eredményt.</span>
-            <span lang="en">Combine structural hierarchy (parent-leaf chunks) with category routing: up to 99% of the search space can be excluded before the first vector comparison — this delivers the best results in on-call and incident-response use cases.</span>
+            <span lang="hu">A leggyorsabb belépő a LangChain <code>ParentDocumentRetriever</code>: néhány sorban beágyazza a gyermek-darabokat és visszaadja a szülőt. Kombináld a strukturális hierarchiát (szülő-levél chunk-ok) a kategória-irányítással: a keresési tér 99%-a is kizárható, mielőtt az első vektoros összehasonlítás megtörténne — ez különösen on-call és incidens-kezelési use case-eknél adja a legjobb eredményt.</span>
+            <span lang="en">The fastest entry point is LangChain's <code>ParentDocumentRetriever</code>: in a few lines it embeds the child chunks and returns the parent. Combine structural hierarchy (parent-leaf chunks) with category routing: up to 99% of the search space can be excluded before the first vector comparison — this delivers the best results in on-call and incident-response use cases.</span>
           </p>
         </div>
       </section>
 
-      <!-- 05 Code example -->
+      <!-- 11 Code example -->
       <section class="section">
         <div class="section__head">
-          <span class="section__num">05</span>
+          <span class="section__num">11</span>
           <h2 class="section__title"><span lang="hu">Kódpélda</span><span lang="en">Code example</span></h2>
         </div>
         <div class="code-block">
           <div class="code-block__head">
             <span>hierarchical_rag_query.py</span>
           </div>
-          <pre><code><span class="tok-comment"># Build a hierarchical index with parent-child chunk relationship</span>
+          <pre><code><span class="tok-comment"># Build a hierarchical index with parent-child chunk relationship.</span>
+<span class="tok-comment"># LangChain alternative: ParentDocumentRetriever (embed child, return parent).</span>
 from llama_index.core import VectorStoreIndex, StorageContext
 from llama_index.core.node_parser import HierarchicalNodeParser, get_leaf_nodes
 from llama_index.core.retrievers import AutoMergingRetriever
