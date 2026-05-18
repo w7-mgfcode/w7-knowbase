@@ -459,6 +459,101 @@ a.card:hover {
 .card--adapt  { --accent: var(--adapt-color);  --accent-dim: var(--adapt-dim); }
 .card--raptor { --accent: var(--raptor-color); --accent-dim: var(--raptor-dim); }
 
+/* Rich card — used on reference-page card grids. A rich card stacks its
+   children, lets the body grow so a stat footer sinks to the bottom, and
+   clips the bleeding footer to the card radius. Combine with a card--<arch>
+   variant: the tag, dot markers and primary stat value inherit --accent. */
+.card--rich {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+.card--rich .card__body { flex: 1 1 auto; }
+.card--rich:hover { background: var(--bg-card-hover); }
+
+/* Mono accent-tinted pill inside a card (brand, license, category). */
+.card__tag {
+  align-self: flex-start;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 3px 8px;
+  margin-bottom: var(--space-sm);
+  color: var(--accent);
+  background: var(--accent-dim);
+  border: 1px solid var(--accent);
+  border-radius: var(--radius-sm);
+}
+
+/* One-line monospace spec strip (dims · context · price). */
+.card__spec {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--text-muted);
+  margin-bottom: var(--space-md);
+}
+
+/* Two-cell stat footer that bleeds to the card edges. */
+.card__stats {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  margin: var(--space-md) calc(-1 * var(--space-lg)) calc(-1 * var(--space-lg));
+  border-top: 1px solid var(--border);
+  background: var(--bg-secondary);
+}
+.card__stat {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  padding: var(--space-md);
+}
+.card__stat + .card__stat { border-left: 1px solid var(--border); }
+.card__stat-label {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+.card__stat-value {
+  font-family: var(--font-mono);
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--accent);
+}
+.card__stat-value--muted { color: var(--text-primary); }
+
+/* Model spec list inside a provider card — model name + indented spec line. */
+.model-list { list-style: none; margin: 0 0 var(--space-md); padding: 0; }
+.model-line { padding: var(--space-sm) 0; }
+.model-line + .model-line { border-top: 1px solid var(--border); }
+.model-line__name {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--accent);
+}
+.model-line__legacy {
+  margin-left: var(--space-xs);
+  padding: 1px 5px;
+  font-size: 9px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-sm);
+}
+.model-line__spec {
+  display: block;
+  margin-top: 3px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--text-muted);
+}
+
 /* ---- 11. Comparison table ------------------------------------ */
 .compare-table-wrap {
   overflow-x: auto;

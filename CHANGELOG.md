@@ -29,6 +29,17 @@ project follows [Semantic Versioning](https://semver.org/) — see
   leaderboard, API-provider models and consolidated pricing, an open-source
   model catalog, MRL/quantization, late interaction and multimodality, a
   model-selection guide, and 2026 trends.
+- Embedding Models reference page card grids redesigned (via the Google Stitch
+  workflow): per-architecture-colored cards with monospace tag pills, spec
+  lines, and a two-cell stat footer. Adds reusable `card--rich`, `card__tag`,
+  `card__spec`, and `card__stats` components to `assets/css/knowbase.css`;
+  `.stitch/DESIGN.md` now permits categorical per-card color on reference-page
+  card grids.
+- Embedding Models reference page expanded with researched mid-2026 data: a
+  ranked MMTEB Borda leaderboard, a benchmark-category card grid, provider
+  cards rebuilt as model-spec blocks, and MRL/quantization pipeline ladders
+  plus a quantization storage table. Adds a `model-list` / `model-line`
+  component to `assets/css/knowbase.css`.
 
 ## [0.1.0] - 2026-05-18
 
