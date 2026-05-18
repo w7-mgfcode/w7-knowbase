@@ -1,0 +1,71 @@
+name: CI
+
+# Static-site checks for w7-knowbase: HTML validity, internal-link integrity,
+# and bilingual (HU/EN) coverage. No build step — the site is served as-is.
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  static-checks:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Detect HTML pages
+        id: detect
+        run: |
+          count=$(find . -name '*.html' \
+            -not -path './oldsite/*' -not -path './.feature/*' \
+            -not -path './node_modules/*' | wc -l)
+          echo "count=$count" >> "$GITHUB_OUTPUT"
+          echo "Found $count HTML page(s)."
+
+      - name: Set up Node
+        if: steps.detect.outputs.count != '0'
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: HTML validation (htmlhint)
+        if: steps.detect.outputs.count != '0'
+        run: |
+          npx --yes htmlhint "**/*.html" \
+            --ignore "oldsite/**,.feature/**,node_modules/**"
+
+      - name: Link check (lychee)
+        if: steps.detect.outputs.count != '0'
+        uses: lycheeverse/lychee-action@v2
+        with:
+          args: >-
+            --no-progress --include-fragments
+            --exclude-path oldsite --exclude-path .feature
+            './**/*.html'
+          fail: true
+
+      - name: Bilingual coverage check
+        if: steps.detect.outputs.count != '0'
+        run: |
+          # Every page must contain both lang="hu" and lang="en" markup.
+          fail=0
+          while IFS= read -r f; do
+            if ! grep -q 'lang="hu"' "$f" || ! grep -q 'lang="en"' "$f"; then
+              echo "::error file=$f::missing HU or EN language variants"
+              fail=1
+            fi
+          done < <(find . -name '*.html' \
+            -not -path './oldsite/*' -not -path './.feature/*' \
+            -not -path './node_modules/*')
+          exit $fail
+
+      - name: No pages yet
+        if: steps.detect.outputs.count == '0'
+        run: echo "No HTML pages to check yet — scaffold stage. Skipping."

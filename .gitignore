@@ -1,0 +1,33 @@
+# ── Knowledge-only / reference material (NOT version-controlled) ──
+# Reference codebases — read-only context, never modified, never tracked.
+.feature/
+# The previous site — kept on disk as source material for the rewrite.
+oldsite/
+
+# ── Local-only — agent tooling, editor, project guide ──
+.claude/
+.vscode/
+CLAUDE.md
+# .git/ is never tracked by git anyway — listed here at request.
+.git/
+
+# ── Tooling / agent working dirs ──
+.playwright-mcp/
+.memo/
+
+# ── Secrets ──
+.env
+.env.*
+!.env.example
+
+# ── Dependencies / build output ──
+node_modules/
+dist/
+build/
+
+# ── OS / editor junk ──
+.DS_Store
+Thumbs.db
+*.log
+*.swp
+*~
