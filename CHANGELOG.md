@@ -8,6 +8,8 @@ project follows [Semantic Versioning](https://semver.org/) — see
 
 ## [Unreleased]
 
+## [0.1.0] - 2026-05-18
+
 ### Added
 - Repository scaffold for the static-site rewrite: `.gitignore`, directory
   structure (`architectures/`, `reference/`, `assets/`), `.stitch/DESIGN.md`,
