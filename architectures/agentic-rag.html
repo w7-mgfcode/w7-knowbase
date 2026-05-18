@@ -118,20 +118,142 @@
           <h2 class="section__title"><span lang="hu">Architektúra-diagram</span><span lang="en">Architecture diagram</span></h2>
         </div>
         <div class="diagram-box">
-          <div class="diagram-placeholder">
-            <p class="section__desc" style="text-align:center;">
-              <span lang="hu">Mermaid-diagram helye — a renderelt ábra a tartalommigráció során kerül ide.</span>
-              <span lang="en">Mermaid diagram area — the rendered figure lands here during content migration.</span>
-            </p>
-            <code>graph TD; A[Agent] --&gt; T[Tools]; T --&gt; A; A --&gt; G[Generation];</code>
+<pre class="mermaid" lang="hu">
+flowchart TD
+  Q[Felhasználói kérdés] --&gt; PLAN[Tervező – LLM]
+  PLAN --&gt; DECIDE{Eszköz szükséges?}
+  DECIDE --&gt;|igen| TOOL[Eszközválasztás]
+  TOOL --&gt; VDB[(Vektoros index)]
+  TOOL --&gt; API[Külső API]
+  TOOL --&gt; SQL[(Strukturált adat)]
+  VDB --&gt; OBS[Megfigyelés – eredmények]
+  API --&gt; OBS
+  SQL --&gt; OBS
+  OBS --&gt; REFLECT{Elég a kontextus?}
+  REFLECT --&gt;|nem| PLAN
+  REFLECT --&gt;|igen| GEN[Válaszgenerálás – LLM]
+  DECIDE --&gt;|nem| GEN
+  GEN --&gt; ANS[Végső válasz]
+</pre>
+<pre class="mermaid" lang="en">
+flowchart TD
+  Q[User query] --&gt; PLAN[Planner - LLM]
+  PLAN --&gt; DECIDE{Tool needed?}
+  DECIDE --&gt;|yes| TOOL[Tool selection]
+  TOOL --&gt; VDB[(Vector index)]
+  TOOL --&gt; API[External API]
+  TOOL --&gt; SQL[(Structured data)]
+  VDB --&gt; OBS[Observation - results]
+  API --&gt; OBS
+  SQL --&gt; OBS
+  OBS --&gt; REFLECT{Context sufficient?}
+  REFLECT --&gt;|no| PLAN
+  REFLECT --&gt;|yes| GEN[Generation - LLM]
+  DECIDE --&gt;|no| GEN
+  GEN --&gt; ANS[Final answer]
+</pre>
+          <p class="mermaid__caption">
+            <span lang="hu">Az ágens iteratív hurkot futtat: tervez, eszközt hív, megfigyeli az eredményeket, majd dönt – folytatja a keresést vagy generál.</span>
+            <span lang="en">The agent runs an iterative loop: plans, calls a tool, observes results, then decides – continue retrieval or generate.</span>
+          </p>
+        </div>
+      </section>
+
+      <!-- 04 When to use it -->
+      <section class="section">
+        <div class="section__head">
+          <span class="section__num">04</span>
+          <h2 class="section__title"><span lang="hu">Mikor érdemes használni</span><span lang="en">When to use it</span></h2>
+        </div>
+        <div class="grid grid-2">
+          <div class="panel panel--ok">
+            <h3 class="panel__title"><span lang="hu">Erősségek</span><span lang="en">Strengths</span></h3>
+            <ul class="feature-list feature-list--ok">
+              <li><span lang="hu">Komplex, több lépéses feladatok megoldása egyetlen folyamban.</span><span lang="en">Solves complex multi-step tasks in a single flow.</span></li>
+              <li><span lang="hu">Dinamikusan választ eszközt – vektoros keresés, SQL, API, web.</span><span lang="en">Dynamically selects tools – vector search, SQL, API, web.</span></li>
+              <li><span lang="hu">Képes önjavításra és lekérdezés-újrafogalmazásra.</span><span lang="en">Capable of self-correction and query reformulation.</span></li>
+              <li><span lang="hu">Jól integrálható LangGraph state-gráf alapú architektúrával.</span><span lang="en">Integrates well with LangGraph state-graph architecture.</span></li>
+            </ul>
+          </div>
+          <div class="panel panel--warn">
+            <h3 class="panel__title"><span lang="hu">Kihívások</span><span lang="en">Trade-offs</span></h3>
+            <ul class="feature-list feature-list--warn">
+              <li><span lang="hu">Magas késleltetés – több LLM-hívás fordulatonként.</span><span lang="en">High latency – multiple LLM calls per turn.</span></li>
+              <li><span lang="hu">Nehéz determinisztikus viselkedést garantálni.</span><span lang="en">Hard to guarantee deterministic behavior.</span></li>
+              <li><span lang="hu">Magasabb üzemeltetési költség (3–10× több token).</span><span lang="en">Higher operational cost (3–10× more tokens).</span></li>
+              <li><span lang="hu">Nem megfelelő egyszerű, egylépéses kérdések esetén.</span><span lang="en">Overkill for simple, single-step questions.</span></li>
+            </ul>
           </div>
         </div>
         <div class="info-box">
-          <p class="info-box__title"><span lang="hu">Vázlat</span><span lang="en">Draft</span></p>
+          <p class="info-box__title"><span lang="hu">Pro tipp</span><span lang="en">Pro tip</span></p>
           <p class="info-box__body">
-            <span lang="hu">Ez az oldal a Stitch-tervből generált váz. A részletes szakaszok — működési diagram, erősségek és kihívások, kódpélda — a korábbi oldal (oldsite/) tartalmából kerülnek át egy következő feladatban.</span>
-            <span lang="en">This page is a scaffold generated from the Stitch design. The detailed sections — working diagram, strengths and trade-offs, code example — will be migrated from the previous site (oldsite/) in a follow-up task.</span>
+            <span lang="hu">Használj LangGraph state-gráfot a ReAct-hurok helyett: a döntési pontok explicitek, a hibakeresés egyszerűbb, és human-in-the-loop breakpoint-okat is beépíthetsz.</span>
+            <span lang="en">Prefer a LangGraph state graph over a bare ReAct loop: decision points are explicit, debugging is simpler, and you can add human-in-the-loop breakpoints.</span>
           </p>
+        </div>
+      </section>
+
+      <!-- 05 Code example -->
+      <section class="section">
+        <div class="section__head">
+          <span class="section__num">05</span>
+          <h2 class="section__title"><span lang="hu">Kódpélda</span><span lang="en">Code example</span></h2>
+        </div>
+        <div class="code-block">
+          <div class="code-block__head">
+            <span>agentic_rag_graph.py</span>
+          </div>
+          <pre><code><span class="tok-comment"># LangGraph agentic RAG — retrieve → grade → generate loop</span>
+from langgraph.graph import StateGraph, END
+from typing import TypedDict, List
+
+class AgentState(TypedDict):
+    question: str
+    documents: List[str]
+    generation: str
+    attempts: int
+
+<span class="tok-comment"># Node: retrieve documents from vector store</span>
+def retrieve(state: AgentState) -&gt; AgentState:
+    docs = vector_store.similarity_search(state["question"], k=4)
+    return {**state, "documents": [d.page_content for d in docs]}
+
+<span class="tok-comment"># Node: grade document relevance with an LLM judge</span>
+def grade_documents(state: AgentState) -&gt; AgentState:
+    relevant = [
+        doc for doc in state["documents"]
+        if grader_chain.invoke({"question": state["question"], "doc": doc})
+    ]
+    return {**state, "documents": relevant}
+
+<span class="tok-comment"># Node: generate answer from graded context</span>
+def generate(state: AgentState) -&gt; AgentState:
+    answer = rag_chain.invoke({
+        "context": "\n\n".join(state["documents"]),
+        "question": state["question"],
+    })
+    return {**state, "generation": answer, "attempts": state["attempts"] + 1}
+
+<span class="tok-comment"># Edge: decide whether to retry or finish</span>
+def decide(state: AgentState) -&gt; str:
+    if not state["documents"] and state["attempts"] &lt; 3:
+        return "retrieve"   <span class="tok-comment"># no useful docs yet — loop back</span>
+    return END
+
+<span class="tok-comment"># Build and compile the state graph</span>
+graph = StateGraph(AgentState)
+graph.add_node("retrieve", retrieve)
+graph.add_node("grade", grade_documents)
+graph.add_node("generate", generate)
+graph.set_entry_point("retrieve")
+graph.add_edge("retrieve", "grade")
+graph.add_conditional_edges("grade", decide, {"retrieve": "retrieve", END: "generate"})
+graph.add_edge("generate", END)
+chain = graph.compile()
+
+result = chain.invoke({"question": "What are the deployment steps?", "documents": [], "generation": "", "attempts": 0})
+</code></pre>
         </div>
       </section>
 
@@ -157,6 +279,7 @@
   </div>
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/mermaid@11.15.0/dist/mermaid.min.js" integrity="sha384-yQ4mmBBT+vhTAwjFH0toJXNYJ6O4usWnt6EPIdWwrRvx2V/n5lXuDZQwQFeSFydF" crossorigin="anonymous" defer></script>
 <script src="../assets/js/knowbase.js" defer></script>
 </body>
 </html>

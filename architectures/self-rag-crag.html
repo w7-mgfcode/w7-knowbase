@@ -118,20 +118,143 @@
           <h2 class="section__title"><span lang="hu">Architektúra-diagram</span><span lang="en">Architecture diagram</span></h2>
         </div>
         <div class="diagram-box">
-          <div class="diagram-placeholder">
-            <p class="section__desc" style="text-align:center;">
-              <span lang="hu">Mermaid-diagram helye — a renderelt ábra a tartalommigráció során kerül ide.</span>
-              <span lang="en">Mermaid diagram area — the rendered figure lands here during content migration.</span>
-            </p>
-            <code>graph TD; R[Retrieve] --&gt; C[Critique]; C --&gt; R; C --&gt; G[Generation];</code>
+<pre class="mermaid" lang="hu">
+flowchart TD
+  Q[Felhasználói kérdés] --&gt; RDEC{Szükséges keresés?}
+  RDEC --&gt;|igen| RET[Visszakeresés – vektoros index]
+  RDEC --&gt;|nem| GEN[Generálás – LLM]
+  RET --&gt; GRADE{Dokumentum értékelése}
+  GRADE --&gt;|releváns| REFINE[Tudás-finomítás]
+  GRADE --&gt;|bizonytalan| WEB[Web-keresés – kiegészítés]
+  GRADE --&gt;|irreleváns| WEB
+  REFINE --&gt; GEN
+  WEB --&gt; GEN
+  GEN --&gt; CRIT{Válasz megalapozott?}
+  CRIT --&gt;|igen| ANS[Végső válasz]
+  CRIT --&gt;|nem| RET
+</pre>
+<pre class="mermaid" lang="en">
+flowchart TD
+  Q[User query] --&gt; RDEC{Retrieval needed?}
+  RDEC --&gt;|yes| RET[Retrieval - vector index]
+  RDEC --&gt;|no| GEN[Generation - LLM]
+  RET --&gt; GRADE{Document grading}
+  GRADE --&gt;|relevant| REFINE[Knowledge refinement]
+  GRADE --&gt;|ambiguous| WEB[Web search - supplement]
+  GRADE --&gt;|irrelevant| WEB
+  REFINE --&gt; GEN
+  WEB --&gt; GEN
+  GEN --&gt; CRIT{Answer grounded?}
+  CRIT --&gt;|yes| ANS[Final answer]
+  CRIT --&gt;|no| RET
+</pre>
+          <p class="mermaid__caption">
+            <span lang="hu">A Self-RAG/CRAG kétszintű önellenőrzést végez: először a visszakeresett dokumentumokat értékeli, majd a generált választ is – szükség esetén visszacsatol.</span>
+            <span lang="en">Self-RAG/CRAG applies two-level self-checking: it grades retrieved documents first, then the generated answer – looping back when needed.</span>
+          </p>
+        </div>
+      </section>
+
+      <!-- 04 When to use it -->
+      <section class="section">
+        <div class="section__head">
+          <span class="section__num">04</span>
+          <h2 class="section__title"><span lang="hu">Mikor érdemes használni</span><span lang="en">When to use it</span></h2>
+        </div>
+        <div class="grid grid-2">
+          <div class="panel panel--ok">
+            <h3 class="panel__title"><span lang="hu">Erősségek</span><span lang="en">Strengths</span></h3>
+            <ul class="feature-list feature-list--ok">
+              <li><span lang="hu">Jelentősen csökkenti a hallucináció előfordulását.</span><span lang="en">Significantly reduces hallucination occurrences.</span></li>
+              <li><span lang="hu">Zajos, nem egyenletesen releváns tudásbázisoknál is megbízható.</span><span lang="en">Reliable even with noisy, unevenly relevant knowledge bases.</span></li>
+              <li><span lang="hu">Web-keresés fallback révén friss adatokat is bevon.</span><span lang="en">Brings in fresh data via web-search fallback.</span></li>
+              <li><span lang="hu">A CRAG könnyűsúlyú értékelője nem igényel teljes LLM-hívást dokumentumonként.</span><span lang="en">CRAG's lightweight evaluator requires no full LLM call per document.</span></li>
+            </ul>
+          </div>
+          <div class="panel panel--warn">
+            <h3 class="panel__title"><span lang="hu">Kihívások</span><span lang="en">Trade-offs</span></h3>
+            <ul class="feature-list feature-list--warn">
+              <li><span lang="hu">Magasabb késleltetés a reflexiós körök miatt.</span><span lang="en">Higher latency due to reflection rounds.</span></li>
+              <li><span lang="hu">Jól kurált tudásbázisnál felesleges overhead.</span><span lang="en">Unnecessary overhead with a well-curated knowledge base.</span></li>
+              <li><span lang="hu">A Self-RAG speciálisan finomhangolt modellt igényel a reflexiós tokenekhez.</span><span lang="en">Self-RAG requires a specially fine-tuned model for reflection tokens.</span></li>
+              <li><span lang="hu">Egyszerű, egyértelmű kérdésekhez túlzott megközelítés.</span><span lang="en">Overkill for simple, straightforward questions.</span></li>
+            </ul>
           </div>
         </div>
         <div class="info-box">
-          <p class="info-box__title"><span lang="hu">Vázlat</span><span lang="en">Draft</span></p>
+          <p class="info-box__title"><span lang="hu">Pro tipp</span><span lang="en">Pro tip</span></p>
           <p class="info-box__body">
-            <span lang="hu">Ez az oldal a Stitch-tervből generált váz. A részletes szakaszok — működési diagram, erősségek és kihívások, kódpélda — a korábbi oldal (oldsite/) tartalmából kerülnek át egy következő feladatban.</span>
-            <span lang="en">This page is a scaffold generated from the Stitch design. The detailed sections — working diagram, strengths and trade-offs, code example — will be migrated from the previous site (oldsite/) in a follow-up task.</span>
+            <span lang="hu">CRAG-nál a visszakeresési értékelőt érdemes T5-large alapú, könnyű modellel implementálni (~0,77 milliárd paraméter): gyorsan osztályozza a dokumentumokat anélkül, hogy teljes LLM-hívást indítana minden egyes találathoz.</span>
+            <span lang="en">For CRAG, implement the retrieval evaluator with a lightweight T5-large model (~0.77 B parameters): it classifies documents quickly without triggering a full LLM call per retrieved chunk.</span>
           </p>
+        </div>
+      </section>
+
+      <!-- 05 Code example -->
+      <section class="section">
+        <div class="section__head">
+          <span class="section__num">05</span>
+          <h2 class="section__title"><span lang="hu">Kódpélda</span><span lang="en">Code example</span></h2>
+        </div>
+        <div class="code-block">
+          <div class="code-block__head">
+            <span>crag_pipeline.py</span>
+          </div>
+          <pre><code><span class="tok-comment"># CRAG pipeline: grade retrieved docs, fall back to web search when needed</span>
+from langgraph.graph import StateGraph, END
+from typing import TypedDict, List
+
+class CRAGState(TypedDict):
+    question: str
+    documents: List[str]
+    generation: str
+
+<span class="tok-comment"># Node: retrieve from vector store</span>
+def retrieve(state: CRAGState) -&gt; CRAGState:
+    docs = vector_store.similarity_search(state["question"], k=5)
+    return {**state, "documents": [d.page_content for d in docs]}
+
+<span class="tok-comment"># Node: grade each document — returns "correct" | "ambiguous" | "incorrect"</span>
+def grade_documents(state: CRAGState) -&gt; CRAGState:
+    grades = [doc_grader.invoke({"question": state["question"], "doc": d}) for d in state["documents"]]
+    relevant = [d for d, g in zip(state["documents"], grades) if g == "correct"]
+    return {**state, "documents": relevant, "_grade": max(grades, key=lambda g: ["incorrect","ambiguous","correct"].index(g))}
+
+<span class="tok-comment"># Node: supplement with web search when docs are ambiguous / irrelevant</span>
+def web_search(state: CRAGState) -&gt; CRAGState:
+    web_docs = web_search_tool.invoke(state["question"])
+    return {**state, "documents": state["documents"] + [web_docs]}
+
+<span class="tok-comment"># Node: generate answer from final context</span>
+def generate(state: CRAGState) -&gt; CRAGState:
+    answer = rag_chain.invoke({
+        "context": "\n\n".join(state["documents"]),
+        "question": state["question"],
+    })
+    return {**state, "generation": answer}
+
+<span class="tok-comment"># Edge: route after grading</span>
+def route_after_grade(state: CRAGState) -&gt; str:
+    grade = state.get("_grade", "ambiguous")
+    if grade == "correct":
+        return "generate"
+    return "web_search"   <span class="tok-comment"># ambiguous or incorrect — supplement with web</span>
+
+<span class="tok-comment"># Build state graph</span>
+graph = StateGraph(CRAGState)
+graph.add_node("retrieve", retrieve)
+graph.add_node("grade_documents", grade_documents)
+graph.add_node("web_search", web_search)
+graph.add_node("generate", generate)
+graph.set_entry_point("retrieve")
+graph.add_edge("retrieve", "grade_documents")
+graph.add_conditional_edges("grade_documents", route_after_grade, {"generate": "generate", "web_search": "web_search"})
+graph.add_edge("web_search", "generate")
+graph.add_edge("generate", END)
+chain = graph.compile()
+
+result = chain.invoke({"question": "Why is the payments-api pod crashing?", "documents": [], "generation": ""})
+</code></pre>
         </div>
       </section>
 
@@ -157,6 +280,7 @@
   </div>
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/mermaid@11.15.0/dist/mermaid.min.js" integrity="sha384-yQ4mmBBT+vhTAwjFH0toJXNYJ6O4usWnt6EPIdWwrRvx2V/n5lXuDZQwQFeSFydF" crossorigin="anonymous" defer></script>
 <script src="../assets/js/knowbase.js" defer></script>
 </body>
 </html>

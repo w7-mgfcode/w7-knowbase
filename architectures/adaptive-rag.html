@@ -118,20 +118,128 @@
           <h2 class="section__title"><span lang="hu">Architektúra-diagram</span><span lang="en">Architecture diagram</span></h2>
         </div>
         <div class="diagram-box">
-          <div class="diagram-placeholder">
-            <p class="section__desc" style="text-align:center;">
-              <span lang="hu">Mermaid-diagram helye — a renderelt ábra a tartalommigráció során kerül ide.</span>
-              <span lang="en">Mermaid diagram area — the rendered figure lands here during content migration.</span>
-            </p>
-            <code>graph TD; Q[Query] --&gt; K[Classifier]; K --&gt; S[Strategy] --&gt; G[Generation];</code>
+<pre class="mermaid" lang="hu">
+flowchart TD
+  Q[Felhasználói kérdés] --&gt; CLS{Komplexitás-osztályozó}
+  CLS --&gt;|Egyszerű| LLM[Csak LLM - nincs retrieval]
+  CLS --&gt;|Közepes| FLAT[Egylépéses RAG]
+  CLS --&gt;|Komplex| MULTI[Többlépéses iteratív RAG]
+  FLAT --&gt; VS[(Vektoros index)]
+  MULTI --&gt; VS
+  MULTI --&gt; ITER[Iteratív finomítás]
+  ITER --&gt; VS
+  LLM --&gt; ANS[Válasz generálása]
+  VS --&gt; ANS
+</pre>
+<pre class="mermaid" lang="en">
+flowchart TD
+  Q[User query] --&gt; CLS{Complexity classifier}
+  CLS --&gt;|Simple| LLM[LLM only - no retrieval]
+  CLS --&gt;|Medium| FLAT[Single-step RAG]
+  CLS --&gt;|Complex| MULTI[Multi-step iterative RAG]
+  FLAT --&gt; VS[(Vector index)]
+  MULTI --&gt; VS
+  MULTI --&gt; ITER[Iterative refinement]
+  ITER --&gt; VS
+  LLM --&gt; ANS[Answer generation]
+  VS --&gt; ANS
+</pre>
+          <p class="mermaid__caption">
+            <span lang="hu">Az osztályozó a kérdés nehézségét méri fel; az egyszerű kérdések rövidre zárják a pipeline-t, a komplexek iteratív retrieval-körökön mennek át.</span>
+            <span lang="en">The classifier gauges query difficulty; simple questions short-circuit the pipeline, complex ones go through iterative retrieval rounds.</span>
+          </p>
+        </div>
+      </section>
+
+      <!-- 04 When to use it -->
+      <section class="section">
+        <div class="section__head">
+          <span class="section__num">04</span>
+          <h2 class="section__title"><span lang="hu">Mikor érdemes használni</span><span lang="en">When to use it</span></h2>
+        </div>
+        <div class="grid grid-2">
+          <div class="panel panel--ok">
+            <h3 class="panel__title"><span lang="hu">Erősségek</span><span lang="en">Strengths</span></h3>
+            <ul class="feature-list feature-list--ok">
+              <li><span lang="hu">Vegyes nehézségű kérdések esetén 40–60%-os költségmegtakarítás.</span><span lang="en">40–60% cost saving when queries vary widely in difficulty.</span></li>
+              <li><span lang="hu">Az egyszerű kérdések rögtön, felesleges retrieval nélkül kapnak választ.</span><span lang="en">Simple questions get instant answers without unnecessary retrieval.</span></li>
+              <li><span lang="hu">Több RAG stratégia egységes, bővíthető keretbe illeszthető.</span><span lang="en">Multiple RAG strategies fit into a single, extensible framework.</span></li>
+              <li><span lang="hu">Átlagos késleltetés csökken, mert az egyszerű útvonal nagyon gyors.</span><span lang="en">Average latency drops because the simple path is very fast.</span></li>
+            </ul>
+          </div>
+          <div class="panel panel--warn">
+            <h3 class="panel__title"><span lang="hu">Kihívások</span><span lang="en">Trade-offs</span></h3>
+            <ul class="feature-list feature-list--warn">
+              <li><span lang="hu">Az osztályozó pontossága meghatározó — hibás besorolás rossz útvonalat aktivál.</span><span lang="en">Classifier accuracy is critical — misclassification triggers the wrong path.</span></li>
+              <li><span lang="hu">Több RAG stratégia karbantartása növeli a rendszer komplexitását.</span><span lang="en">Maintaining multiple RAG strategies increases system complexity.</span></li>
+              <li><span lang="hu">Az osztályozó maga is extra latency- és cost-overhead, ha LLM alapú.</span><span lang="en">The classifier itself adds latency and cost overhead when LLM-based.</span></li>
+            </ul>
           </div>
         </div>
         <div class="info-box">
-          <p class="info-box__title"><span lang="hu">Vázlat</span><span lang="en">Draft</span></p>
+          <p class="info-box__title"><span lang="hu">Pro tipp</span><span lang="en">Pro tip</span></p>
           <p class="info-box__body">
-            <span lang="hu">Ez az oldal a Stitch-tervből generált váz. A részletes szakaszok — működési diagram, erősségek és kihívások, kódpélda — a korábbi oldal (oldsite/) tartalmából kerülnek át egy következő feladatban.</span>
-            <span lang="en">This page is a scaffold generated from the Stitch design. The detailed sections — working diagram, strengths and trade-offs, code example — will be migrated from the previous site (oldsite/) in a follow-up task.</span>
+            <span lang="hu">Kezdj egyszerű heurisztikával az osztályozáshoz (kérdéshossz, kulcsszavak), mielőtt LLM-alapú osztályozóra váltanál — sokszor a szabályalapú megközelítés is elegendő pontosságot ad, töredék késleltetéssel.</span>
+            <span lang="en">Start with simple heuristics for classification (question length, keywords) before switching to an LLM-based classifier — rule-based approaches often achieve sufficient accuracy at a fraction of the latency.</span>
           </p>
+        </div>
+      </section>
+
+      <!-- 05 Code example -->
+      <section class="section">
+        <div class="section__head">
+          <span class="section__num">05</span>
+          <h2 class="section__title"><span lang="hu">Kódpélda</span><span lang="en">Code example</span></h2>
+        </div>
+        <div class="code-block">
+          <div class="code-block__head">
+            <span>adaptive_rag_router.py</span>
+          </div>
+          <pre><code><span class="tok-comment"># Complexity levels returned by the classifier</span>
+from enum import Enum
+from langchain_openai import ChatOpenAI
+from langchain_core.prompts import ChatPromptTemplate
+
+class Complexity(str, Enum):
+    SIMPLE = "simple"
+    MEDIUM = "medium"
+    COMPLEX = "complex"
+
+<span class="tok-comment"># Lightweight classifier — falls back to LLM when heuristics are uncertain</span>
+def classify_query(question: str, llm: ChatOpenAI) -&gt; Complexity:
+    prompt = ChatPromptTemplate.from_messages([
+        ("system", "Classify the query complexity as 'simple', 'medium', or 'complex'. "
+                   "Reply with ONLY the label."),
+        ("human", "{question}"),
+    ])
+    result = (prompt | llm).invoke({"question": question})
+    return Complexity(result.content.strip().lower())
+
+<span class="tok-comment"># Adaptive router dispatches to the right retrieval strategy</span>
+def adaptive_rag(question: str, retriever, llm: ChatOpenAI) -&gt; str:
+    complexity = classify_query(question, llm)
+
+    if complexity == Complexity.SIMPLE:
+        <span class="tok-comment"># No retrieval — LLM answers from parametric knowledge</span>
+        return llm.invoke(question).content
+
+    elif complexity == Complexity.MEDIUM:
+        <span class="tok-comment"># Single-step RAG</span>
+        docs = retriever.invoke(question)
+        context = "\n\n".join(d.page_content for d in docs)
+        return llm.invoke(f"Context:\n{context}\n\nQuestion: {question}").content
+
+    else:
+        <span class="tok-comment"># Multi-step iterative RAG — refine the query, retrieve again</span>
+        refined = llm.invoke(
+            f"Decompose into 2–3 sub-questions: {question}"
+        ).content
+        all_docs = []
+        for sub_q in refined.split("\n"):
+            all_docs.extend(retriever.invoke(sub_q.strip()))
+        context = "\n\n".join(d.page_content for d in all_docs)
+        return llm.invoke(f"Context:\n{context}\n\nQuestion: {question}").content
+</code></pre>
         </div>
       </section>
 
@@ -157,6 +265,7 @@
   </div>
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/mermaid@11.15.0/dist/mermaid.min.js" integrity="sha384-yQ4mmBBT+vhTAwjFH0toJXNYJ6O4usWnt6EPIdWwrRvx2V/n5lXuDZQwQFeSFydF" crossorigin="anonymous" defer></script>
 <script src="../assets/js/knowbase.js" defer></script>
 </body>
 </html>

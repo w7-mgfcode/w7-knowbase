@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hibrid keresés — w7-knowbase</title>
+<meta name="description" content="Hibrid keresés: sűrű vektoros és ritka kulcsszavas (BM25) visszakeresés kombinálása Reciprocal Rank Fusion segítségével.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300..700&family=Space+Grotesk:wght@400..700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/css/knowbase.css">
+</head>
+<body class="accent-cyan" data-page="hybrid-search">
+<script>try{if(localStorage.getItem('knowbase-lang')==='en')document.body.classList.add('lang-en');}catch(e){}</script>
+
+<div class="layout">
+  <aside class="sidebar" id="sidebar" data-base="../"></aside>
+  <div class="sidebar-backdrop" id="navBackdrop"></div>
+
+  <div class="main">
+    <div class="mobile-header">
+      <a class="mobile-header__brand" href="../index.html"><span>w7</span>-knowbase</a>
+      <div style="display:flex;gap:8px;align-items:center;">
+        <div class="lang-toggle" role="group" aria-label="Language">
+          <button class="lang-toggle__btn" type="button" data-lang-btn="hu" aria-pressed="true">HU</button>
+          <button class="lang-toggle__btn" type="button" data-lang-btn="en" aria-pressed="false">EN</button>
+        </div>
+        <button class="menu-btn" id="menuBtn" type="button" aria-label="Open navigation" aria-controls="sidebar" aria-expanded="false"></button>
+      </div>
+    </div>
+
+    <header class="topbar">
+      <nav class="breadcrumb" aria-label="Breadcrumb">
+        <span><span lang="hu">Referencia</span><span lang="en">Reference</span></span>
+        <span class="breadcrumb__sep" aria-hidden="true">/</span>
+        <span class="breadcrumb__current"><span lang="hu">Hibrid keresés</span><span lang="en">Hybrid Search</span></span>
+      </nav>
+      <div class="lang-toggle" role="group" aria-label="Language">
+        <button class="lang-toggle__btn" type="button" data-lang-btn="hu" aria-pressed="true">HU</button>
+        <button class="lang-toggle__btn" type="button" data-lang-btn="en" aria-pressed="false">EN</button>
+      </div>
+    </header>
+
+    <main class="content">
+      <div class="page-header">
+        <span class="tag"><span lang="hu">Referencia</span><span lang="en">Reference</span></span>
+        <h1 class="page-header__title tinted"><span lang="hu">Hibrid keresés</span><span lang="en">Hybrid Search</span></h1>
+        <p class="page-header__subtitle">
+          <span lang="hu">Sűrű vektoros és ritka kulcsszavas (BM25) visszakeresés kombinálása: mindkét módszer erősségei egy lekérdezési folyamatban, Reciprocal Rank Fusion segítségével összefűzve.</span>
+          <span lang="en">Combining dense vector and sparse keyword (BM25) retrieval: the strengths of both methods in a single query pipeline, fused with Reciprocal Rank Fusion.</span>
+        </p>
+        <div class="stat-row">
+          <div class="stat-pill">
+            <div class="stat-pill__label"><span lang="hu">Módszerek</span><span lang="en">Methods</span></div>
+            <div class="stat-pill__value"><span lang="hu">Sűrű + Ritka</span><span lang="en">Dense + Sparse</span></div>
+          </div>
+          <div class="stat-pill">
+            <div class="stat-pill__label"><span lang="hu">Fúziós technika</span><span lang="en">Fusion technique</span></div>
+            <div class="stat-pill__value">RRF</div>
+          </div>
+          <div class="stat-pill">
+            <div class="stat-pill__label"><span lang="hu">Mire jó</span><span lang="en">Best for</span></div>
+            <div class="stat-pill__value"><span lang="hu">Vegyes lekérdezések</span><span lang="en">Mixed queries</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 01 Overview -->
+      <section class="section">
+        <div class="section__head">
+          <span class="section__num">01</span>
+          <h2 class="section__title"><span lang="hu">Áttekintés</span><span lang="en">Overview</span></h2>
+        </div>
+        <div class="grid grid-2">
+          <p class="section__desc">
+            <span lang="hu">A hagyományos vektoros keresés a szemantikai hasonlóságra támaszkodik: a kérdés és a dokumentumdarabok embedding-vektorait hasonlítja össze a vektortérben. Kiváló az általános, parafrazált kérdéseknél, de megbukhat pontos kulcsszavaknál, kódneveken, termékszámokon vagy speciális szakkifejezéseken — ahol a BM25-alapú ritka visszakeresés megbízhatóbb.</span>
+            <span lang="en">Traditional vector search relies on semantic similarity: it compares the embedding vectors of the query and document chunks in vector space. It excels at paraphrased, general questions, but can fail on exact keywords, codenames, product numbers, or highly specific terms — where BM25-based sparse retrieval is more reliable.</span>
+          </p>
+          <p class="section__desc">
+            <span lang="hu">A hibrid keresés mindkét módszert párhuzamosan futtatja, majd a találati listákat egy pontszám-összefűző (score fusion) algoritmussal — tipikusan Reciprocal Rank Fusion (RRF) vagy súlyozott összeg — vonja össze. Az eredmény egy olyan rangsorolt lista, amely a szemantikai és kulcsszavas relevanciát egyaránt figyelembe veszi, így szinte minden lekérdezési stílusnál felülmúlja a csak vektoros megközelítést.</span>
+            <span lang="en">Hybrid search runs both methods in parallel, then merges the result lists using a score fusion algorithm — typically Reciprocal Rank Fusion (RRF) or a weighted sum. The result is a ranked list that captures both semantic and keyword relevance, consistently outperforming pure-vector approaches across virtually all query styles.</span>
+          </p>
+        </div>
+      </section>
+
+      <!-- 02 How it works -->
+      <section class="section">
+        <div class="section__head">
+          <span class="section__num">02</span>
+          <h2 class="section__title"><span lang="hu">Működési folyamat</span><span lang="en">How it works</span></h2>
+        </div>
+        <div class="diagram-box">
+          <div class="pipeline">
+            <div class="pipeline__step">
+              <span class="pipeline__node">1</span>
+              <span class="pipeline__label"><span lang="hu">Lekérdezés</span><span lang="en">Query</span></span>
+            </div>
+            <span class="pipeline__arrow" aria-hidden="true">→</span>
+            <div class="pipeline__step">
+              <span class="pipeline__node">2</span>
+              <span class="pipeline__label"><span lang="hu">Párhuzamos keresés</span><span lang="en">Parallel search</span></span>
+            </div>
+            <span class="pipeline__arrow" aria-hidden="true">→</span>
+            <div class="pipeline__step">
+              <span class="pipeline__node">3</span>
+              <span class="pipeline__label"><span lang="hu">RRF fúzió</span><span lang="en">RRF fusion</span></span>
+            </div>
+            <span class="pipeline__arrow" aria-hidden="true">→</span>
+            <div class="pipeline__step">
+              <span class="pipeline__node">4</span>
+              <span class="pipeline__label"><span lang="hu">Összesített rangsor</span><span lang="en">Merged ranking</span></span>
+            </div>
+            <span class="pipeline__arrow" aria-hidden="true">→</span>
+            <div class="pipeline__step">
+              <span class="pipeline__node">5</span>
+              <span class="pipeline__label"><span lang="hu">Generálás</span><span lang="en">Generation</span></span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 03 Architecture diagram -->
+      <section class="section">
+        <div class="section__head">
+          <span class="section__num">03</span>
+          <h2 class="section__title"><span lang="hu">Architektúra-diagram</span><span lang="en">Architecture diagram</span></h2>
+        </div>
+        <div class="diagram-box">
+<pre class="mermaid" lang="hu">
+flowchart TD
+  Q[Felhasználói kérdés] --&gt; EMB[Embedding generálás]
+  Q --&gt; TOK[Tokenizálás - BM25]
+  EMB --&gt; VS[(Vektoros index)]
+  TOK --&gt; INV[(Invertált index)]
+  VS --&gt; VR[Vektoros találatok]
+  INV --&gt; KR[Kulcsszavas találatok]
+  VR --&gt; RRF[RRF fúzió]
+  KR --&gt; RRF
+  RRF --&gt; TOP[Összesített top-k lista]
+  TOP --&gt; GEN[Válaszgenerálás - LLM]
+  GEN --&gt; ANS[Kontextualizált válasz]
+</pre>
+<pre class="mermaid" lang="en">
+flowchart TD
+  Q[User query] --&gt; EMB[Embedding generation]
+  Q --&gt; TOK[Tokenisation - BM25]
+  EMB --&gt; VS[(Vector index)]
+  TOK --&gt; INV[(Inverted index)]
+  VS --&gt; VR[Vector results]
+  INV --&gt; KR[Keyword results]
+  VR --&gt; RRF[RRF fusion]
+  KR --&gt; RRF
+  RRF --&gt; TOP[Merged top-k list]
+  TOP --&gt; GEN[Generation - LLM]
+  GEN --&gt; ANS[Contextualised answer]
+</pre>
+          <p class="mermaid__caption">
+            <span lang="hu">A vektoros és az invertált index párhuzamosan ad vissza találatokat; az RRF fúzió az egyesített rangsorból emeli ki a legjobb dokumentumokat.</span>
+            <span lang="en">The vector and inverted indexes return results in parallel; RRF fusion surfaces the best documents from the merged ranking.</span>
+          </p>
+        </div>
+      </section>
+
+      <!-- 04 Practical guidance -->
+      <section class="section">
+        <div class="section__head">
+          <span class="section__num">04</span>
+          <h2 class="section__title"><span lang="hu">Gyakorlati tanácsok</span><span lang="en">Practical guidance</span></h2>
+        </div>
+        <div class="grid grid-2">
+          <div class="panel panel--ok">
+            <h3 class="panel__title"><span lang="hu">Mikor alkalmazzuk</span><span lang="en">When to apply</span></h3>
+            <ul class="feature-list feature-list--ok">
+              <li><span lang="hu">Vegyes lekérdezési stílusok: általános kérdések és pontos kulcsszavak egyaránt előfordulnak.</span><span lang="en">Mixed query styles: both general questions and exact keyword lookups occur.</span></li>
+              <li><span lang="hu">Specialistaszótár, kódok, terméknevek vagy rövidítések a korpuszban.</span><span lang="en">Specialist vocabulary, codes, product names, or abbreviations appear in the corpus.</span></li>
+              <li><span lang="hu">Natív hibrid támogatással rendelkező vektoros adatbázis (Weaviate, Qdrant, OpenSearch, Elastic, pgvector+tsvector).</span><span lang="en">A vector database with native hybrid support (Weaviate, Qdrant, OpenSearch, Elasticsearch, pgvector+tsvector).</span></li>
+              <li><span lang="hu">A tisztán vektoros keresés pontossága alapból elégtelennek bizonyult.</span><span lang="en">Pure-vector retrieval precision has proven insufficient as a baseline.</span></li>
+            </ul>
+          </div>
+          <div class="panel panel--warn">
+            <h3 class="panel__title"><span lang="hu">Kompromisszumok</span><span lang="en">Trade-offs</span></h3>
+            <ul class="feature-list feature-list--warn">
+              <li><span lang="hu">Két indexet kell fenntartani és szinkronban tartani, ami növeli az infrastrukturális terhet.</span><span lang="en">Two indexes must be maintained and kept in sync, increasing infrastructure overhead.</span></li>
+              <li><span lang="hu">Az alfa-paraméter hangolása (dense vs. sparse arány) kísérleti optimalizálást igényel.</span><span lang="en">Tuning the alpha parameter (dense vs. sparse weight) requires experimental optimisation.</span></li>
+              <li><span lang="hu">Az RRF k-konstansa (jellemzően 60) befolyásolja, mennyire bünteti az alacsony helyezéseket; helytelen beállítás rontja a fúziót.</span><span lang="en">The RRF k-constant (typically 60) controls how harshly low ranks are penalised; misconfiguration degrades fusion quality.</span></li>
+              <li><span lang="hu">A lekérdezési késleltetés megnőhet, ha a két keresési útvonal nem fut valóban párhuzamosan.</span><span lang="en">Query latency increases if the two retrieval paths are not run in true parallel.</span></li>
+            </ul>
+          </div>
+        </div>
+        <div class="info-box">
+          <p class="info-box__title"><span lang="hu">RRF-képlet</span><span lang="en">RRF formula</span></p>
+          <p class="info-box__body">
+            <span lang="hu">Az RRF pontszám minden dokumentumra: RRF(d) = 1/(k + rank_dense(d)) + 1/(k + rank_sparse(d)), ahol k = 60 az alapértelmezett konstans. A képlet a jó helyezés jutalmát halmozza össze, nem az eredeti pontszámot — így a két rendszer eltérő skálájú pontszámai sem okoznak torzítást.</span>
+            <span lang="en">The RRF score for each document: RRF(d) = 1/(k + rank_dense(d)) + 1/(k + rank_sparse(d)), where k = 60 is the default constant. The formula accumulates rank-position rewards rather than raw scores — so differing score scales across the two systems introduce no distortion.</span>
+          </p>
+        </div>
+      </section>
+
+      <!-- 05 Code example -->
+      <section class="section">
+        <div class="section__head">
+          <span class="section__num">05</span>
+          <h2 class="section__title"><span lang="hu">Kódpélda</span><span lang="en">Code example</span></h2>
+        </div>
+        <div class="code-block">
+          <div class="code-block__head">
+            <span>hybrid_search.py</span>
+          </div>
+          <pre><code><span class="tok-comment"># Reciprocal Rank Fusion — provider-agnostic implementation</span>
+from collections import defaultdict
+
+def rrf_fusion(dense_results, sparse_results, k: int = 60) -&gt; list[dict]:
+    <span class="tok-comment">"""Merge two ranked lists using Reciprocal Rank Fusion.
+
+    Args:
+        dense_results:  list of {'id': str, 'text': str, ...} ordered by dense rank
+        sparse_results: list of {'id': str, 'text': str, ...} ordered by sparse rank
+        k: smoothing constant (default 60, rarely needs tuning)
+    Returns:
+        Merged list sorted by descending RRF score.
+    """</span>
+    scores: dict[str, float] = defaultdict(float)
+    docs: dict[str, dict] = {}
+
+    for rank, hit in enumerate(dense_results, start=1):
+        scores[hit["id"]] += 1.0 / (k + rank)
+        docs[hit["id"]] = hit
+
+    for rank, hit in enumerate(sparse_results, start=1):
+        scores[hit["id"]] += 1.0 / (k + rank)
+        docs.setdefault(hit["id"], hit)
+
+    return sorted(docs.values(), key=lambda d: scores[d["id"]], reverse=True)
+
+
+<span class="tok-comment"># Qdrant native hybrid search (dense + sparse BM42 / SPLADE)</span>
+from qdrant_client import QdrantClient
+from qdrant_client.models import (
+    Prefetch, FusionQuery, Fusion,
+    NamedVector, NamedSparseVector, SparseVector,
+)
+
+client = QdrantClient(url="http://localhost:6333")
+
+def hybrid_query(query_text: str, embedder, sparse_encoder, top_k: int = 10):
+    dense_vec = embedder.encode(query_text).tolist()
+    sparse_vec = sparse_encoder.encode(query_text)   <span class="tok-comment"># returns indices + values</span>
+
+    results = client.query_points(
+        collection_name="knowbase",
+        prefetch=[
+            Prefetch(
+                query=NamedVector(name="dense", vector=dense_vec),
+                limit=top_k * 2,
+            ),
+            Prefetch(
+                query=NamedSparseVector(
+                    name="sparse",
+                    vector=SparseVector(
+                        indices=sparse_vec.indices,
+                        values=sparse_vec.values,
+                    ),
+                ),
+                limit=top_k * 2,
+            ),
+        ],
+        query=FusionQuery(fusion=Fusion.RRF),  <span class="tok-comment"># server-side RRF</span>
+        limit=top_k,
+    )
+    return results.points
+</code></pre>
+        </div>
+      </section>
+
+      <nav class="pager" aria-label="Reference pager">
+        <a class="pager__link" href="reranking.html">
+          <div class="pager__dir">← <span lang="hu">Előző</span><span lang="en">Previous</span></div>
+          <div class="pager__name"><span lang="hu">Újrarangsorolás</span><span lang="en">Reranking</span></div>
+        </a>
+        <a class="pager__link pager__link--next" href="evaluation.html">
+          <div class="pager__dir"><span lang="hu">Következő</span><span lang="en">Next</span> →</div>
+          <div class="pager__name"><span lang="hu">Kiértékelés</span><span lang="en">Evaluation</span></div>
+        </a>
+      </nav>
+
+      <footer class="site-footer">
+        <p class="site-footer__copy">© 2026 w7-knowbase</p>
+        <nav class="site-footer__links" aria-label="Footer">
+          <a href="https://github.com/w7-mgfcode/w7-knowbase">GitHub</a>
+          <a href="../CHANGELOG.md">Changelog</a>
+        </nav>
+      </footer>
+    </main>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/mermaid@11.15.0/dist/mermaid.min.js" integrity="sha384-yQ4mmBBT+vhTAwjFH0toJXNYJ6O4usWnt6EPIdWwrRvx2V/n5lXuDZQwQFeSFydF" crossorigin="anonymous" defer></script>
+<script src="../assets/js/knowbase.js" defer></script>
+</body>
+</html>

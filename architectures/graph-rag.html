@@ -126,13 +126,36 @@
           <h2 class="section__title"><span lang="hu">Architektúra-diagram</span><span lang="en">Architecture diagram</span></h2>
         </div>
         <div class="diagram-box">
-          <div class="diagram-placeholder">
-            <p class="section__desc" style="text-align:center;">
-              <span lang="hu">Mermaid-diagram helye — a renderelt ábra a tartalommigráció során kerül ide.</span>
-              <span lang="en">Mermaid diagram area — the rendered figure lands here during content migration.</span>
-            </p>
-            <code>graph TD; A[Query] --&gt; B[NER]; B --&gt; C[Graph Traversal]; C --&gt; D[Generation];</code>
-          </div>
+<pre class="mermaid" lang="hu">
+flowchart TD
+  Q[Felhasználói kérdés] --&gt; NER[Entitás-kinyerés]
+  NER --&gt; VS[(Vektoros index)]
+  NER --&gt; KG[(Tudásgráf)]
+  VS --&gt; SEED[Kezdő entitások]
+  SEED --&gt; TRAV[Gráfbejárás]
+  KG --&gt; TRAV
+  TRAV --&gt; SUB[Algráf-lekérés]
+  SUB --&gt; CTX[Kontextus összeállítása]
+  CTX --&gt; GEN[Válaszgenerálás – LLM]
+  GEN --&gt; ANS[Hivatkozott válasz]
+</pre>
+<pre class="mermaid" lang="en">
+flowchart TD
+  Q[User query] --&gt; NER[Entity extraction]
+  NER --&gt; VS[(Vector index)]
+  NER --&gt; KG[(Knowledge graph)]
+  VS --&gt; SEED[Seed entities]
+  SEED --&gt; TRAV[Graph traversal]
+  KG --&gt; TRAV
+  TRAV --&gt; SUB[Subgraph retrieval]
+  SUB --&gt; CTX[Context assembly]
+  CTX --&gt; GEN[Generation - LLM]
+  GEN --&gt; ANS[Cited answer]
+</pre>
+          <p class="mermaid__caption">
+            <span lang="hu">A vektoros index adja a kezdő entitásokat; a tudásgráf élei mentén történő bejárás bővíti a kontextust.</span>
+            <span lang="en">The vector index seeds the entities; traversal along the knowledge-graph edges expands the context.</span>
+          </p>
         </div>
       </section>
 
@@ -222,6 +245,7 @@ response = query_engine.query(question)
   </div>
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/mermaid@11.15.0/dist/mermaid.min.js" integrity="sha384-yQ4mmBBT+vhTAwjFH0toJXNYJ6O4usWnt6EPIdWwrRvx2V/n5lXuDZQwQFeSFydF" crossorigin="anonymous" defer></script>
 <script src="../assets/js/knowbase.js" defer></script>
 </body>
 </html>
