@@ -14,6 +14,9 @@ CLAUDE.md
 # ── Tooling / agent working dirs ──
 .playwright-mcp/
 .memo/
+# Stitch design scratch — generated HTML/screenshots, not part of the site.
+# The design system itself (.stitch/DESIGN.md) IS tracked.
+.stitch/designs/
 
 # ── Secrets ──
 .env
