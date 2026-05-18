@@ -13,12 +13,16 @@ project follows [Semantic Versioning](https://semver.org/) — see
   card grid for the seven architectures.
 - Seven architecture pages under `architectures/` (flat, hierarchical, graph,
   agentic, self-rag-crag, adaptive, raptor), each with its signature accent
-  colour. `graph-rag.html` carries full content; the other six are scaffolds
-  pending content migration from `oldsite/`.
+  colour and full deep-dive content: overview, working pipeline, a rendered
+  architecture diagram, strengths/trade-offs, and a code example.
+- Four reference pages under `reference/` (embedding models, reranking, hybrid
+  search, evaluation) — cyan-accented, matching the architecture-page depth.
+- Mermaid architecture diagrams, rendered from a version-pinned, SRI-hashed CDN
+  build; each diagram ships bilingual HU/EN variants.
 - `assets/css/knowbase.css` — hand-written design-system stylesheet built from
   `.stitch/DESIGN.md` tokens.
 - `assets/js/knowbase.js` — sidebar generation, bilingual HU/EN toggle
-  (persisted to `localStorage`), and mobile navigation.
+  (persisted to `localStorage`), mobile navigation, and Mermaid rendering.
 
 ## [0.1.0] - 2026-05-18
 
