@@ -118,20 +118,122 @@
           <h2 class="section__title"><span lang="hu">Architektúra-diagram</span><span lang="en">Architecture diagram</span></h2>
         </div>
         <div class="diagram-box">
-          <div class="diagram-placeholder">
-            <p class="section__desc" style="text-align:center;">
-              <span lang="hu">Mermaid-diagram helye — a renderelt ábra a tartalommigráció során kerül ide.</span>
-              <span lang="en">Mermaid diagram area — the rendered figure lands here during content migration.</span>
-            </p>
-            <code>graph TD; L0[Chunks] --&gt; L1[Summaries] --&gt; L2[Root Summary];</code>
+<pre class="mermaid" lang="hu">
+flowchart TD
+  DOCS[(Dokumentumok)] --&gt; CHUNK[Darabolás - levél chunk-ok]
+  CHUNK --&gt; EMB1[Embedding - SBERT]
+  EMB1 --&gt; UMAP1[UMAP dimenziócsökkentés]
+  UMAP1 --&gt; GMM1[GMM klaszterezés]
+  GMM1 --&gt; SUM1[LLM összefoglalás klaszterenként]
+  SUM1 --&gt; EMB2[Embedding - összefoglalók]
+  EMB2 --&gt; GMM2[GMM klaszterezés - 2. szint]
+  GMM2 --&gt; SUM2[LLM gyökér-összefoglaló]
+  SUM2 --&gt; IDX[(Összevont fa-index)]
+  CHUNK --&gt; IDX
+  SUM1 --&gt; IDX
+  IDX --&gt; RET[Top-K keresés bármely szintről]
+  RET --&gt; GEN[Válaszgenerálás - LLM]
+</pre>
+<pre class="mermaid" lang="en">
+flowchart TD
+  DOCS[(Documents)] --&gt; CHUNK[Chunking - leaf chunks]
+  CHUNK --&gt; EMB1[Embedding - SBERT]
+  EMB1 --&gt; UMAP1[UMAP dimension reduction]
+  UMAP1 --&gt; GMM1[GMM clustering]
+  GMM1 --&gt; SUM1[LLM summary per cluster]
+  SUM1 --&gt; EMB2[Embedding - summaries]
+  EMB2 --&gt; GMM2[GMM clustering - level 2]
+  GMM2 --&gt; SUM2[LLM root summary]
+  SUM2 --&gt; IDX[(Collapsed tree index)]
+  CHUNK --&gt; IDX
+  SUM1 --&gt; IDX
+  IDX --&gt; RET[Top-K search at any level]
+  RET --&gt; GEN[Answer generation - LLM]
+</pre>
+          <p class="mermaid__caption">
+            <span lang="hu">Az indexépítés alulról felfelé halad: a levél chunk-ok klaszterezése és összefoglalása rekurzívan ismétlődik; lekérdezéskor minden szint egy összevont vektortárból érhető el.</span>
+            <span lang="en">Index construction runs bottom-up: clustering and summarisation of leaf chunks repeats recursively; at query time all levels are accessible from a single collapsed vector store.</span>
+          </p>
+        </div>
+      </section>
+
+      <!-- 04 When to use it -->
+      <section class="section">
+        <div class="section__head">
+          <span class="section__num">04</span>
+          <h2 class="section__title"><span lang="hu">Mikor érdemes használni</span><span lang="en">When to use it</span></h2>
+        </div>
+        <div class="grid grid-2">
+          <div class="panel panel--ok">
+            <h3 class="panel__title"><span lang="hu">Erősségek</span><span lang="en">Strengths</span></h3>
+            <ul class="feature-list feature-list--ok">
+              <li><span lang="hu">Kiváló tematikus, korpusz-szintű kérdésekhez — a gyökér-összefoglaló egyszeri lekéréssel átfogó kontextust ad.</span><span lang="en">Excellent for thematic, corpus-level questions — the root summary delivers broad context in a single retrieval.</span></li>
+              <li><span lang="hu">Globális és részletkérdések egyaránt kiszolgálhatók egyetlen indexből.</span><span lang="en">Both global overview and detail questions are served from a single index.</span></li>
+              <li><span lang="hu">Hosszú dokumentumokon (könyvek, post-mortem gyűjtemények, ADR sorozatok) +15–20%-os pontosságnövekedés a lapos RAG-hoz képest.</span><span lang="en">Long documents (books, post-mortem collections, ADR series) show +15–20% accuracy improvement over flat RAG.</span></li>
+              <li><span lang="hu">A Gaussian Mixture Model lehetővé teszi, hogy egy chunk több klaszterhez is tartozzon — az átfedő témák nem vesznek el.</span><span lang="en">Gaussian Mixture Model allows a chunk to belong to multiple clusters — overlapping topics are not lost.</span></li>
+            </ul>
+          </div>
+          <div class="panel panel--warn">
+            <h3 class="panel__title"><span lang="hu">Kihívások</span><span lang="en">Trade-offs</span></h3>
+            <ul class="feature-list feature-list--warn">
+              <li><span lang="hu">Az indexépítés 3–5-ször drágább, mint a sima vektoros indexelésnél — csak nagy, stabil korpuszon éri meg.</span><span lang="en">Index construction is 3–5× more expensive than flat vector indexing — only worthwhile on large, stable corpora.</span></li>
+              <li><span lang="hu">Sűrűn frissülő tudásbázison a fa újraépítési költ magas lehet.</span><span lang="en">On frequently updated knowledge bases the tree rebuild cost can be high.</span></li>
+              <li><span lang="hu">Főleg GPT-4-gyel validált; kisebb modelleknél az összefoglaló minősége validálandó.</span><span lang="en">Primarily validated with GPT-4; summary quality with smaller models needs validation.</span></li>
+            </ul>
           </div>
         </div>
         <div class="info-box">
-          <p class="info-box__title"><span lang="hu">Vázlat</span><span lang="en">Draft</span></p>
+          <p class="info-box__title"><span lang="hu">Pro tipp</span><span lang="en">Pro tip</span></p>
           <p class="info-box__body">
-            <span lang="hu">Ez az oldal a Stitch-tervből generált váz. A részletes szakaszok — működési diagram, erősségek és kihívások, kódpélda — a korábbi oldal (oldsite/) tartalmából kerülnek át egy következő feladatban.</span>
-            <span lang="en">This page is a scaffold generated from the Stitch design. The detailed sections — working diagram, strengths and trade-offs, code example — will be migrated from the previous site (oldsite/) in a follow-up task.</span>
+            <span lang="hu">Inkrementális RAPTOR-nál csak az érintett klasztereket és a felettük lévő összefoglalókat kell újraépíteni — nem az egész fát. Ez drasztikusan csökkenti a frissítési költséget dinamikusan növekvő korpuszok esetén.</span>
+            <span lang="en">For incremental RAPTOR, rebuild only the affected clusters and their parent summaries — not the entire tree. This dramatically reduces update cost on dynamically growing corpora.</span>
           </p>
+        </div>
+      </section>
+
+      <!-- 05 Code example -->
+      <section class="section">
+        <div class="section__head">
+          <span class="section__num">05</span>
+          <h2 class="section__title"><span lang="hu">Kódpélda</span><span lang="en">Code example</span></h2>
+        </div>
+        <div class="code-block">
+          <div class="code-block__head">
+            <span>raptor_index_build.py</span>
+          </div>
+          <pre><code><span class="tok-comment"># RAPTOR index build using LlamaIndex RaptorPack</span>
+from llama_index.packs.raptor import RaptorPack
+from llama_index.core import SimpleDirectoryReader
+from llama_index.llms.openai import OpenAI
+from llama_index.embeddings.openai import OpenAIEmbedding
+
+<span class="tok-comment"># Load corpus — works well for large document collections</span>
+documents = SimpleDirectoryReader("./corpus").load_data()
+
+llm = OpenAI(model="gpt-4o-mini", temperature=0)
+embed_model = OpenAIEmbedding(model="text-embedding-3-small")
+
+<span class="tok-comment"># Build the RAPTOR tree — clusters chunks, summarises each cluster,</span>
+<span class="tok-comment"># then repeats recursively until a single root summary is produced.</span>
+raptor_pack = RaptorPack(
+    documents,
+    llm=llm,
+    embed_model=embed_model,
+    summary_module=None,   <span class="tok-comment"># use default LLM summariser</span>
+    num_workers=4,
+    max_cluster_size=10,
+)
+
+<span class="tok-comment"># Query — collapsed tree: top-K retrieved from any level simultaneously</span>
+query_engine = raptor_pack.get_modules()["query_engine"]
+response = query_engine.query(
+    "What recurring incident patterns appeared in the last 6 months?"
+)
+print(response)
+
+<span class="tok-comment"># Persist the built index for reuse (avoids expensive rebuilds)</span>
+raptor_pack.get_modules()["vector_store"].persist("./raptor_index")
+</code></pre>
         </div>
       </section>
 
@@ -153,6 +255,7 @@
   </div>
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/mermaid@11.15.0/dist/mermaid.min.js" integrity="sha384-yQ4mmBBT+vhTAwjFH0toJXNYJ6O4usWnt6EPIdWwrRvx2V/n5lXuDZQwQFeSFydF" crossorigin="anonymous" defer></script>
 <script src="../assets/js/knowbase.js" defer></script>
 </body>
 </html>

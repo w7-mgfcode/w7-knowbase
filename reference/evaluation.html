@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RAG kiértékelés — w7-knowbase</title>
+<meta name="description" content="RAG rendszerek kiértékelése 2026-ban: visszakeresési metrikák, generálási metrikák, LLM-as-a-judge, RAGAS és arany teszthalmazok.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300..700&family=Space+Grotesk:wght@400..700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/css/knowbase.css">
+</head>
+<body class="accent-cyan" data-page="evaluation">
+<script>try{if(localStorage.getItem('knowbase-lang')==='en')document.body.classList.add('lang-en');}catch(e){}</script>
+
+<div class="layout">
+  <aside class="sidebar" id="sidebar" data-base="../"></aside>
+  <div class="sidebar-backdrop" id="navBackdrop"></div>
+
+  <div class="main">
+    <div class="mobile-header">
+      <a class="mobile-header__brand" href="../index.html"><span>w7</span>-knowbase</a>
+      <div style="display:flex;gap:8px;align-items:center;">
+        <div class="lang-toggle" role="group" aria-label="Language">
+          <button class="lang-toggle__btn" type="button" data-lang-btn="hu" aria-pressed="true">HU</button>
+          <button class="lang-toggle__btn" type="button" data-lang-btn="en" aria-pressed="false">EN</button>
+        </div>
+        <button class="menu-btn" id="menuBtn" type="button" aria-label="Open navigation" aria-controls="sidebar" aria-expanded="false"></button>
+      </div>
+    </div>
+
+    <header class="topbar">
+      <nav class="breadcrumb" aria-label="Breadcrumb">
+        <span><span lang="hu">Referencia</span><span lang="en">Reference</span></span>
+        <span class="breadcrumb__sep" aria-hidden="true">/</span>
+        <span class="breadcrumb__current"><span lang="hu">Kiértékelés</span><span lang="en">Evaluation</span></span>
+      </nav>
+      <div class="lang-toggle" role="group" aria-label="Language">
+        <button class="lang-toggle__btn" type="button" data-lang-btn="hu" aria-pressed="true">HU</button>
+        <button class="lang-toggle__btn" type="button" data-lang-btn="en" aria-pressed="false">EN</button>
+      </div>
+    </header>
+
+    <main class="content">
+      <div class="page-header">
+        <span class="tag"><span lang="hu">Referencia</span><span lang="en">Reference</span></span>
+        <h1 class="page-header__title tinted"><span lang="hu">RAG kiértékelés</span><span lang="en">RAG Evaluation</span></h1>
+        <p class="page-header__subtitle">
+          <span lang="hu">Hogyan mérjük egy RAG rendszer minőségét 2026-ban: visszakeresési és generálási metrikák, LLM-as-a-judge, automatizált keretrendszerek és arany teszthalmaz építése.</span>
+          <span lang="en">How to measure RAG system quality in 2026: retrieval and generation metrics, LLM-as-a-judge, automated evaluation frameworks, and building a golden test set.</span>
+        </p>
+        <div class="stat-row">
+          <div class="stat-pill">
+            <div class="stat-pill__label"><span lang="hu">Két dimenzió</span><span lang="en">Two dimensions</span></div>
+            <div class="stat-pill__value"><span lang="hu">Visszakeresés + Generálás</span><span lang="en">Retrieval + Generation</span></div>
+          </div>
+          <div class="stat-pill">
+            <div class="stat-pill__label"><span lang="hu">Kiértékelő</span><span lang="en">Judge</span></div>
+            <div class="stat-pill__value">LLM-as-a-judge</div>
+          </div>
+          <div class="stat-pill">
+            <div class="stat-pill__label"><span lang="hu">Keretrendszer</span><span lang="en">Framework</span></div>
+            <div class="stat-pill__value">RAGAS</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 01 Overview -->
+      <section class="section">
+        <div class="section__head">
+          <span class="section__num">01</span>
+          <h2 class="section__title"><span lang="hu">Áttekintés</span><span lang="en">Overview</span></h2>
+        </div>
+        <div class="grid grid-2">
+          <p class="section__desc">
+            <span lang="hu">Egy RAG rendszer minősége két egymástól független ponton dől el: a visszakeresési (retrieval) lépésnél és a generálási lépésnél. A visszakeresés hibái — releváns dokumentumok kihagyása, irrelevánsak bevonása — nem javíthatók utólag a generáló modellel. Ezért a két szintet külön is mérni kell: egy összesített „helyes válasz" arány elfedi, hogy melyik komponens rontott le.</span>
+            <span lang="en">A RAG system's quality is decided at two independent points: the retrieval step and the generation step. Retrieval failures — missing relevant documents, including irrelevant ones — cannot be corrected by the generation model. That is why both levels must be measured independently: an aggregate "correct answer" rate hides which component degraded.</span>
+          </p>
+          <p class="section__desc">
+            <span lang="hu">A 2026-os gyakorlatban a RAGAS és hasonló keretrendszerek (DeepEval, TruLens, Arize Phoenix) LLM-as-a-judge megközelítéssel értékelik a hűséget (faithfulness/groundedness), a válasz relevanciáját és a kontextus relevanciáját. Az offline kiértékelést arany teszthalmazon futtatják, az online kiértékelés pedig valós felhasználói forgalmon alapul.</span>
+            <span lang="en">In 2026 practice, RAGAS and similar frameworks (DeepEval, TruLens, Arize Phoenix) apply an LLM-as-a-judge approach to measure faithfulness/groundedness, answer relevance, and context relevance. Offline evaluation runs on a golden test set; online evaluation operates on real user traffic.</span>
+          </p>
+        </div>
+      </section>
+
+      <!-- 02 How it works -->
+      <section class="section">
+        <div class="section__head">
+          <span class="section__num">02</span>
+          <h2 class="section__title"><span lang="hu">Kiértékelési folyamat</span><span lang="en">Evaluation pipeline</span></h2>
+        </div>
+        <div class="diagram-box">
+          <div class="pipeline">
+            <div class="pipeline__step">
+              <span class="pipeline__node">1</span>
+              <span class="pipeline__label"><span lang="hu">Teszthalmaz összeállítása</span><span lang="en">Build test set</span></span>
+            </div>
+            <span class="pipeline__arrow" aria-hidden="true">→</span>
+            <div class="pipeline__step">
+              <span class="pipeline__node">2</span>
+              <span class="pipeline__label"><span lang="hu">RAG pipeline futtatása</span><span lang="en">Run RAG pipeline</span></span>
+            </div>
+            <span class="pipeline__arrow" aria-hidden="true">→</span>
+            <div class="pipeline__step">
+              <span class="pipeline__node">3</span>
+              <span class="pipeline__label"><span lang="hu">Visszakeresési metrikák</span><span lang="en">Retrieval metrics</span></span>
+            </div>
+            <span class="pipeline__arrow" aria-hidden="true">→</span>
+            <div class="pipeline__step">
+              <span class="pipeline__node">4</span>
+              <span class="pipeline__label"><span lang="hu">Generálási metrikák</span><span lang="en">Generation metrics</span></span>
+            </div>
+            <span class="pipeline__arrow" aria-hidden="true">→</span>
+            <div class="pipeline__step">
+              <span class="pipeline__node">5</span>
+              <span class="pipeline__label"><span lang="hu">Iteráció</span><span lang="en">Iteration</span></span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 03 Architecture diagram -->
+      <section class="section">
+        <div class="section__head">
+          <span class="section__num">03</span>
+          <h2 class="section__title"><span lang="hu">Kiértékelési diagram</span><span lang="en">Evaluation diagram</span></h2>
+        </div>
+        <div class="diagram-box">
+<pre class="mermaid" lang="hu">
+flowchart TD
+  TS[(Arany teszthalmaz)] --&gt; RUN[RAG pipeline futtatása]
+  RUN --&gt; CTX[Visszakeresett kontextus]
+  RUN --&gt; ANS[Generált válasz]
+  CTX --&gt; RM[Visszakeresési metrikák]
+  RM --&gt; REC[Recall - Lefedettség]
+  RM --&gt; PRE[Precision - Pontosság]
+  RM --&gt; NDCG[nDCG - Rangsor]
+  RM --&gt; CTXREL[Kontextus relevanciája]
+  ANS --&gt; GM[Generálási metrikák]
+  GM --&gt; FAITH[Hűség - Groundedness]
+  GM --&gt; AREL[Válasz relevanciája]
+  GM --&gt; HALL[Hallucinációs arány]
+  CTXREL --&gt; JUDGE[LLM-as-a-judge]
+  FAITH --&gt; JUDGE
+  AREL --&gt; JUDGE
+  JUDGE --&gt; SCORE[Összesített pontszám]
+</pre>
+<pre class="mermaid" lang="en">
+flowchart TD
+  TS[(Golden test set)] --&gt; RUN[Run RAG pipeline]
+  RUN --&gt; CTX[Retrieved context]
+  RUN --&gt; ANS[Generated answer]
+  CTX --&gt; RM[Retrieval metrics]
+  RM --&gt; REC[Recall - Coverage]
+  RM --&gt; PRE[Precision - Accuracy]
+  RM --&gt; NDCG[nDCG - Ranking]
+  RM --&gt; CTXREL[Context relevance]
+  ANS --&gt; GM[Generation metrics]
+  GM --&gt; FAITH[Faithfulness - Groundedness]
+  GM --&gt; AREL[Answer relevance]
+  GM --&gt; HALL[Hallucination rate]
+  CTXREL --&gt; JUDGE[LLM-as-a-judge]
+  FAITH --&gt; JUDGE
+  AREL --&gt; JUDGE
+  JUDGE --&gt; SCORE[Composite score]
+</pre>
+          <p class="mermaid__caption">
+            <span lang="hu">A visszakeresési és generálási metrikák párhuzamosan folynak az LLM-bíró felé, amely összesíti a végső minőségi pontszámot.</span>
+            <span lang="en">Retrieval and generation metrics flow in parallel to the LLM judge, which aggregates the final quality score.</span>
+          </p>
+        </div>
+      </section>
+
+      <!-- 04 Practical guidance -->
+      <section class="section">
+        <div class="section__head">
+          <span class="section__num">04</span>
+          <h2 class="section__title"><span lang="hu">Gyakorlati tanácsok</span><span lang="en">Practical guidance</span></h2>
+        </div>
+        <div class="grid grid-2">
+          <div class="panel panel--ok">
+            <h3 class="panel__title"><span lang="hu">Helyes gyakorlatok</span><span lang="en">Best practices</span></h3>
+            <ul class="feature-list feature-list--ok">
+              <li><span lang="hu">Építs arany teszthalmazt a Day 1-től: legalább 100-200 kérdés-válasz-forrás hármas, amelyet emberi szakértők hitelesítenek.</span><span lang="en">Build a golden test set from Day 1: at least 100-200 question-answer-source triples validated by human experts.</span></li>
+              <li><span lang="hu">Mérj visszakeresést és generálást külön-külön — egy összesített pontszám elfedi a valódi problémaforrást.</span><span lang="en">Measure retrieval and generation separately — an aggregate score hides the true failure source.</span></li>
+              <li><span lang="hu">Használj LLM-as-a-judge megközelítést hűségmérésre (RAGAS faithfulness), de validáld emberi mintán is.</span><span lang="en">Use an LLM-as-a-judge approach for faithfulness measurement (RAGAS faithfulness), but validate on a human sample too.</span></li>
+              <li><span lang="hu">Online kiértékeléshez figyeld az implicit jelzéseket: újraindított kérdések, visszajelzés-gombok, munkamenet-elhagyás.</span><span lang="en">For online evaluation, track implicit signals: rephrased follow-up questions, thumbs feedback, session abandonment.</span></li>
+            </ul>
+          </div>
+          <div class="panel panel--warn">
+            <h3 class="panel__title"><span lang="hu">Tipikus csapdák</span><span lang="en">Common pitfalls</span></h3>
+            <ul class="feature-list feature-list--warn">
+              <li><span lang="hu">Az arany teszthalmaz ugyanabból a forrásból kerül ki, mint az indexelt dokumentumok — adatszivárgás veszélye.</span><span lang="en">The golden test set is drawn from the same source as indexed documents — risk of data leakage.</span></li>
+              <li><span lang="hu">Az LLM-bíró önmaga hallucináló ítéleteket hozhat — minden bírói LLM egy forrásból fakad.</span><span lang="en">The LLM judge can itself produce hallucinated judgements — every judge LLM has the same failure mode.</span></li>
+              <li><span lang="hu">Csak offline metrikákat nézni: a produkciós eloszlás eltérhet a teszthalmaztól (distribution shift).</span><span lang="en">Watching only offline metrics: the production distribution may drift from the test set (distribution shift).</span></li>
+              <li><span lang="hu">Egyetlen átlagos pontszámra hagyatkozni ahelyett, hogy a legrosszabb eseteket (tail failures) vizsgálnánk.</span><span lang="en">Relying on a single average score instead of investigating the worst-case tail failures.</span></li>
+            </ul>
+          </div>
+        </div>
+        <div class="info-box">
+          <p class="info-box__title"><span lang="hu">A RAGAS négy fő metrikája</span><span lang="en">RAGAS four core metrics</span></p>
+          <p class="info-box__body">
+            <span lang="hu">A RAGAS keretrendszer négy metrikát számít: (1) Faithfulness — a válasz állításai mennyire alapulnak a visszakeresett kontextuson; (2) Answer Relevancy — a válasz mennyire releváns az eredeti kérdéshez; (3) Context Precision — a visszakeresett dokumentumok mekkora hányada valóban releváns; (4) Context Recall — a releváns információ mekkora hányadát sikerült visszakeresni. Mindegyiket LLM-as-a-judge pontja, ezért determinisztikusan nem reprodukálhatók, de statisztikailag stabil metrikák.</span>
+            <span lang="en">RAGAS computes four metrics: (1) Faithfulness — how well the answer's claims are grounded in the retrieved context; (2) Answer Relevancy — how relevant the answer is to the original question; (3) Context Precision — what fraction of the retrieved documents are actually relevant; (4) Context Recall — what fraction of the relevant information was retrieved. Each is scored by an LLM judge, so they are not deterministically reproducible, but are statistically stable metrics.</span>
+          </p>
+        </div>
+      </section>
+
+      <!-- 05 Code example -->
+      <section class="section">
+        <div class="section__head">
+          <span class="section__num">05</span>
+          <h2 class="section__title"><span lang="hu">Kódpélda</span><span lang="en">Code example</span></h2>
+        </div>
+        <div class="code-block">
+          <div class="code-block__head">
+            <span>rag_evaluation.py</span>
+          </div>
+          <pre><code><span class="tok-comment"># RAG evaluation with RAGAS (ragas&gt;=0.2) + a custom retrieval metric pass</span>
+from ragas import evaluate
+from ragas.metrics import (
+    faithfulness,
+    answer_relevancy,
+    context_precision,
+    context_recall,
+)
+from ragas.llms import LangchainLLMWrapper
+from datasets import Dataset
+from langchain_openai import ChatOpenAI
+
+
+<span class="tok-comment"># --- Build the evaluation dataset -----------------------------------</span>
+<span class="tok-comment"># Each row: question, ground_truth answer, retrieved contexts, generated answer.</span>
+<span class="tok-comment"># 'contexts' is a list[str] of the chunks the RAG pipeline returned.</span>
+eval_data = {
+    "question":      ["What is Reciprocal Rank Fusion?", ...],
+    "ground_truth":  ["RRF merges ranked lists by ...", ...],
+    "contexts":      [["chunk A text", "chunk B text"], ...],
+    "answer":        ["RRF is a score fusion method that ...", ...],
+}
+dataset = Dataset.from_dict(eval_data)
+
+
+<span class="tok-comment"># --- Configure the judge LLM ----------------------------------------</span>
+judge_llm = LangchainLLMWrapper(ChatOpenAI(model="gpt-4o-mini", temperature=0))
+
+metrics = [faithfulness, answer_relevancy, context_precision, context_recall]
+for m in metrics:
+    m.llm = judge_llm
+
+
+<span class="tok-comment"># --- Run RAGAS evaluation -------------------------------------------</span>
+results = evaluate(dataset=dataset, metrics=metrics)
+df = results.to_pandas()
+print(df[["faithfulness", "answer_relevancy",
+          "context_precision", "context_recall"]].describe())
+
+
+<span class="tok-comment"># --- Standalone retrieval metrics (no judge LLM needed) -------------</span>
+def retrieval_recall(retrieved_ids: list[str], relevant_ids: set[str]) -&gt; float:
+    <span class="tok-comment">"""Fraction of relevant documents that were actually retrieved."""</span>
+    if not relevant_ids:
+        return 0.0
+    hits = sum(1 for doc_id in retrieved_ids if doc_id in relevant_ids)
+    return hits / len(relevant_ids)
+
+def ndcg_at_k(retrieved_ids: list[str], relevant_ids: set[str], k: int = 10) -&gt; float:
+    <span class="tok-comment">"""nDCG@k: penalises relevant docs appearing lower in the ranking."""</span>
+    import math
+    dcg = sum(
+        1.0 / math.log2(rank + 2)
+        for rank, doc_id in enumerate(retrieved_ids[:k])
+        if doc_id in relevant_ids
+    )
+    ideal = sum(
+        1.0 / math.log2(rank + 2)
+        for rank in range(min(len(relevant_ids), k))
+    )
+    return dcg / ideal if ideal else 0.0
+</code></pre>
+        </div>
+      </section>
+
+      <nav class="pager" aria-label="Reference pager">
+        <a class="pager__link" href="hybrid-search.html">
+          <div class="pager__dir">← <span lang="hu">Előző</span><span lang="en">Previous</span></div>
+          <div class="pager__name"><span lang="hu">Hibrid keresés</span><span lang="en">Hybrid Search</span></div>
+        </a>
+      </nav>
+
+      <footer class="site-footer">
+        <p class="site-footer__copy">© 2026 w7-knowbase</p>
+        <nav class="site-footer__links" aria-label="Footer">
+          <a href="https://github.com/w7-mgfcode/w7-knowbase">GitHub</a>
+          <a href="../CHANGELOG.md">Changelog</a>
+        </nav>
+      </footer>
+    </main>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/mermaid@11.15.0/dist/mermaid.min.js" integrity="sha384-yQ4mmBBT+vhTAwjFH0toJXNYJ6O4usWnt6EPIdWwrRvx2V/n5lXuDZQwQFeSFydF" crossorigin="anonymous" defer></script>
+<script src="../assets/js/knowbase.js" defer></script>
+</body>
+</html>

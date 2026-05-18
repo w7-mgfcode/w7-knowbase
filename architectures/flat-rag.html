@@ -112,26 +112,122 @@
         </div>
       </section>
 
+      <!-- 03 Architecture diagram -->
       <section class="section">
         <div class="section__head">
           <span class="section__num">03</span>
           <h2 class="section__title"><span lang="hu">Architektúra-diagram</span><span lang="en">Architecture diagram</span></h2>
         </div>
         <div class="diagram-box">
-          <div class="diagram-placeholder">
-            <p class="section__desc" style="text-align:center;">
-              <span lang="hu">Mermaid-diagram helye — a renderelt ábra a tartalommigráció során kerül ide.</span>
-              <span lang="en">Mermaid diagram area — the rendered figure lands here during content migration.</span>
-            </p>
-            <code>graph LR; Q[Query] --&gt; R[Vector Search] --&gt; G[Generation];</code>
+<pre class="mermaid" lang="hu">
+flowchart TD
+  Q[Felhasználói kérdés] --&gt; EMB[Embedding modell]
+  EMB --&gt; VS[(Vektoros index)]
+  VS --&gt; TOPK[Top-K chunk-ok kiválasztása]
+  TOPK --&gt; FILT[Reranking - opcionális]
+  FILT --&gt; CTX[Kontextus összeállítása]
+  CTX --&gt; GEN[Válaszgenerálás - LLM]
+  GEN --&gt; ANS[Válasz hivatkozásokkal]
+  DOC[Dokumentumok] --&gt; CHUNK[Chunking - darabolás]
+  CHUNK --&gt; CEMB[Chunk embedding]
+  CEMB --&gt; VS
+</pre>
+<pre class="mermaid" lang="en">
+flowchart TD
+  Q[User query] --&gt; EMB[Embedding model]
+  EMB --&gt; VS[(Vector index)]
+  VS --&gt; TOPK[Top-K chunk selection]
+  TOPK --&gt; FILT[Reranking - optional]
+  FILT --&gt; CTX[Context assembly]
+  CTX --&gt; GEN[Generation - LLM]
+  GEN --&gt; ANS[Answer with citations]
+  DOC[Documents] --&gt; CHUNK[Chunking]
+  CHUNK --&gt; CEMB[Chunk embedding]
+  CEMB --&gt; VS
+</pre>
+          <p class="mermaid__caption">
+            <span lang="hu">A dokumentumok darabolás és embedding után kerülnek a vektoros indexbe; lekérdezéskor a Top-K legközelebbi chunk kerül a generáló modell kontextusába.</span>
+            <span lang="en">Documents are chunked and embedded into the vector index; at query time the Top-K nearest chunks are passed as context to the generation model.</span>
+          </p>
+        </div>
+      </section>
+
+      <!-- 04 When to use it -->
+      <section class="section">
+        <div class="section__head">
+          <span class="section__num">04</span>
+          <h2 class="section__title"><span lang="hu">Mikor érdemes használni</span><span lang="en">When to use it</span></h2>
+        </div>
+        <div class="grid grid-2">
+          <div class="panel panel--ok">
+            <h3 class="panel__title"><span lang="hu">Erősségek</span><span lang="en">Strengths</span></h3>
+            <ul class="feature-list feature-list--ok">
+              <li><span lang="hu">Gyors prototípus-építés: a legkisebb architektúrális overhead.</span><span lang="en">Rapid prototyping: the smallest architectural overhead.</span></li>
+              <li><span lang="hu">Könnyen hibakereshető és mérhető — ideális baseline-ként.</span><span lang="en">Easy to debug and benchmark — ideal as a baseline.</span></li>
+              <li><span lang="hu">Homogén, kis korpuszon (kb. 5 000 dokumentum alatt) kiváló pontosságot ad.</span><span lang="en">Excellent accuracy on homogeneous, small corpora (under ~5 000 documents).</span></li>
+              <li><span lang="hu">Nincs szükség speciális adatbázisra — pgvector vagy Chroma elegendő.</span><span lang="en">No specialized database required — pgvector or Chroma is sufficient.</span></li>
+            </ul>
+          </div>
+          <div class="panel panel--warn">
+            <h3 class="panel__title"><span lang="hu">Kihívások</span><span lang="en">Trade-offs</span></h3>
+            <ul class="feature-list feature-list--warn">
+              <li><span lang="hu">Nagy, heterogén korpuszon a relevancia gyorsan romlik.</span><span lang="en">Relevance degrades quickly on large, heterogeneous corpora.</span></li>
+              <li><span lang="hu">Nem támogatja a több-lépéses következtetést.</span><span lang="en">Does not support multi-hop reasoning.</span></li>
+              <li><span lang="hu">Fix Top-K: nem alkalmazkodik a kérdés összetettségéhez.</span><span lang="en">Fixed Top-K: does not adapt to query complexity.</span></li>
+              <li><span lang="hu">Cross-domain zaj: nem releváns területek chunk-jai is bekerülhetnek.</span><span lang="en">Cross-domain noise: chunks from irrelevant domains can contaminate results.</span></li>
+            </ul>
           </div>
         </div>
         <div class="info-box">
-          <p class="info-box__title"><span lang="hu">Vázlat</span><span lang="en">Draft</span></p>
+          <p class="info-box__title"><span lang="hu">Pro tipp</span><span lang="en">Pro tip</span></p>
           <p class="info-box__body">
-            <span lang="hu">Ez az oldal a Stitch-tervből generált váz. A részletes szakaszok — működési diagram, erősségek és kihívások, kódpélda — a korábbi oldal (oldsite/) tartalmából kerülnek át egy következő feladatban.</span>
-            <span lang="en">This page is a scaffold generated from the Stitch design. The detailed sections — working diagram, strengths and trade-offs, code example — will be migrated from the previous site (oldsite/) in a follow-up task.</span>
+            <span lang="hu">Hybrid keresés (BM25 + vektoros) és egy könnyű reranker (pl. Cohere Rerank vagy cross-encoder) hozzáadásával a Flat RAG pontossága 15–25%-kal javítható anélkül, hogy az architektúra komplexitása számottevően nőne.</span>
+            <span lang="en">Adding hybrid search (BM25 + vector) and a lightweight reranker (e.g. Cohere Rerank or a cross-encoder) can improve Flat RAG accuracy by 15–25% without meaningfully increasing architectural complexity.</span>
           </p>
+        </div>
+      </section>
+
+      <!-- 05 Code example -->
+      <section class="section">
+        <div class="section__head">
+          <span class="section__num">05</span>
+          <h2 class="section__title"><span lang="hu">Kódpélda</span><span lang="en">Code example</span></h2>
+        </div>
+        <div class="code-block">
+          <div class="code-block__head">
+            <span>flat_rag_query.py</span>
+          </div>
+          <pre><code><span class="tok-comment"># Build the vector store from documents</span>
+from langchain_community.vectorstores import Chroma
+from langchain_openai import OpenAIEmbeddings
+from langchain_text_splitters import RecursiveCharacterTextSplitter
+
+splitter = RecursiveCharacterTextSplitter(chunk_size=512, chunk_overlap=64)
+chunks = splitter.split_documents(documents)
+
+embeddings = OpenAIEmbeddings(model="text-embedding-3-small")
+vectorstore = Chroma.from_documents(chunks, embeddings)
+
+<span class="tok-comment"># Retriever with optional reranking</span>
+retriever = vectorstore.as_retriever(search_kwargs={"k": 6})
+
+<span class="tok-comment"># RAG chain: retrieve → augment → generate</span>
+from langchain_core.prompts import ChatPromptTemplate
+from langchain_openai import ChatOpenAI
+from langchain_core.runnables import RunnablePassthrough
+
+prompt = ChatPromptTemplate.from_template(
+    "Answer using only the context below.\n\nContext:\n{context}\n\nQuestion: {question}"
+)
+llm = ChatOpenAI(model="gpt-4o-mini")
+
+chain = (
+    {"context": retriever, "question": RunnablePassthrough()}
+    | prompt
+    | llm
+)
+response = chain.invoke(question)
+</code></pre>
         </div>
       </section>
 
@@ -153,6 +249,7 @@
   </div>
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/mermaid@11.15.0/dist/mermaid.min.js" integrity="sha384-yQ4mmBBT+vhTAwjFH0toJXNYJ6O4usWnt6EPIdWwrRvx2V/n5lXuDZQwQFeSFydF" crossorigin="anonymous" defer></script>
 <script src="../assets/js/knowbase.js" defer></script>
 </body>
 </html>

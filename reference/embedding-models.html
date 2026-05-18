@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Embedding Modellek — w7-knowbase</title>
+<meta name="description" content="Embedding modellek referencia: MTEB benchmark, MRL/Matryoshka dimenzionalitás, többnyelvű modellek, dense vs sparse, fine-tuning.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300..700&family=Space+Grotesk:wght@400..700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/css/knowbase.css">
+</head>
+<body class="accent-cyan" data-page="embedding-models">
+<script>try{if(localStorage.getItem('knowbase-lang')==='en')document.body.classList.add('lang-en');}catch(e){}</script>
+
+<div class="layout">
+  <aside class="sidebar" id="sidebar" data-base="../"></aside>
+  <div class="sidebar-backdrop" id="navBackdrop"></div>
+
+  <div class="main">
+    <div class="mobile-header">
+      <a class="mobile-header__brand" href="../index.html"><span>w7</span>-knowbase</a>
+      <div style="display:flex;gap:8px;align-items:center;">
+        <div class="lang-toggle" role="group" aria-label="Language">
+          <button class="lang-toggle__btn" type="button" data-lang-btn="hu" aria-pressed="true">HU</button>
+          <button class="lang-toggle__btn" type="button" data-lang-btn="en" aria-pressed="false">EN</button>
+        </div>
+        <button class="menu-btn" id="menuBtn" type="button" aria-label="Open navigation" aria-controls="sidebar" aria-expanded="false"></button>
+      </div>
+    </div>
+
+    <header class="topbar">
+      <nav class="breadcrumb" aria-label="Breadcrumb">
+        <span><span lang="hu">Referencia</span><span lang="en">Reference</span></span>
+        <span class="breadcrumb__sep" aria-hidden="true">/</span>
+        <span class="breadcrumb__current"><span lang="hu">Embedding modellek</span><span lang="en">Embedding Models</span></span>
+      </nav>
+      <div class="lang-toggle" role="group" aria-label="Language">
+        <button class="lang-toggle__btn" type="button" data-lang-btn="hu" aria-pressed="true">HU</button>
+        <button class="lang-toggle__btn" type="button" data-lang-btn="en" aria-pressed="false">EN</button>
+      </div>
+    </header>
+
+    <main class="content">
+      <div class="page-header">
+        <span class="tag"><span lang="hu">Referencia</span><span lang="en">Reference</span></span>
+        <h1 class="page-header__title tinted"><span lang="hu">Embedding Modellek</span><span lang="en">Embedding Models</span></h1>
+        <p class="page-header__subtitle">
+          <span lang="hu">Szövegvektorok előállítása RAG rendszerekhez: MTEB benchmark, Matryoshka/MRL dimenzionalitás, többnyelvű modellek és fine-tuning stratégiák 2026-ban.</span>
+          <span lang="en">Generating text vectors for RAG systems: MTEB benchmark, Matryoshka/MRL dimensionality, multilingual models, and fine-tuning strategies in 2026.</span>
+        </p>
+        <div class="stat-row">
+          <div class="stat-pill">
+            <div class="stat-pill__label"><span lang="hu">Benchmark</span><span lang="en">Benchmark</span></div>
+            <div class="stat-pill__value">MTEB</div>
+          </div>
+          <div class="stat-pill">
+            <div class="stat-pill__label"><span lang="hu">Top dimenzió</span><span lang="en">Top dimension</span></div>
+            <div class="stat-pill__value">4096d</div>
+          </div>
+          <div class="stat-pill">
+            <div class="stat-pill__label"><span lang="hu">Megközelítés</span><span lang="en">Approach</span></div>
+            <div class="stat-pill__value"><span lang="hu">Dense + Sparse</span><span lang="en">Dense + Sparse</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 01 Overview -->
+      <section class="section">
+        <div class="section__head">
+          <span class="section__num">01</span>
+          <h2 class="section__title"><span lang="hu">Áttekintés</span><span lang="en">Overview</span></h2>
+        </div>
+        <div class="grid grid-2">
+          <p class="section__desc">
+            <span lang="hu">Az embedding modellek szövegeket sűrű numerikus vektorokká alakítanak, amelyekben a szemantikailag hasonló szövegek közel kerülnek egymáshoz a vektortérben. RAG rendszerekben az embedding minősége közvetlenül meghatározza a visszakeresés pontosságát: gyenge embedding esetén még a legjobb reranker sem tud kármenteni. A 2026-os modellgeneráció — Qwen3-Embedding, NV-Embed-v2, Cohere embed-v4 — 7B+ paraméteres decoder-only architektúrákat és Matryoshka Representation Learning (MRL) dimenziócsökkentést hoz.</span>
+            <span lang="en">Embedding models convert text into dense numerical vectors where semantically similar texts cluster close together in the vector space. In RAG systems, embedding quality directly determines retrieval accuracy: even the best reranker cannot fully compensate for a weak embedding. The 2026 model generation — Qwen3-Embedding, NV-Embed-v2, Cohere embed-v4 — brings 7B+ parameter decoder-only architectures and Matryoshka Representation Learning (MRL) dimension reduction.</span>
+          </p>
+          <p class="section__desc">
+            <span lang="hu">Az iparági standard értékelési eszköz az MTEB (Massive Text Embedding Benchmark), amely 8 feladattípuson, 58 adatkészleten és 112 nyelven méri a modelleket. RAG-hoz a Retrieval alkategória a meghatározó — az összesített MTEB-pontszám félrevezető lehet, ha egy modell klaszterezésben kiemelkedő, de visszakeresésben gyengébb. A dense modellek mellett terjednek a sparse (BM25-szerű) és a ColBERT-stílusú late-interaction megközelítések is.</span>
+            <span lang="en">The industry-standard evaluation tool is MTEB (Massive Text Embedding Benchmark), which measures models across 8 task types, 58 datasets, and 112 languages. For RAG the Retrieval sub-category is what matters — the overall MTEB score can be misleading if a model excels at clustering but underperforms at retrieval. Alongside dense models, sparse (BM25-like) and ColBERT-style late-interaction approaches are also gaining ground.</span>
+          </p>
+        </div>
+      </section>
+
+      <!-- 02 How it works -->
+      <section class="section">
+        <div class="section__head">
+          <span class="section__num">02</span>
+          <h2 class="section__title"><span lang="hu">Működési folyamat</span><span lang="en">How it works</span></h2>
+        </div>
+        <div class="diagram-box">
+          <div class="pipeline">
+            <div class="pipeline__step">
+              <span class="pipeline__node">1</span>
+              <span class="pipeline__label"><span lang="hu">Szöveg / chunk</span><span lang="en">Text / chunk</span></span>
+            </div>
+            <span class="pipeline__arrow" aria-hidden="true">→</span>
+            <div class="pipeline__step">
+              <span class="pipeline__node">2</span>
+              <span class="pipeline__label"><span lang="hu">Tokenizálás</span><span lang="en">Tokenization</span></span>
+            </div>
+            <span class="pipeline__arrow" aria-hidden="true">→</span>
+            <div class="pipeline__step">
+              <span class="pipeline__node">3</span>
+              <span class="pipeline__label"><span lang="hu">Transformer kódolás</span><span lang="en">Transformer encoding</span></span>
+            </div>
+            <span class="pipeline__arrow" aria-hidden="true">→</span>
+            <div class="pipeline__step">
+              <span class="pipeline__node">4</span>
+              <span class="pipeline__label"><span lang="hu">Pooling / projekció</span><span lang="en">Pooling / projection</span></span>
+            </div>
+            <span class="pipeline__arrow" aria-hidden="true">→</span>
+            <div class="pipeline__step">
+              <span class="pipeline__node">5</span>
+              <span class="pipeline__label"><span lang="hu">Sűrű vektor</span><span lang="en">Dense vector</span></span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 03 Diagram -->
+      <section class="section">
+        <div class="section__head">
+          <span class="section__num">03</span>
+          <h2 class="section__title"><span lang="hu">Architektúra-diagram</span><span lang="en">Architecture diagram</span></h2>
+        </div>
+        <div class="diagram-box">
+<pre class="mermaid" lang="hu">
+flowchart TD
+  DOC[Dokumentum chunk] --&gt; ENC[Embedding modell]
+  Q[Lekérdezés] --&gt; ENC
+  ENC --&gt; VEC[Vektorreprezentáció]
+  VEC --&gt; MRL[MRL dimenziócsökkentés]
+  VEC --&gt; QUANT[Kvantizálás int8 vagy binary]
+  MRL --&gt; IDX[(Vektoros index)]
+  QUANT --&gt; IDX
+  IDX --&gt; SIM[Hasonlóság-keresés]
+  SIM --&gt; TOPK[Top-K találat]
+</pre>
+<pre class="mermaid" lang="en">
+flowchart TD
+  DOC[Document chunk] --&gt; ENC[Embedding model]
+  Q[Query] --&gt; ENC
+  ENC --&gt; VEC[Vector representation]
+  VEC --&gt; MRL[MRL dimension reduction]
+  VEC --&gt; QUANT[Quantization int8 or binary]
+  MRL --&gt; IDX[(Vector index)]
+  QUANT --&gt; IDX
+  IDX --&gt; SIM[Similarity search]
+  SIM --&gt; TOPK[Top-K results]
+</pre>
+          <p class="mermaid__caption">
+            <span lang="hu">A dokumentumok és a lekérdezés ugyanazon modellen fut át; MRL és kvantizálás opcionálisan csökkentik a tárhely- és számítási igényt.</span>
+            <span lang="en">Documents and query pass through the same model; MRL and quantization optionally reduce storage and compute requirements.</span>
+          </p>
+        </div>
+      </section>
+
+      <!-- 04 Guidance -->
+      <section class="section">
+        <div class="section__head">
+          <span class="section__num">04</span>
+          <h2 class="section__title"><span lang="hu">Gyakorlati tanácsok</span><span lang="en">Practical guidance</span></h2>
+        </div>
+        <div class="grid grid-2">
+          <div class="panel panel--ok">
+            <h3 class="panel__title"><span lang="hu">Bevált megközelítések</span><span lang="en">Proven approaches</span></h3>
+            <ul class="feature-list feature-list--ok">
+              <li><span lang="hu">MRL-kompatibilis modell választásakor kezdj kisebb dimenzióval (pl. 512d), és csak szükség esetén növeld — a tárhely és sebesség javul minimális minőségvesztéssel.</span><span lang="en">When choosing an MRL-compatible model, start with a smaller dimension (e.g. 512d) and increase only if needed — storage and speed improve with minimal quality loss.</span></li>
+              <li><span lang="hu">MTEB Retrieval alkategóriát nézd, ne az összesített átlagot RAG értékeléshez.</span><span lang="en">Look at the MTEB Retrieval sub-category, not the overall average, when evaluating for RAG.</span></li>
+              <li><span lang="hu">Kezdő projekthez az OpenAI text-embedding-3-small ideális: $0.02/1M token, 1536d, kiváló ökoszisztéma-integráció.</span><span lang="en">For a starter project, OpenAI text-embedding-3-small is ideal: $0.02/1M tokens, 1536d, excellent ecosystem integration.</span></li>
+              <li><span lang="hu">Többnyelvű adatnál BGE-M3 (open-source, 100+ nyelv) vagy Cohere embed-v4 (API, 128K kontextus).</span><span lang="en">For multilingual data, use BGE-M3 (open-source, 100+ languages) or Cohere embed-v4 (API, 128K context).</span></li>
+            </ul>
+          </div>
+          <div class="panel panel--warn">
+            <h3 class="panel__title"><span lang="hu">Gyakori hibák</span><span lang="en">Common pitfalls</span></h3>
+            <ul class="feature-list feature-list--warn">
+              <li><span lang="hu">Legacy ada-002 használata: rosszabb ár/teljesítmény arány, mint az újabb 3-small modell esetén.</span><span lang="en">Using legacy ada-002: worse price/performance ratio than the newer 3-small model.</span></li>
+              <li><span lang="hu">7B+ modell CPU-n futtatása: érdemi sebesség nem érhető el, GPU szükséges.</span><span lang="en">Running a 7B+ model on CPU: meaningful speed is not achievable, a GPU is required.</span></li>
+              <li><span lang="hu">Modell kiválasztása saját adat nélküli benchmark alapján: mindig mérj a saját domainjeden!</span><span lang="en">Selecting a model based on benchmarks without testing on your own data: always evaluate on your own domain!</span></li>
+              <li><span lang="hu">Aszimmetrikus embedding kihagyása: a query és a dokumentum különböző instrukciós prefixet igényelhet.</span><span lang="en">Skipping asymmetric embedding: query and document may require different instruction prefixes.</span></li>
+            </ul>
+          </div>
+        </div>
+        <div class="info-box">
+          <p class="info-box__title"><span lang="hu">Fine-tuning mikor éri meg?</span><span lang="en">When is fine-tuning worth it?</span></p>
+          <p class="info-box__body">
+            <span lang="hu">Domain-specifikus fine-tuning 10–30%-os visszakeresési javulást adhat jogi, orvosi vagy műszaki szövegkorpuszon. Sentence Transformers könyvtárral és néhány ezer (kérdés, releváns dokumentum) párral elegendő. Alternatíva: instrukció-hangolt modell (Qwen3-Embedding, E5-Mistral) természetes nyelvű prefixszel — fine-tuning nélkül.</span>
+            <span lang="en">Domain-specific fine-tuning can yield 10–30% retrieval improvement on legal, medical, or technical corpora. Sentence Transformers library with a few thousand (query, relevant document) pairs is sufficient. Alternative: instruction-tuned model (Qwen3-Embedding, E5-Mistral) with a natural-language prefix — no fine-tuning needed.</span>
+          </p>
+        </div>
+      </section>
+
+      <!-- 05 Code example -->
+      <section class="section">
+        <div class="section__head">
+          <span class="section__num">05</span>
+          <h2 class="section__title"><span lang="hu">Kódpélda</span><span lang="en">Code example</span></h2>
+        </div>
+        <div class="code-block">
+          <div class="code-block__head">
+            <span>embedding_pipeline.py</span>
+          </div>
+          <pre><code><span class="tok-comment"># pip install sentence-transformers openai</span>
+<span class="tok-comment"># Dense embedding with MRL dimension reduction (Matryoshka)</span>
+from openai import OpenAI
+
+client = OpenAI()
+
+def embed_texts(texts: list[str], dimensions: int = 512) -&gt; list[list[float]]:
+    <span class="tok-comment"># text-embedding-3-small supports MRL: reduce from 1536d to any lower value</span>
+    response = client.embeddings.create(
+        model="text-embedding-3-small",
+        input=texts,
+        dimensions=dimensions,   <span class="tok-comment"># MRL: 256 / 512 / 768 / 1536</span>
+    )
+    return [item.embedding for item in response.data]
+
+<span class="tok-comment"># Open-source alternative: BGE-M3 with dense + sparse modes</span>
+from FlagEmbedding import BGEM3FlagModel
+
+model = BGEM3FlagModel("BAAI/bge-m3", use_fp16=True)
+
+def embed_bge(texts: list[str]) -&gt; dict:
+    <span class="tok-comment"># Returns dense, sparse (lexical), and colbert_vecs</span>
+    return model.encode(
+        texts,
+        batch_size=12,
+        max_length=8192,
+        return_dense=True,
+        return_sparse=True,
+        return_colbert_vecs=False,
+    )
+
+<span class="tok-comment"># Instruction-tuned model: Qwen3-Embedding with task prefix</span>
+from sentence_transformers import SentenceTransformer
+
+qwen = SentenceTransformer("Alibaba-NLP/gte-Qwen3-8B-instruct", trust_remote_code=True)
+
+query_vecs = qwen.encode(
+    ["What is Matryoshka Representation Learning?"],
+    prompt_name="query",          <span class="tok-comment"># asymmetric: query vs. passage prefix</span>
+)
+doc_vecs = qwen.encode(
+    ["MRL trains nested representations..."],
+    prompt_name="passage",
+)
+</code></pre>
+        </div>
+      </section>
+
+      <nav class="pager" aria-label="Reference pager">
+        <a class="pager__link pager__link--next" href="reranking.html">
+          <div class="pager__dir"><span lang="hu">Következő</span><span lang="en">Next</span> →</div>
+          <div class="pager__name"><span lang="hu">Újrarangsorolás</span><span lang="en">Reranking</span></div>
+        </a>
+      </nav>
+
+      <footer class="site-footer">
+        <p class="site-footer__copy">© 2026 w7-knowbase</p>
+        <nav class="site-footer__links" aria-label="Footer">
+          <a href="https://github.com/w7-mgfcode/w7-knowbase">GitHub</a>
+          <a href="../CHANGELOG.md">Changelog</a>
+        </nav>
+      </footer>
+    </main>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/mermaid@11.15.0/dist/mermaid.min.js" integrity="sha384-yQ4mmBBT+vhTAwjFH0toJXNYJ6O4usWnt6EPIdWwrRvx2V/n5lXuDZQwQFeSFydF" crossorigin="anonymous" defer></script>
+<script src="../assets/js/knowbase.js" defer></script>
+</body>
+</html>

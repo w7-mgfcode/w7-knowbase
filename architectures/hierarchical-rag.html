@@ -112,26 +112,121 @@
         </div>
       </section>
 
+      <!-- 03 Architecture diagram -->
       <section class="section">
         <div class="section__head">
           <span class="section__num">03</span>
           <h2 class="section__title"><span lang="hu">Architektúra-diagram</span><span lang="en">Architecture diagram</span></h2>
         </div>
         <div class="diagram-box">
-          <div class="diagram-placeholder">
-            <p class="section__desc" style="text-align:center;">
-              <span lang="hu">Mermaid-diagram helye — a renderelt ábra a tartalommigráció során kerül ide.</span>
-              <span lang="en">Mermaid diagram area — the rendered figure lands here during content migration.</span>
-            </p>
-            <code>graph TD; S[Summaries] --&gt; C[Chunks] --&gt; G[Generation];</code>
+<pre class="mermaid" lang="hu">
+flowchart TD
+  Q[Felhasználói kérdés] --&gt; CAT[Kategória-irányítás]
+  CAT --&gt; META[(Metaadat-index)]
+  META --&gt; FILT[Dokumentum-szűrés]
+  FILT --&gt; LEAF[(Levél chunk-ok - kis darabok)]
+  Q --&gt; QEMB[Kérdés embedding]
+  QEMB --&gt; LEAF
+  LEAF --&gt; TOPK[Top-K levél chunk]
+  TOPK --&gt; PAR[Szülő chunk lekérése - kontextus]
+  PAR --&gt; CTX[Kontextus összeállítása]
+  CTX --&gt; GEN[Válaszgenerálás - LLM]
+  GEN --&gt; ANS[Részletes, hivatkozott válasz]
+</pre>
+<pre class="mermaid" lang="en">
+flowchart TD
+  Q[User query] --&gt; CAT[Category routing]
+  CAT --&gt; META[(Metadata index)]
+  META --&gt; FILT[Document filtering]
+  FILT --&gt; LEAF[(Leaf chunks - small pieces)]
+  Q --&gt; QEMB[Query embedding]
+  QEMB --&gt; LEAF
+  LEAF --&gt; TOPK[Top-K leaf chunks]
+  TOPK --&gt; PAR[Parent chunk retrieval - context]
+  PAR --&gt; CTX[Context assembly]
+  CTX --&gt; GEN[Generation - LLM]
+  GEN --&gt; ANS[Detailed answer with citations]
+</pre>
+          <p class="mermaid__caption">
+            <span lang="hu">A metaadat-index irányítja a keresést a releváns kategóriára; a kis levél chunk-okban való precíz egyezés után a rendszer a szülő chunk-ot kéri le a teljes kontextusért.</span>
+            <span lang="en">The metadata index routes the search to the relevant category; after precise matching in small leaf chunks the system retrieves the parent chunk for full context.</span>
+          </p>
+        </div>
+      </section>
+
+      <!-- 04 When to use it -->
+      <section class="section">
+        <div class="section__head">
+          <span class="section__num">04</span>
+          <h2 class="section__title"><span lang="hu">Mikor érdemes használni</span><span lang="en">When to use it</span></h2>
+        </div>
+        <div class="grid grid-2">
+          <div class="panel panel--ok">
+            <h3 class="panel__title"><span lang="hu">Erősségek</span><span lang="en">Strengths</span></h3>
+            <ul class="feature-list feature-list--ok">
+              <li><span lang="hu">Nagy tudásbázison (5 000+ dokumentum) 90%+ keresési tér csökkentés érhető el.</span><span lang="en">Achieves 90%+ search space reduction on large knowledge bases (5 000+ documents).</span></li>
+              <li><span lang="hu">Megőrzi a dokumentum struktúráját: kis chunk = pontos embedding, szülő = teljes kontextus.</span><span lang="en">Preserves document structure: small chunk = precise embedding, parent = full context.</span></li>
+              <li><span lang="hu">Kategória-irányítás eliminálja a cross-domain zajt multi-tenant rendszerekben.</span><span lang="en">Category routing eliminates cross-domain noise in multi-tenant systems.</span></li>
+              <li><span lang="hu">Összefoglaló réteg lehetővé teszi az áttekintő és részletes kérdések kezelését is.</span><span lang="en">Summary layer handles both high-level overview and detail-level questions.</span></li>
+            </ul>
+          </div>
+          <div class="panel panel--warn">
+            <h3 class="panel__title"><span lang="hu">Kihívások</span><span lang="en">Trade-offs</span></h3>
+            <ul class="feature-list feature-list--warn">
+              <li><span lang="hu">Összetettebb indexelési pipeline: a hierarchia felépítése és karbantartása plusz munka.</span><span lang="en">More complex indexing pipeline: building and maintaining the hierarchy takes extra effort.</span></li>
+              <li><span lang="hu">A kategóriarendszer stabilitást igényel — ha sokat változik, magas a karbantartási teher.</span><span lang="en">Category schema requires stability — frequently changing categories mean high maintenance cost.</span></li>
+              <li><span lang="hu">Kis adathalmazon (5 000 dokumentum alatt) a komplexitás nem térül meg.</span><span lang="en">Overhead is not justified for small corpora (under 5 000 documents).</span></li>
+            </ul>
           </div>
         </div>
         <div class="info-box">
-          <p class="info-box__title"><span lang="hu">Vázlat</span><span lang="en">Draft</span></p>
+          <p class="info-box__title"><span lang="hu">Pro tipp</span><span lang="en">Pro tip</span></p>
           <p class="info-box__body">
-            <span lang="hu">Ez az oldal a Stitch-tervből generált váz. A részletes szakaszok — működési diagram, erősségek és kihívások, kódpélda — a korábbi oldal (oldsite/) tartalmából kerülnek át egy következő feladatban.</span>
-            <span lang="en">This page is a scaffold generated from the Stitch design. The detailed sections — working diagram, strengths and trade-offs, code example — will be migrated from the previous site (oldsite/) in a follow-up task.</span>
+            <span lang="hu">Kombináld a strukturális hierarchiát (szülő-levél chunk-ok) a kategória-irányítással: a keresési tér 99%-a is kizárható, mielőtt az első vektoros összehasonlítás megtörténne — ez különösen on-call és incidens-kezelési use case-eknél adja a legjobb eredményt.</span>
+            <span lang="en">Combine structural hierarchy (parent-leaf chunks) with category routing: up to 99% of the search space can be excluded before the first vector comparison — this delivers the best results in on-call and incident-response use cases.</span>
           </p>
+        </div>
+      </section>
+
+      <!-- 05 Code example -->
+      <section class="section">
+        <div class="section__head">
+          <span class="section__num">05</span>
+          <h2 class="section__title"><span lang="hu">Kódpélda</span><span lang="en">Code example</span></h2>
+        </div>
+        <div class="code-block">
+          <div class="code-block__head">
+            <span>hierarchical_rag_query.py</span>
+          </div>
+          <pre><code><span class="tok-comment"># Build a hierarchical index with parent-child chunk relationship</span>
+from llama_index.core import VectorStoreIndex, StorageContext
+from llama_index.core.node_parser import HierarchicalNodeParser, get_leaf_nodes
+from llama_index.core.retrievers import AutoMergingRetriever
+from llama_index.core.storage.docstore import SimpleDocumentStore
+
+<span class="tok-comment"># Parse into 3-level hierarchy: 2048 → 512 → 128 tokens</span>
+node_parser = HierarchicalNodeParser.from_defaults(
+    chunk_sizes=[2048, 512, 128]
+)
+nodes = node_parser.get_nodes_from_documents(documents)
+leaf_nodes = get_leaf_nodes(nodes)
+
+<span class="tok-comment"># Store all nodes so parent retrieval works at query time</span>
+docstore = SimpleDocumentStore()
+docstore.add_documents(nodes)
+
+storage_context = StorageContext.from_defaults(docstore=docstore)
+index = VectorStoreIndex(leaf_nodes, storage_context=storage_context)
+
+<span class="tok-comment"># AutoMergingRetriever: if &gt;50% of sibling chunks match, return the parent</span>
+base_retriever = index.as_retriever(similarity_top_k=6)
+retriever = AutoMergingRetriever(
+    base_retriever,
+    storage_context,
+    verbose=False,
+)
+nodes = retriever.retrieve(question)
+</code></pre>
         </div>
       </section>
 
@@ -157,6 +252,7 @@
   </div>
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/mermaid@11.15.0/dist/mermaid.min.js" integrity="sha384-yQ4mmBBT+vhTAwjFH0toJXNYJ6O4usWnt6EPIdWwrRvx2V/n5lXuDZQwQFeSFydF" crossorigin="anonymous" defer></script>
 <script src="../assets/js/knowbase.js" defer></script>
 </body>
 </html>
