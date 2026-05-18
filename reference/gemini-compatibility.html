@@ -240,6 +240,192 @@ flowchart LR
             </tbody>
           </table>
         </div>
+        <p class="section__desc">
+          <span lang="hu">Modellenkénti adatlap: a modell kódja, a támogatott be- és kimenetek, a token-ablak, a tudásküszöb és a képességkészlet. Mind a hat modell ugyanazt a multimodális bemenetet és 1M / 64k tokenes ablakot adja, és ugyanazt a RAG-szempontból fontos képességkészletet támogatja — a modell kódja, az állapota és a legutóbbi frissítés dátuma tér el.</span>
+          <span lang="en">A per-model detail card: the model code, supported inputs and outputs, the token window, the knowledge cutoff and the capability set. All six models share the same multimodal input, the same 1M / 64k token window and the same RAG-relevant capability set — the model code, the status and the latest-update date are what differ.</span>
+        </p>
+        <div class="grid grid-3">
+          <div class="card card--rich">
+            <span class="card__tag">gemini-3.1-pro-preview</span>
+            <div class="card__title">Gemini 3.1 Pro</div>
+            <ul class="model-list">
+              <li class="model-line">
+                <span class="model-line__name"><span lang="hu">Bemenet</span><span lang="en">Input</span></span>
+                <span class="model-line__spec"><span lang="hu">szöveg · kép · videó · hang · PDF</span><span lang="en">text · image · video · audio · PDF</span></span>
+              </li>
+              <li class="model-line">
+                <span class="model-line__name"><span lang="hu">Kimenet</span><span lang="en">Output</span></span>
+                <span class="model-line__spec"><span lang="hu">szöveg</span><span lang="en">text</span></span>
+              </li>
+              <li class="model-line">
+                <span class="model-line__name"><span lang="hu">Tokenek</span><span lang="en">Tokens</span></span>
+                <span class="model-line__spec">1M → 64k</span>
+              </li>
+              <li class="model-line">
+                <span class="model-line__name"><span lang="hu">Tudásküszöb</span><span lang="en">Cutoff</span></span>
+                <span class="model-line__spec">2025-01</span>
+              </li>
+              <li class="model-line">
+                <span class="model-line__name"><span lang="hu">Frissítve</span><span lang="en">Updated</span></span>
+                <span class="model-line__spec">2026-02 · Preview</span>
+              </li>
+            </ul>
+            <ul class="feature-list">
+              <li><span lang="hu">✓ strukturált kimenet, gyorsítótár, function calling, kódfuttatás, search grounding, thinking, Batch API</span><span lang="en">✓ structured outputs, caching, function calling, code execution, search grounding, thinking, Batch API</span></li>
+              <li><span lang="hu">✗ képgenerálás, Live API</span><span lang="en">✗ image generation, Live API</span></li>
+            </ul>
+          </div>
+          <div class="card card--rich">
+            <span class="card__tag">gemini-3-flash-preview</span>
+            <div class="card__title">Gemini 3 Flash</div>
+            <ul class="model-list">
+              <li class="model-line">
+                <span class="model-line__name"><span lang="hu">Bemenet</span><span lang="en">Input</span></span>
+                <span class="model-line__spec"><span lang="hu">szöveg · kép · videó · hang · PDF</span><span lang="en">text · image · video · audio · PDF</span></span>
+              </li>
+              <li class="model-line">
+                <span class="model-line__name"><span lang="hu">Kimenet</span><span lang="en">Output</span></span>
+                <span class="model-line__spec"><span lang="hu">szöveg</span><span lang="en">text</span></span>
+              </li>
+              <li class="model-line">
+                <span class="model-line__name"><span lang="hu">Tokenek</span><span lang="en">Tokens</span></span>
+                <span class="model-line__spec">1M → 64k</span>
+              </li>
+              <li class="model-line">
+                <span class="model-line__name"><span lang="hu">Tudásküszöb</span><span lang="en">Cutoff</span></span>
+                <span class="model-line__spec">2025-01</span>
+              </li>
+              <li class="model-line">
+                <span class="model-line__name"><span lang="hu">Frissítve</span><span lang="en">Updated</span></span>
+                <span class="model-line__spec">2025-12 · Preview</span>
+              </li>
+            </ul>
+            <ul class="feature-list">
+              <li><span lang="hu">✓ strukturált kimenet, gyorsítótár, function calling, kódfuttatás, search grounding, thinking, Batch API</span><span lang="en">✓ structured outputs, caching, function calling, code execution, search grounding, thinking, Batch API</span></li>
+              <li><span lang="hu">✗ képgenerálás, Live API</span><span lang="en">✗ image generation, Live API</span></li>
+            </ul>
+          </div>
+          <div class="card card--rich">
+            <span class="card__tag">gemini-3.1-flash-lite</span>
+            <div class="card__title">Gemini 3.1 Flash-Lite</div>
+            <ul class="model-list">
+              <li class="model-line">
+                <span class="model-line__name"><span lang="hu">Bemenet</span><span lang="en">Input</span></span>
+                <span class="model-line__spec"><span lang="hu">szöveg · kép · videó · hang · PDF</span><span lang="en">text · image · video · audio · PDF</span></span>
+              </li>
+              <li class="model-line">
+                <span class="model-line__name"><span lang="hu">Kimenet</span><span lang="en">Output</span></span>
+                <span class="model-line__spec"><span lang="hu">szöveg</span><span lang="en">text</span></span>
+              </li>
+              <li class="model-line">
+                <span class="model-line__name"><span lang="hu">Tokenek</span><span lang="en">Tokens</span></span>
+                <span class="model-line__spec">1M → 64k</span>
+              </li>
+              <li class="model-line">
+                <span class="model-line__name"><span lang="hu">Tudásküszöb</span><span lang="en">Cutoff</span></span>
+                <span class="model-line__spec">2025-01</span>
+              </li>
+              <li class="model-line">
+                <span class="model-line__name"><span lang="hu">Frissítve</span><span lang="en">Updated</span></span>
+                <span class="model-line__spec">2026-05 · GA</span>
+              </li>
+            </ul>
+            <ul class="feature-list">
+              <li><span lang="hu">✓ strukturált kimenet, gyorsítótár, function calling, kódfuttatás, search grounding, thinking, Batch API</span><span lang="en">✓ structured outputs, caching, function calling, code execution, search grounding, thinking, Batch API</span></li>
+              <li><span lang="hu">✗ képgenerálás, Live API</span><span lang="en">✗ image generation, Live API</span></li>
+            </ul>
+          </div>
+          <div class="card card--rich">
+            <span class="card__tag">gemini-2.5-pro</span>
+            <div class="card__title">Gemini 2.5 Pro</div>
+            <ul class="model-list">
+              <li class="model-line">
+                <span class="model-line__name"><span lang="hu">Bemenet</span><span lang="en">Input</span></span>
+                <span class="model-line__spec"><span lang="hu">szöveg · kép · videó · hang · PDF</span><span lang="en">text · image · video · audio · PDF</span></span>
+              </li>
+              <li class="model-line">
+                <span class="model-line__name"><span lang="hu">Kimenet</span><span lang="en">Output</span></span>
+                <span class="model-line__spec"><span lang="hu">szöveg</span><span lang="en">text</span></span>
+              </li>
+              <li class="model-line">
+                <span class="model-line__name"><span lang="hu">Tokenek</span><span lang="en">Tokens</span></span>
+                <span class="model-line__spec">1M → 64k</span>
+              </li>
+              <li class="model-line">
+                <span class="model-line__name"><span lang="hu">Tudásküszöb</span><span lang="en">Cutoff</span></span>
+                <span class="model-line__spec">2025-01</span>
+              </li>
+              <li class="model-line">
+                <span class="model-line__name"><span lang="hu">Frissítve</span><span lang="en">Updated</span></span>
+                <span class="model-line__spec"><span lang="hu">2025-06 · Stabil</span><span lang="en">2025-06 · Stable</span></span>
+              </li>
+            </ul>
+            <ul class="feature-list">
+              <li><span lang="hu">✓ strukturált kimenet, gyorsítótár, function calling, kódfuttatás, search grounding, thinking, Batch API</span><span lang="en">✓ structured outputs, caching, function calling, code execution, search grounding, thinking, Batch API</span></li>
+              <li><span lang="hu">✗ képgenerálás, Live API</span><span lang="en">✗ image generation, Live API</span></li>
+            </ul>
+          </div>
+          <div class="card card--rich">
+            <span class="card__tag">gemini-2.5-flash</span>
+            <div class="card__title">Gemini 2.5 Flash</div>
+            <ul class="model-list">
+              <li class="model-line">
+                <span class="model-line__name"><span lang="hu">Bemenet</span><span lang="en">Input</span></span>
+                <span class="model-line__spec"><span lang="hu">szöveg · kép · videó · hang · PDF</span><span lang="en">text · image · video · audio · PDF</span></span>
+              </li>
+              <li class="model-line">
+                <span class="model-line__name"><span lang="hu">Kimenet</span><span lang="en">Output</span></span>
+                <span class="model-line__spec"><span lang="hu">szöveg</span><span lang="en">text</span></span>
+              </li>
+              <li class="model-line">
+                <span class="model-line__name"><span lang="hu">Tokenek</span><span lang="en">Tokens</span></span>
+                <span class="model-line__spec">1M → 64k</span>
+              </li>
+              <li class="model-line">
+                <span class="model-line__name"><span lang="hu">Tudásküszöb</span><span lang="en">Cutoff</span></span>
+                <span class="model-line__spec">2025-01</span>
+              </li>
+              <li class="model-line">
+                <span class="model-line__name"><span lang="hu">Frissítve</span><span lang="en">Updated</span></span>
+                <span class="model-line__spec"><span lang="hu">2025-06 · Stabil</span><span lang="en">2025-06 · Stable</span></span>
+              </li>
+            </ul>
+            <ul class="feature-list">
+              <li><span lang="hu">✓ strukturált kimenet, gyorsítótár, function calling, kódfuttatás, search grounding, thinking, Batch API</span><span lang="en">✓ structured outputs, caching, function calling, code execution, search grounding, thinking, Batch API</span></li>
+              <li><span lang="hu">✗ képgenerálás, Live API</span><span lang="en">✗ image generation, Live API</span></li>
+            </ul>
+          </div>
+          <div class="card card--rich">
+            <span class="card__tag">gemini-2.5-flash-lite</span>
+            <div class="card__title">Gemini 2.5 Flash-Lite</div>
+            <ul class="model-list">
+              <li class="model-line">
+                <span class="model-line__name"><span lang="hu">Bemenet</span><span lang="en">Input</span></span>
+                <span class="model-line__spec"><span lang="hu">szöveg · kép · videó · hang · PDF</span><span lang="en">text · image · video · audio · PDF</span></span>
+              </li>
+              <li class="model-line">
+                <span class="model-line__name"><span lang="hu">Kimenet</span><span lang="en">Output</span></span>
+                <span class="model-line__spec"><span lang="hu">szöveg</span><span lang="en">text</span></span>
+              </li>
+              <li class="model-line">
+                <span class="model-line__name"><span lang="hu">Tokenek</span><span lang="en">Tokens</span></span>
+                <span class="model-line__spec">1M → 64k</span>
+              </li>
+              <li class="model-line">
+                <span class="model-line__name"><span lang="hu">Tudásküszöb</span><span lang="en">Cutoff</span></span>
+                <span class="model-line__spec">2025-01</span>
+              </li>
+              <li class="model-line">
+                <span class="model-line__name"><span lang="hu">Frissítve</span><span lang="en">Updated</span></span>
+                <span class="model-line__spec"><span lang="hu">2025-07 · Stabil</span><span lang="en">2025-07 · Stable</span></span>
+              </li>
+            </ul>
+            <ul class="feature-list">
+              <li><span lang="hu">✓ strukturált kimenet, gyorsítótár, function calling, kódfuttatás, search grounding, thinking, Batch API</span><span lang="en">✓ structured outputs, caching, function calling, code execution, search grounding, thinking, Batch API</span></li>
+              <li><span lang="hu">✗ képgenerálás, Live API</span><span lang="en">✗ image generation, Live API</span></li>
+            </ul>
+          </div>
+        </div>
         <div class="info-box">
           <p class="info-box__title"><span lang="hu">Fontos változások</span><span lang="en">Important changes</span></p>
           <p class="info-box__body">
