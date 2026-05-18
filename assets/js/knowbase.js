@@ -44,7 +44,8 @@
         { id: "reranking", page: "reranking", href: "reference/reranking.html", dot: "cyan", label: { hu: "Újrarangsorolás", en: "Reranking" } },
         { id: "hybrid-search", page: "hybrid-search", href: "reference/hybrid-search.html", dot: "cyan", label: { hu: "Hibrid keresés", en: "Hybrid Search" } },
         { id: "evaluation", page: "evaluation", href: "reference/evaluation.html", dot: "cyan", label: { hu: "Kiértékelés", en: "Evaluation" } },
-        { id: "openai-compatibility", page: "openai-compatibility", href: "reference/openai-compatibility.html", dot: "cyan", label: { hu: "OpenAI kompatibilitás", en: "OpenAI Compatibility" } }
+        { id: "openai-compatibility", page: "openai-compatibility", href: "reference/openai-compatibility.html", dot: "cyan", label: { hu: "OpenAI kompatibilitás", en: "OpenAI Compatibility" } },
+        { id: "gemini-compatibility", page: "gemini-compatibility", href: "reference/gemini-compatibility.html", dot: "cyan", label: { hu: "Gemini kompatibilitás", en: "Gemini Compatibility" } }
       ]
     }
   ];
