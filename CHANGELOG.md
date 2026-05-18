@@ -35,6 +35,11 @@ project follows [Semantic Versioning](https://semver.org/) — see
   `card__spec`, and `card__stats` components to `assets/css/knowbase.css`;
   `.stitch/DESIGN.md` now permits categorical per-card color on reference-page
   card grids.
+- Embedding Models reference page expanded with researched mid-2026 data: a
+  ranked MMTEB Borda leaderboard, a benchmark-category card grid, provider
+  cards rebuilt as model-spec blocks, and MRL/quantization pipeline ladders
+  plus a quantization storage table. Adds a `model-list` / `model-line`
+  component to `assets/css/knowbase.css`.
 
 ## [0.1.0] - 2026-05-18
 

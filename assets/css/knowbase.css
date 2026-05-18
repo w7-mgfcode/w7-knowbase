@@ -526,6 +526,34 @@ a.card:hover {
 }
 .card__stat-value--muted { color: var(--text-primary); }
 
+/* Model spec list inside a provider card — model name + indented spec line. */
+.model-list { list-style: none; margin: 0 0 var(--space-md); padding: 0; }
+.model-line { padding: var(--space-sm) 0; }
+.model-line + .model-line { border-top: 1px solid var(--border); }
+.model-line__name {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--accent);
+}
+.model-line__legacy {
+  margin-left: var(--space-xs);
+  padding: 1px 5px;
+  font-size: 9px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-sm);
+}
+.model-line__spec {
+  display: block;
+  margin-top: 3px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--text-muted);
+}
+
 /* ---- 11. Comparison table ------------------------------------ */
 .compare-table-wrap {
   overflow-x: auto;
