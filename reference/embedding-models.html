@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Embedding Modellek — w7-knowbase</title>
-<meta name="description" content="Embedding modellek referencia: MTEB benchmark, MRL/Matryoshka dimenzionalitás, többnyelvű modellek, dense vs sparse, fine-tuning.">
+<meta name="description" content="Embedding modellek referencia: MTEB/MMTEB benchmark, MRL/Matryoshka dimenzionalitás, kvantizálás, többnyelvű és multimodális modellek, modellválasztás 2026-ban.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300..700&family=Space+Grotesk:wght@400..700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
@@ -46,13 +46,13 @@
         <span class="tag"><span lang="hu">Referencia</span><span lang="en">Reference</span></span>
         <h1 class="page-header__title tinted"><span lang="hu">Embedding Modellek</span><span lang="en">Embedding Models</span></h1>
         <p class="page-header__subtitle">
-          <span lang="hu">Szövegvektorok előállítása RAG rendszerekhez: MTEB benchmark, Matryoshka/MRL dimenzionalitás, többnyelvű modellek és fine-tuning stratégiák 2026-ban.</span>
-          <span lang="en">Generating text vectors for RAG systems: MTEB benchmark, Matryoshka/MRL dimensionality, multilingual models, and fine-tuning strategies in 2026.</span>
+          <span lang="hu">Szövegvektorok előállítása RAG rendszerekhez: MMTEB rangsor, kereskedelmi API-k és nyílt modellek, árazás, MRL/kvantizálás, késői interakció és multimodalitás — a 2026-os modellgeneráció áttekintése. Adatpillanat: 2026. május.</span>
+          <span lang="en">Generating text vectors for RAG systems: the MMTEB leaderboard, commercial APIs and open models, pricing, MRL/quantization, late interaction and multimodality — an overview of the 2026 model generation. Data snapshot: May 2026.</span>
         </p>
         <div class="stat-row">
           <div class="stat-pill">
             <div class="stat-pill__label"><span lang="hu">Benchmark</span><span lang="en">Benchmark</span></div>
-            <div class="stat-pill__value">MTEB</div>
+            <div class="stat-pill__value">MMTEB</div>
           </div>
           <div class="stat-pill">
             <div class="stat-pill__label"><span lang="hu">Top dimenzió</span><span lang="en">Top dimension</span></div>
@@ -60,7 +60,7 @@
           </div>
           <div class="stat-pill">
             <div class="stat-pill__label"><span lang="hu">Megközelítés</span><span lang="en">Approach</span></div>
-            <div class="stat-pill__value"><span lang="hu">Dense + Sparse</span><span lang="en">Dense + Sparse</span></div>
+            <div class="stat-pill__value"><span lang="hu">Dense + Sparse + Multi-vektor</span><span lang="en">Dense + Sparse + Multi-vector</span></div>
           </div>
         </div>
       </div>
@@ -73,12 +73,12 @@
         </div>
         <div class="grid grid-2">
           <p class="section__desc">
-            <span lang="hu">Az embedding modellek szövegeket sűrű numerikus vektorokká alakítanak, amelyekben a szemantikailag hasonló szövegek közel kerülnek egymáshoz a vektortérben. RAG rendszerekben az embedding minősége közvetlenül meghatározza a visszakeresés pontosságát: gyenge embedding esetén még a legjobb reranker sem tud kármenteni. A 2026-os modellgeneráció — Qwen3-Embedding, NV-Embed-v2, Cohere embed-v4 — 7B+ paraméteres decoder-only architektúrákat és Matryoshka Representation Learning (MRL) dimenziócsökkentést hoz.</span>
-            <span lang="en">Embedding models convert text into dense numerical vectors where semantically similar texts cluster close together in the vector space. In RAG systems, embedding quality directly determines retrieval accuracy: even the best reranker cannot fully compensate for a weak embedding. The 2026 model generation — Qwen3-Embedding, NV-Embed-v2, Cohere embed-v4 — brings 7B+ parameter decoder-only architectures and Matryoshka Representation Learning (MRL) dimension reduction.</span>
+            <span lang="hu">Az embedding modellek szövegeket sűrű numerikus vektorokká alakítanak, amelyekben a szemantikailag hasonló szövegek közel kerülnek egymáshoz a vektortérben. RAG rendszerekben az embedding minősége közvetlenül meghatározza a visszakeresés pontosságát: gyenge embedding esetén még a legjobb reranker sem tud kármenteni. A 2026-os modellgeneráció — Qwen3-Embedding, Voyage 4, Gemini Embedding 2 — LLM-gerincű architektúrákat, Matryoshka (MRL) dimenziócsökkentést, kvantizálás-tudatos tanítást és multimodális vektortereket hoz.</span>
+            <span lang="en">Embedding models convert text into dense numerical vectors where semantically similar texts cluster close together in the vector space. In RAG systems, embedding quality directly determines retrieval accuracy: even the best reranker cannot fully compensate for a weak embedding. The 2026 model generation — Qwen3-Embedding, Voyage 4, Gemini Embedding 2 — brings LLM-backbone architectures, Matryoshka (MRL) dimension reduction, quantization-aware training, and multimodal vector spaces.</span>
           </p>
           <p class="section__desc">
-            <span lang="hu">Az iparági standard értékelési eszköz az MTEB (Massive Text Embedding Benchmark), amely 8 feladattípuson, 58 adatkészleten és 112 nyelven méri a modelleket. RAG-hoz a Retrieval alkategória a meghatározó — az összesített MTEB-pontszám félrevezető lehet, ha egy modell klaszterezésben kiemelkedő, de visszakeresésben gyengébb. A dense modellek mellett terjednek a sparse (BM25-szerű) és a ColBERT-stílusú late-interaction megközelítések is.</span>
-            <span lang="en">The industry-standard evaluation tool is MTEB (Massive Text Embedding Benchmark), which measures models across 8 task types, 58 datasets, and 112 languages. For RAG the Retrieval sub-category is what matters — the overall MTEB score can be misleading if a model excels at clustering but underperforms at retrieval. Alongside dense models, sparse (BM25-like) and ColBERT-style late-interaction approaches are also gaining ground.</span>
+            <span lang="hu">Az iparági értékelési eszköz az MTEB, amelynek leaderboardja ma alapból a többnyelvű MMTEB rangsort mutatja, külön angol (MTEB eng v2) és legacy v1 fülekkel. RAG-hoz a Retrieval alkategória a meghatározó — az összesített pontszám félrevezető lehet. A dense modellek mellett terjednek a sparse (lexikai) és a ColBERT-stílusú late-interaction megközelítések is. (Adatpillanat: 2026. május.)</span>
+            <span lang="en">The industry evaluation tool is MTEB, whose leaderboard now defaults to the multilingual MMTEB ranking, with separate English (MTEB eng v2) and legacy v1 tabs. For RAG the Retrieval sub-category is what matters — the aggregate score can be misleading. Alongside dense models, sparse (lexical) and ColBERT-style late-interaction approaches are also gaining ground. (Data snapshot: May 2026.)</span>
           </p>
         </div>
       </section>
@@ -157,52 +157,487 @@ flowchart TD
         </div>
       </section>
 
-      <!-- 04 Guidance -->
+      <!-- 04 MTEB leaderboard & benchmarks -->
       <section class="section">
         <div class="section__head">
           <span class="section__num">04</span>
-          <h2 class="section__title"><span lang="hu">Gyakorlati tanácsok</span><span lang="en">Practical guidance</span></h2>
+          <h2 class="section__title"><span lang="hu">MTEB rangsor és benchmarkok</span><span lang="en">MTEB leaderboard &amp; benchmarks</span></h2>
         </div>
-        <div class="grid grid-2">
-          <div class="panel panel--ok">
-            <h3 class="panel__title"><span lang="hu">Bevált megközelítések</span><span lang="en">Proven approaches</span></h3>
-            <ul class="feature-list feature-list--ok">
-              <li><span lang="hu">MRL-kompatibilis modell választásakor kezdj kisebb dimenzióval (pl. 512d), és csak szükség esetén növeld — a tárhely és sebesség javul minimális minőségvesztéssel.</span><span lang="en">When choosing an MRL-compatible model, start with a smaller dimension (e.g. 512d) and increase only if needed — storage and speed improve with minimal quality loss.</span></li>
-              <li><span lang="hu">MTEB Retrieval alkategóriát nézd, ne az összesített átlagot RAG értékeléshez.</span><span lang="en">Look at the MTEB Retrieval sub-category, not the overall average, when evaluating for RAG.</span></li>
-              <li><span lang="hu">Kezdő projekthez az OpenAI text-embedding-3-small ideális: $0.02/1M token, 1536d, kiváló ökoszisztéma-integráció.</span><span lang="en">For a starter project, OpenAI text-embedding-3-small is ideal: $0.02/1M tokens, 1536d, excellent ecosystem integration.</span></li>
-              <li><span lang="hu">Többnyelvű adatnál BGE-M3 (open-source, 100+ nyelv) vagy Cohere embed-v4 (API, 128K kontextus).</span><span lang="en">For multilingual data, use BGE-M3 (open-source, 100+ languages) or Cohere embed-v4 (API, 128K context).</span></li>
-            </ul>
-          </div>
-          <div class="panel panel--warn">
-            <h3 class="panel__title"><span lang="hu">Gyakori hibák</span><span lang="en">Common pitfalls</span></h3>
-            <ul class="feature-list feature-list--warn">
-              <li><span lang="hu">Legacy ada-002 használata: rosszabb ár/teljesítmény arány, mint az újabb 3-small modell esetén.</span><span lang="en">Using legacy ada-002: worse price/performance ratio than the newer 3-small model.</span></li>
-              <li><span lang="hu">7B+ modell CPU-n futtatása: érdemi sebesség nem érhető el, GPU szükséges.</span><span lang="en">Running a 7B+ model on CPU: meaningful speed is not achievable, a GPU is required.</span></li>
-              <li><span lang="hu">Modell kiválasztása saját adat nélküli benchmark alapján: mindig mérj a saját domainjeden!</span><span lang="en">Selecting a model based on benchmarks without testing on your own data: always evaluate on your own domain!</span></li>
-              <li><span lang="hu">Aszimmetrikus embedding kihagyása: a query és a dokumentum különböző instrukciós prefixet igényelhet.</span><span lang="en">Skipping asymmetric embedding: query and document may require different instruction prefixes.</span></li>
-            </ul>
-          </div>
+        <p class="section__desc">
+          <span lang="hu">A leaderboard három, egymással NEM összehasonlítható benchmarkot kínál — ezért visz a táblázat külön „Benchmark” oszlopot. Ne olvass ki belőle egyetlen összevont sorrendet.</span>
+          <span lang="en">The leaderboard offers three benchmarks that are NOT comparable with one another — which is why the table carries a separate "Benchmark" column. Do not read a single merged rank order out of it.</span>
+        </p>
+        <div class="compare-table-wrap">
+          <table class="compare-table">
+            <thead>
+              <tr>
+                <th><span lang="hu">Modell</span><span lang="en">Model</span></th>
+                <th><span lang="hu">Szolgáltató</span><span lang="en">Provider</span></th>
+                <th><span lang="hu">Pontszám</span><span lang="en">Score</span></th>
+                <th>Benchmark</th>
+                <th><span lang="hu">Dimenzió</span><span lang="en">Dimensions</span></th>
+                <th><span lang="hu">Kontextus</span><span lang="en">Context</span></th>
+                <th><span lang="hu">Paraméter</span><span lang="en">Params</span></th>
+                <th><span lang="hu">Licenc</span><span lang="en">License</span></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="arch-name">Qwen3-Embedding-8B</td>
+                <td>Alibaba</td>
+                <td class="mono">70.58 / 75.22</td>
+                <td>MMTEB / MTEB(eng v2)</td>
+                <td class="mono">32–4096 (MRL)</td>
+                <td class="mono">32K</td>
+                <td class="mono">8B</td>
+                <td>Apache 2.0</td>
+              </tr>
+              <tr>
+                <td class="arch-name">Gemini Embedding 001</td>
+                <td>Google</td>
+                <td class="mono">68.32</td>
+                <td>MMTEB</td>
+                <td class="mono">3072 (MRL 1536/768)</td>
+                <td class="mono">2K</td>
+                <td class="mono">n/d</td>
+                <td><span lang="hu">Zárt</span><span lang="en">Proprietary</span></td>
+              </tr>
+              <tr>
+                <td class="arch-name">NV-Embed-v2</td>
+                <td>NVIDIA</td>
+                <td class="mono">72.31</td>
+                <td>MTEB v1 (2024-08)</td>
+                <td class="mono">4096</td>
+                <td class="mono">2K</td>
+                <td class="mono">~7.85B</td>
+                <td>CC-BY-NC-4.0</td>
+              </tr>
+              <tr>
+                <td class="arch-name">bge-en-icl</td>
+                <td>BAAI</td>
+                <td class="mono">~71</td>
+                <td>MTEB v1</td>
+                <td class="mono">4096</td>
+                <td class="mono">32K</td>
+                <td class="mono">~7B</td>
+                <td>Apache 2.0</td>
+              </tr>
+              <tr>
+                <td class="arch-name">gte-Qwen2-7B-instruct</td>
+                <td>Alibaba</td>
+                <td class="mono">~70</td>
+                <td>MTEB v1</td>
+                <td class="mono">3584</td>
+                <td class="mono">32K</td>
+                <td class="mono">7B</td>
+                <td>Apache 2.0</td>
+              </tr>
+              <tr>
+                <td class="arch-name">text-embedding-3-large</td>
+                <td>OpenAI</td>
+                <td class="mono">~64.6</td>
+                <td>MTEB v1</td>
+                <td class="mono">256–3072 (MRL)</td>
+                <td class="mono">8191</td>
+                <td class="mono">n/d</td>
+                <td><span lang="hu">Zárt</span><span lang="en">Proprietary</span></td>
+              </tr>
+              <tr>
+                <td class="arch-name">BGE-M3</td>
+                <td>BAAI</td>
+                <td class="mono">~63–66</td>
+                <td>MTEB / MIRACL</td>
+                <td class="mono">1024</td>
+                <td class="mono">8192</td>
+                <td class="mono">~568M</td>
+                <td>MIT</td>
+              </tr>
+            </tbody>
+          </table>
         </div>
         <div class="info-box">
-          <p class="info-box__title"><span lang="hu">Fine-tuning mikor éri meg?</span><span lang="en">When is fine-tuning worth it?</span></p>
+          <p class="info-box__title"><span lang="hu">Benchmark-verziók</span><span lang="en">Benchmark versions</span></p>
           <p class="info-box__body">
-            <span lang="hu">Domain-specifikus fine-tuning 10–30%-os visszakeresési javulást adhat jogi, orvosi vagy műszaki szövegkorpuszon. Sentence Transformers könyvtárral és néhány ezer (kérdés, releváns dokumentum) párral elegendő. Alternatíva: instrukció-hangolt modell (Qwen3-Embedding, E5-Mistral) természetes nyelvű prefixszel — fine-tuning nélkül.</span>
-            <span lang="en">Domain-specific fine-tuning can yield 10–30% retrieval improvement on legal, medical, or technical corpora. Sentence Transformers library with a few thousand (query, relevant document) pairs is sufficient. Alternative: instruction-tuned model (Qwen3-Embedding, E5-Mistral) with a natural-language prefix — no fine-tuning needed.</span>
+            <span lang="hu">Az MMTEB (arXiv 2502.13595) közösségi bővítés 500+ feladattal és 250+ nyelvvel — ma ez a leaderboard alapértelmezése. Az MTEB(eng, v2) egy letisztított angol benchmark külön fülön; a legacy MTEB v1 számok ezekkel nem cserélhetők fel. A leaderboard 2025 közepe óta egy „zero-shot” pontszámot is mutat, amely a tanító- és benchmarkadat átfedését jelzi.</span>
+            <span lang="en">MMTEB (arXiv 2502.13595) is a community expansion to 500+ tasks and 250+ languages — now the leaderboard default. MTEB(eng, v2) is a cleaned English benchmark on a separate tab; the legacy MTEB v1 numbers are not interchangeable with either. Since mid-2025 the leaderboard also shows a "zero-shot" score quantifying train/benchmark overlap.</span>
+          </p>
+          <p class="info-box__body">
+            <span lang="hu">Olvasat: a Qwen3-Embedding-8B a legerősebb teljesen nyílt modell; a Gemini Embedding 001 vezet a zárt, többnyelvű mezőnyben; az NV-Embed-v2 híres 72.31-es eredménye a régi MTEB v1-en született és nem kereskedelmi licencű. „n/d” = a gyártó nem közli. RAG-hoz mindig a Retrieval alkategóriát nézd, és tesztelj a saját domaineden.</span>
+            <span lang="en">Takeaway: Qwen3-Embedding-8B is the strongest fully-open model; Gemini Embedding 001 leads the proprietary multilingual field; NV-Embed-v2's famous 72.31 was set on the old MTEB v1 and is non-commercially licensed. "n/d" = not disclosed by the vendor. For RAG always look at the Retrieval sub-category, and test on your own domain.</span>
           </p>
         </div>
       </section>
 
-      <!-- 05 Code example -->
+      <!-- 05 API provider models -->
       <section class="section">
         <div class="section__head">
           <span class="section__num">05</span>
+          <h2 class="section__title"><span lang="hu">API-szolgáltatók</span><span lang="en">API provider models</span></h2>
+        </div>
+        <div class="grid grid-3">
+          <div class="card">
+            <div class="card__title">OpenAI</div>
+            <p class="card__body">
+              <span lang="hu">text-embedding-3-large — 3072d MRL, 8191 token kontextus, $0.13/1M (batch $0.065). text-embedding-3-small — 1536d MRL, $0.02/1M (batch $0.01). Az elavult ada-002 ($0.10/1M) nem ajánlott. text-embedding-4 nem létezik.</span>
+              <span lang="en">text-embedding-3-large — 3072d MRL, 8191-token context, $0.13/1M (batch $0.065). text-embedding-3-small — 1536d MRL, $0.02/1M (batch $0.01). The legacy ada-002 ($0.10/1M) is not recommended. There is no text-embedding-4.</span>
+            </p>
+          </div>
+          <div class="card">
+            <div class="card__title">Google</div>
+            <p class="card__body">
+              <span lang="hu">gemini-embedding-001 — 3072d MRL (→1536/768), 2048 token kontextus, $0.15/1M, ingyenes szint, GA. gemini-embedding-2 — az első natívan 5-modalitású modell (szöveg/kép/videó/audio/PDF), 8192 token szöveges kontextus, kb. $0.20/1M; előzetes → ~GA 2026 áprilisa.</span>
+              <span lang="en">gemini-embedding-001 — 3072d MRL (→1536/768), 2048-token context, $0.15/1M, free tier, GA. gemini-embedding-2 — the first natively 5-modality model (text/image/video/audio/PDF), 8192-token text context, approx. $0.20/1M; preview → ~GA late Apr 2026.</span>
+            </p>
+          </div>
+          <div class="card">
+            <div class="card__title">Cohere</div>
+            <p class="card__body">
+              <span lang="hu">embed-v4.0 — 256/512/1024/1536d Matryoshka, 128K kontextus, kb. $0.12/1M, multimodális (szöveg+kép+PDF). Kvantizálás: float/int8/binary/ubinary. 2025 áprilisában jelent meg.</span>
+              <span lang="en">embed-v4.0 — 256/512/1024/1536d Matryoshka, 128K context, approx. $0.12/1M, multimodal (text+image+PDF). Quantization: float/int8/binary/ubinary. Released April 2025.</span>
+            </p>
+          </div>
+          <div class="card">
+            <div class="card__title">Voyage AI</div>
+            <p class="card__body">
+              <span lang="hu">A MongoDB tulajdonában. A Voyage 4 sorozat 2026-01-15-én indult: 256–2048d Matryoshka, 32K kontextus, 200M ingyenes token, közös embedding-tér. voyage-4-large $0.12/1M (MoE), voyage-4 $0.06, voyage-4-lite $0.02, voyage-4-nano nyílt súlyú (Apache 2.0). voyage-context-3 $0.18, voyage-code-3 $0.18, voyage-multimodal-3.5 $0.12.</span>
+              <span lang="en">Owned by MongoDB. The Voyage 4 series launched 2026-01-15: 256–2048d Matryoshka, 32K context, 200M free tokens, shared embedding space. voyage-4-large $0.12/1M (MoE), voyage-4 $0.06, voyage-4-lite $0.02, voyage-4-nano open-weight (Apache 2.0). voyage-context-3 $0.18, voyage-code-3 $0.18, voyage-multimodal-3.5 $0.12.</span>
+            </p>
+          </div>
+          <div class="card">
+            <div class="card__title">Mistral</div>
+            <p class="card__body">
+              <span lang="hu">mistral-embed — 1024d, kb. 8K kontextus, kb. $0.10/1M. codestral-embed-2505 — kódra specializált, kb. $0.15/1M.</span>
+              <span lang="en">mistral-embed — 1024d, approx. 8K context, approx. $0.10/1M. codestral-embed-2505 — code-specialized, approx. $0.15/1M.</span>
+            </p>
+          </div>
+          <div class="card">
+            <div class="card__title">AWS</div>
+            <p class="card__body">
+              <span lang="hu">amazon.titan-embed-text-v2:0 — 256/512/1024d MRL, 8192 token kontextus, $0.11/1M. (Nincs „Nova embedding” modell — a Nova egy generatív modellcsalád.)</span>
+              <span lang="en">amazon.titan-embed-text-v2:0 — 256/512/1024d MRL, 8192-token context, $0.11/1M. (There is no "Nova embedding" model — Nova is a generative model family.)</span>
+            </p>
+          </div>
+        </div>
+        <p class="section__desc" style="margin-top:24px;">
+          <span lang="hu"><strong>Konszolidált árazás</strong> — legolcsóbb felül; a „kb.” jelölésű árak közelítőek.</span>
+          <span lang="en"><strong>Consolidated pricing</strong> — cheapest first; prices marked "approx." are approximate.</span>
+        </p>
+        <div class="compare-table-wrap" style="margin-top:8px;">
+          <table class="compare-table">
+            <thead>
+              <tr>
+                <th><span lang="hu">Ár / 1M token</span><span lang="en">Price / 1M tokens</span></th>
+                <th><span lang="hu">Modellek</span><span lang="en">Models</span></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td class="mono">$0.02</td><td>OpenAI text-embedding-3-small · Voyage voyage-4-lite</td></tr>
+              <tr><td class="mono">$0.06</td><td>Voyage voyage-4</td></tr>
+              <tr><td class="mono">~$0.10</td><td>Mistral mistral-embed</td></tr>
+              <tr><td class="mono">$0.11</td><td>AWS Titan Text v2</td></tr>
+              <tr><td class="mono">$0.12</td><td>Voyage voyage-4-large · Cohere embed-v4 · voyage-multimodal-3.5</td></tr>
+              <tr><td class="mono">$0.13</td><td>OpenAI text-embedding-3-large</td></tr>
+              <tr><td class="mono">$0.15</td><td>Google gemini-embedding-001 · Mistral codestral-embed</td></tr>
+              <tr><td class="mono">$0.18</td><td>Voyage voyage-context-3 · voyage-code-3</td></tr>
+              <tr><td class="mono">~$0.20</td><td>Google gemini-embedding-2</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="info-box">
+          <p class="info-box__title"><span lang="hu">Nyílt forráskódú = infrastruktúra-költség</span><span lang="en">Open-source = infrastructure cost</span></p>
+          <p class="info-box__body">
+            <span lang="hu">A nyílt modellek licencdíj-mentesek, de GPU-infrastruktúrát igényelnek: kb. $0.50/óra egy ~500M paraméteres modellhez, kb. $2–4/óra egy 7B-es modellhez. A teljes költséget ezzel együtt érdemes számolni — az API-ár nem mindig a drágább megoldás.</span>
+            <span lang="en">Open-source models are license-free but need GPU infrastructure: approx. $0.50/hr for a ~500M-parameter model, approx. $2–4/hr for a 7B model. Factor this into the total cost — an API price is not always the more expensive option.</span>
+          </p>
+        </div>
+      </section>
+
+      <!-- 06 Open-source models -->
+      <section class="section">
+        <div class="section__head">
+          <span class="section__num">06</span>
+          <h2 class="section__title"><span lang="hu">Nyílt forráskódú modellek</span><span lang="en">Open-source models</span></h2>
+        </div>
+        <div class="grid grid-3">
+          <div class="card">
+            <div class="card__title">Qwen3-Embedding</div>
+            <p class="card__body">
+              <span lang="hu">Alibaba, Apache 2.0, 2025. június. 0.6B / 4B / 8B méret, LLM-gerinc, instrukció-tudatos, MRL 32–4096d, 32K kontextus, 100+ nyelv (kóddal együtt). A 2026-os referencia nyílt súlyú RAG-modell.</span>
+              <span lang="en">Alibaba, Apache 2.0, June 2025. 0.6B / 4B / 8B sizes, LLM backbone, instruction-aware, MRL 32–4096d, 32K context, 100+ languages incl. code. The reference open-weight RAG model in 2026.</span>
+            </p>
+          </div>
+          <div class="card">
+            <div class="card__title">BGE-M3</div>
+            <p class="card__body">
+              <span lang="hu">BAAI, MIT. Egy modell, három mód: dense + sparse (lexikai) + multi-vektor (ColBERT-stílus). 1024d, 8192 kontextus, ~568M paraméter, 100+ nyelv.</span>
+              <span lang="en">BAAI, MIT. One model, three modes: dense + sparse (lexical) + multi-vector (ColBERT-style). 1024d, 8192 context, ~568M params, 100+ languages.</span>
+            </p>
+          </div>
+          <div class="card">
+            <div class="card__title">bge-en-icl</div>
+            <p class="card__body">
+              <span lang="hu">BAAI, Apache 2.0. ~7B paraméter, 4096d, angol zászlóshajó. Újdonsága az in-context learning: néhány példa megadása inferencia közben.</span>
+              <span lang="en">BAAI, Apache 2.0. ~7B params, 4096d, English flagship. Its novelty is in-context learning: few-shot examples supplied at inference time.</span>
+            </p>
+          </div>
+          <div class="card">
+            <div class="card__title">NV-Embed-v2</div>
+            <p class="card__body">
+              <span lang="hu">NVIDIA, CC-BY-NC-4.0 — nem kereskedelmi licenc. ~7.85B paraméter, Mistral-7B alap, latent-attention pooling. MTEB v1 #1 (72.31, 2024. augusztus) — de a licenc miatt produkcióban nem használható.</span>
+              <span lang="en">NVIDIA, CC-BY-NC-4.0 — non-commercial license. ~7.85B params, Mistral-7B base, latent-attention pooling. MTEB v1 #1 (72.31, Aug 2024) — but not usable in production due to the license.</span>
+            </p>
+          </div>
+          <div class="card">
+            <div class="card__title">multilingual-e5-large-instruct</div>
+            <p class="card__body">
+              <span lang="hu">Microsoft / intfloat, MIT. ~560M paraméter, 1024d, csak 512 token kontextus, 100 nyelv — könnyű, érett választás.</span>
+              <span lang="en">Microsoft / intfloat, MIT. ~560M params, 1024d, only 512-token context, 100 languages — a lightweight, mature option.</span>
+            </p>
+          </div>
+          <div class="card">
+            <div class="card__title">gte-modernbert-base</div>
+            <p class="card__body">
+              <span lang="hu">Alibaba, Apache 2.0. 149M paraméter, 768d, 8192 kontextus, ModernBERT-alapú — erős kis encoder-only self-host választás.</span>
+              <span lang="en">Alibaba, Apache 2.0. 149M params, 768d, 8192 context, ModernBERT-based — a strong small encoder-only self-host pick.</span>
+            </p>
+          </div>
+          <div class="card">
+            <div class="card__title">nomic-embed-text-v2-moe</div>
+            <p class="card__body">
+              <span lang="hu">Nomic, Apache 2.0, 2025. február. Az első általános célú MoE szöveg-embedder: 8 szakértő, top-2 routing, 475M összes / 305M aktív paraméter, 768→256d MRL, 512 kontextus, ~100 nyelv.</span>
+              <span lang="en">Nomic, Apache 2.0, Feb 2025. The first general-purpose MoE text embedder: 8 experts, top-2 routing, 475M total / 305M active params, 768→256d MRL, 512 context, ~100 languages.</span>
+            </p>
+          </div>
+          <div class="card">
+            <div class="card__title">Snowflake Arctic Embed 2.0</div>
+            <p class="card__body">
+              <span lang="hu">Snowflake (l-v2.0), Apache 2.0, 2024. december. ~568M paraméter, 8192 kontextus, kvantizálás-barát MRL — akár 128 bájt/vektor mellett is használható.</span>
+              <span lang="en">Snowflake (l-v2.0), Apache 2.0, Dec 2024. ~568M params, 8192 context, quantization-friendly MRL — usable down to 128 bytes/vector.</span>
+            </p>
+          </div>
+          <div class="card">
+            <div class="card__title">EmbeddingGemma</div>
+            <p class="card__body">
+              <span lang="hu">Google (embeddinggemma-300m), Gemma licenc, 2025. szeptember. 308M paraméter, 768d MRL (→512/256/128), 2048 kontextus — eszközön futtatható: &lt;200 MB RAM kvantálva, &lt;22 ms EdgeTPU-n, teljesen offline.</span>
+              <span lang="en">Google (embeddinggemma-300m), Gemma license, Sep 2025. 308M params, 768d MRL (→512/256/128), 2048 context — runs on-device: &lt;200 MB RAM quantized, &lt;22 ms on EdgeTPU, fully offline.</span>
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- 07 Optimization: MRL & quantization -->
+      <section class="section">
+        <div class="section__head">
+          <span class="section__num">07</span>
+          <h2 class="section__title"><span lang="hu">Optimalizálás: MRL és kvantizálás</span><span lang="en">Optimization: MRL &amp; quantization</span></h2>
+        </div>
+        <div class="grid grid-2">
+          <div class="panel">
+            <h3 class="panel__title"><span lang="hu">Matryoshka (MRL)</span><span lang="en">Matryoshka (MRL)</span></h3>
+            <ul class="feature-list">
+              <li><span lang="hu">A fontos információ a vezető dimenziókban koncentrálódik, így a vektor egyszerűen csonkítható.</span><span lang="en">The important information is concentrated in the leading dimensions, so the vector can simply be truncated.</span></li>
+              <li><span lang="hu">3072→768d csonkítás kb. &lt;10% recall-veszteséget okoz; a 256d a gyakori „agresszív, de használható” alsó határ.</span><span lang="en">Truncating 3072→768d costs roughly &lt;10% recall; 256d is the common "aggressive but usable" floor.</span></li>
+              <li><span lang="hu">Ma gyakorlatilag univerzális: OpenAI 3-large/small, Gemini, Cohere v4, Voyage 4, Jina, Qwen3, Nomic, EmbeddingGemma.</span><span lang="en">Now effectively universal: OpenAI 3-large/small, Gemini, Cohere v4, Voyage 4, Jina, Qwen3, Nomic, EmbeddingGemma.</span></li>
+            </ul>
+          </div>
+          <div class="panel">
+            <h3 class="panel__title"><span lang="hu">Kvantizálás</span><span lang="en">Quantization</span></h3>
+            <ul class="feature-list">
+              <li><span lang="hu">Precíziós létra: float32 → float16 → int8 → binary, egyre kisebb tárhellyel.</span><span lang="en">Precision ladder: float32 → float16 → int8 → binary, with progressively smaller storage.</span></li>
+              <li><span lang="hu">A kvantizálás-tudatos tanítás (QAT) a 2025–2026-os váltás: a modell már a kvantizálással együtt tanul.</span><span lang="en">Quantization-aware training (QAT) is the 2025–2026 shift: the model trains with quantization in the loop.</span></li>
+              <li><span lang="hu">A Voyage API-paraméterként kínál float32/int8/uint8/binary-t; a Cohere v4 és a Jina támogatja a binaryt. A gyártó szerint a voyage-context-3 binary/512d az OpenAI-3-large float/3072d szintjét hozza.</span><span lang="en">Voyage exposes float32/int8/uint8/binary as an API parameter; Cohere v4 and Jina support binary. Vendor-reported: voyage-context-3 binary/512d matches OpenAI-3-large float/3072d.</span></li>
+            </ul>
+          </div>
+        </div>
+        <div class="info-box">
+          <p class="info-box__title"><span lang="hu">Tárhely-számítás</span><span lang="en">Storage calculation</span></p>
+          <p class="info-box__body">
+            <span lang="hu">1024 dimenziós vektorok, 250M darab (Sentence-Transformers referencia): float32 ≈ 954 GB → int8 ≈ 238 GB (4×, ~99.3% pontosság-megtartás, rescore nélkül) → binary ≈ 30 GB (32×, ~92.5% rescore nélkül, ~96% rescore-ral).</span>
+            <span lang="en">1024-dimension vectors, 250M of them (Sentence-Transformers reference): float32 ≈ 954 GB → int8 ≈ 238 GB (4×, ~99.3% retention, no rescore) → binary ≈ 30 GB (32×, ~92.5% no rescore, ~96% with rescore).</span>
+          </p>
+        </div>
+        <div class="info-box">
+          <p class="info-box__title"><span lang="hu">Kontextualizált chunk-embedding</span><span lang="en">Contextualized chunk embedding</span></p>
+          <p class="info-box__body">
+            <span lang="hu">Három párhuzamos megközelítés: (1) Anthropic Contextual Retrieval — LLM minden chunk elé kontextus-leírást fűz; (2) késői chunkolás (Jina) — előbb az egész dokumentum embedingje, majd felosztás és pooling; (3) voyage-context-3 — a modell tanulja be a globális dokumentum-kontextust minden chunk-vektorba, per-chunk LLM-hívás nélkül. A gyártó szerint a voyage-context-3 +6.76%-ot hoz az Anthropic Contextual Retrievalhez képest.</span>
+            <span lang="en">Three coexisting approaches: (1) Anthropic Contextual Retrieval — an LLM prepends a context blurb to each chunk; (2) late chunking (Jina) — embed the whole document first, then split and pool; (3) voyage-context-3 — the model is trained to inject global document context into each chunk vector, with no per-chunk LLM call. Vendor-reported: voyage-context-3 is +6.76% over Anthropic Contextual Retrieval.</span>
+          </p>
+        </div>
+      </section>
+
+      <!-- 08 Late interaction & multimodal -->
+      <section class="section">
+        <div class="section__head">
+          <span class="section__num">08</span>
+          <h2 class="section__title"><span lang="hu">Késői interakció és multimodalitás</span><span lang="en">Late interaction &amp; multimodal</span></h2>
+        </div>
+        <div class="grid grid-2">
+          <div class="panel">
+            <h3 class="panel__title"><span lang="hu">Bi-encoder vs. ColBERT</span><span lang="en">Bi-encoder vs. ColBERT</span></h3>
+            <ul class="feature-list">
+              <li><span lang="hu">A bi-encoderek (egy vektor / dokumentum, gyors, egyszerű) még mindig dominálják a produkciós RAG-ot.</span><span lang="en">Bi-encoders (one vector per document, fast, simple) still dominate production RAG.</span></li>
+              <li><span lang="hu">A ColBERT / late-interaction (token-szintű multi-vektorok, MaxSim pontozás) jobb precizitást ad nehéz lekérdezéseknél, de tárhelyigényes.</span><span lang="en">ColBERT / late interaction (token-level multi-vectors, MaxSim scoring) gives better precision on hard queries but costs storage.</span></li>
+              <li><span lang="hu">Multi-vektor modellek: jina-colbert-v2 (89 nyelv, 8192 kontextus), BGE-M3 multi-vektor mód.</span><span lang="en">Multi-vector models: jina-colbert-v2 (89 languages, 8192 context), BGE-M3 multi-vector mode.</span></li>
+              <li><span lang="hu">2026-os váltás: a PyLate token-pooling felezi a multi-vektor index méretét minőségvesztés nélkül.</span><span lang="en">2026 shift: PyLate's token pooling halves the multi-vector index size with no quality loss.</span></li>
+            </ul>
+          </div>
+          <div class="panel">
+            <h3 class="panel__title"><span lang="hu">Multimodális embedding</span><span lang="en">Multimodal embedding</span></h3>
+            <ul class="feature-list">
+              <li><span lang="hu">Egységes szöveg + kép + videó + audio vektortér egyetlen modellben.</span><span lang="en">A unified text + image + video + audio vector space in a single model.</span></li>
+              <li><span lang="hu">Cohere embed-v4 (szöveg+kép+PDF), voyage-multimodal-3.5 (videó-képkockákkal), gemini-embedding-2 (öt modalitás).</span><span lang="en">Cohere embed-v4 (text+image+PDF), voyage-multimodal-3.5 (adds video frames), gemini-embedding-2 (five modalities).</span></li>
+              <li><span lang="hu">A ColPali / ColQwen / ColNomic az oldalt képként kezelő, late-interaction dokumentum-visszakeresés.</span><span lang="en">ColPali / ColQwen / ColNomic do page-as-image, late-interaction document retrieval.</span></li>
+              <li><span lang="hu">Az egyvektoros multimodális modellek szűkítették a rést a ViDoRe v2 benchmarkon.</span><span lang="en">Single-vector multimodal models have narrowed the gap on the ViDoRe v2 benchmark.</span></li>
+            </ul>
+          </div>
+        </div>
+        <div class="info-box">
+          <p class="info-box__title"><span lang="hu">Gyakorlati ajánlás</span><span lang="en">Practical recommendation</span></p>
+          <p class="info-box__body">
+            <span lang="hu">Kezdj bi-encoderrel → ha kell, adj hozzá cross-encoder rerankelést → ColBERT-et csak akkor, ha ez még mindig nem elég. A legtöbb produkciós RAG az első lépésnél megáll.</span>
+            <span lang="en">Start with a bi-encoder → add cross-encoder reranking if needed → reach for ColBERT only if that is still insufficient. Most production RAG stops at the first step.</span>
+          </p>
+        </div>
+      </section>
+
+      <!-- 09 Choosing a model -->
+      <section class="section">
+        <div class="section__head">
+          <span class="section__num">09</span>
+          <h2 class="section__title"><span lang="hu">Modellválasztás</span><span lang="en">Choosing a model</span></h2>
+        </div>
+        <div class="decision-flow">
+          <div class="decision-step">
+            <div class="decision-q">
+              <span class="decision-q__icon">?</span>
+              <span><span lang="hu">Többnyelvű adat?</span><span lang="en">Multilingual data?</span></span>
+            </div>
+            <span class="decision-arrow" aria-hidden="true">→</span>
+            <div class="decision-out">
+              <span class="arch-chip">BGE-M3</span>
+              <span class="arch-chip">Qwen3-Embedding</span>
+              <span class="arch-chip">Cohere embed-v4</span>
+            </div>
+          </div>
+          <div class="decision-step">
+            <div class="decision-q">
+              <span class="decision-q__icon">?</span>
+              <span><span lang="hu">Szűk büdzsé?</span><span lang="en">Tight budget?</span></span>
+            </div>
+            <span class="decision-arrow" aria-hidden="true">→</span>
+            <div class="decision-out">
+              <span class="arch-chip">text-embedding-3-small</span>
+              <span class="arch-chip">voyage-4-lite</span>
+            </div>
+          </div>
+          <div class="decision-step">
+            <div class="decision-q">
+              <span class="decision-q__icon">?</span>
+              <span><span lang="hu">Maximális minőség?</span><span lang="en">Maximum quality?</span></span>
+            </div>
+            <span class="decision-arrow" aria-hidden="true">→</span>
+            <div class="decision-out">
+              <span class="arch-chip">Qwen3-Embedding-8B</span>
+              <span class="arch-chip">Gemini Embedding 001</span>
+              <span class="arch-chip">voyage-4-large</span>
+            </div>
+          </div>
+          <div class="decision-step">
+            <div class="decision-q">
+              <span class="decision-q__icon">?</span>
+              <span><span lang="hu">Eszközön vagy offline?</span><span lang="en">On-device or offline?</span></span>
+            </div>
+            <span class="decision-arrow" aria-hidden="true">→</span>
+            <div class="decision-out">
+              <span class="arch-chip">EmbeddingGemma</span>
+              <span class="arch-chip">gte-modernbert-base</span>
+            </div>
+          </div>
+        </div>
+        <div class="grid grid-2">
+          <div class="panel panel--ok">
+            <h3 class="panel__title"><span lang="hu">Ajánlott választások</span><span lang="en">Recommended picks</span></h3>
+            <ul class="feature-list feature-list--ok">
+              <li><span lang="hu">Kezdő projekt: OpenAI text-embedding-3-small — olcsó, érett ökoszisztéma.</span><span lang="en">Starter project: OpenAI text-embedding-3-small — cheap, mature ecosystem.</span></li>
+              <li><span lang="hu">Produkció: Voyage 4 vagy Cohere embed-v4 — minőség, hosszú kontextus, multimodalitás.</span><span lang="en">Production: Voyage 4 or Cohere embed-v4 — quality, long context, multimodality.</span></li>
+              <li><span lang="hu">Többnyelvű, self-host: BGE-M3 vagy Qwen3-Embedding.</span><span lang="en">Multilingual, self-hosted: BGE-M3 or Qwen3-Embedding.</span></li>
+              <li><span lang="hu">Eszközön / offline: EmbeddingGemma.</span><span lang="en">On-device / offline: EmbeddingGemma.</span></li>
+            </ul>
+          </div>
+          <div class="panel panel--warn">
+            <h3 class="panel__title"><span lang="hu">Kerülendő</span><span lang="en">Avoid</span></h3>
+            <ul class="feature-list feature-list--warn">
+              <li><span lang="hu">Az elavult ada-002 — rosszabb ár/teljesítmény, mint a 3-small.</span><span lang="en">The legacy ada-002 — worse price/performance than 3-small.</span></li>
+              <li><span lang="hu">7B+ modell GPU nélkül — érdemi sebesség nem érhető el.</span><span lang="en">A 7B+ model without a GPU — meaningful speed is not achievable.</span></li>
+              <li><span lang="hu">Modellválasztás a saját adaton való tesztelés nélkül — a benchmark nem helyettesíti a domain-mérést.</span><span lang="en">Picking a model without testing on your own data — a benchmark does not replace a domain measurement.</span></li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <!-- 10 Trends 2026 -->
+      <section class="section">
+        <div class="section__head">
+          <span class="section__num">10</span>
+          <h2 class="section__title"><span lang="hu">Trendek 2026</span><span lang="en">Trends 2026</span></h2>
+        </div>
+        <div class="grid grid-3">
+          <div class="card">
+            <div class="card__title"><span lang="hu">Univerzális MRL</span><span lang="en">Universal MRL</span></div>
+            <p class="card__body">
+              <span lang="hu">Minden komoly modell csonkítható dimenziókkal érkezik — a tárhely és a sebesség paraméterré vált.</span>
+              <span lang="en">Every serious model ships with truncatable dimensions — storage and speed have become a parameter.</span>
+            </p>
+          </div>
+          <div class="card">
+            <div class="card__title"><span lang="hu">Kvantizálás-tudatos tanítás</span><span lang="en">Quantization-aware training</span></div>
+            <p class="card__body">
+              <span lang="hu">Natív int8 / binary kimenet; a tárhely 32×-es csökkentése a minőség minimális romlásával.</span>
+              <span lang="en">Native int8 / binary output; up to 32× storage cuts with minimal quality loss.</span>
+            </p>
+          </div>
+          <div class="card">
+            <div class="card__title"><span lang="hu">Kontextualizált chunkok</span><span lang="en">Contextualized chunks</span></div>
+            <p class="card__body">
+              <span lang="hu">A voyage-context-3 és a késői chunkolás globális dokumentum-kontextust visz a chunk-vektorokba.</span>
+              <span lang="en">voyage-context-3 and late chunking inject global document context into chunk vectors.</span>
+            </p>
+          </div>
+          <div class="card">
+            <div class="card__title"><span lang="hu">Multimodalitás + videó/audio</span><span lang="en">Multimodal + video/audio</span></div>
+            <p class="card__body">
+              <span lang="hu">A voyage-multimodal-3.5 és a Gemini Embedding 2 egységes vektortérbe vonja a videót és a hangot is.</span>
+              <span lang="en">voyage-multimodal-3.5 and Gemini Embedding 2 bring video and audio into a unified vector space.</span>
+            </p>
+          </div>
+          <div class="card">
+            <div class="card__title"><span lang="hu">Cserélhető LoRA-adapterek</span><span lang="en">Swappable LoRA adapters</span></div>
+            <p class="card__body">
+              <span lang="hu">Egy gerinc, több feladat: a Jina v4/v5 retrieval / matching / klaszterezés / klasszifikáció adaptereket szállít.</span>
+              <span lang="en">One backbone, many tasks: Jina v4/v5 ship retrieval / matching / clustering / classification adapters.</span>
+            </p>
+          </div>
+          <div class="card">
+            <div class="card__title"><span lang="hu">Eszközön futó embedding</span><span lang="en">On-device embeddings</span></div>
+            <p class="card__body">
+              <span lang="hu">Az EmbeddingGemma &lt;200 MB RAM mellett, teljesen offline fut — embedding a hálózat széle felé tolva.</span>
+              <span lang="en">EmbeddingGemma runs fully offline in &lt;200 MB RAM — embeddings pushed toward the network edge.</span>
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- 11 Code example -->
+      <section class="section">
+        <div class="section__head">
+          <span class="section__num">11</span>
           <h2 class="section__title"><span lang="hu">Kódpélda</span><span lang="en">Code example</span></h2>
         </div>
         <div class="code-block">
           <div class="code-block__head">
             <span>embedding_pipeline.py</span>
           </div>
-          <pre><code><span class="tok-comment"># pip install sentence-transformers openai</span>
+          <pre><code><span class="tok-comment"># pip install sentence-transformers openai voyageai FlagEmbedding</span>
 <span class="tok-comment"># Dense embedding with MRL dimension reduction (Matryoshka)</span>
 from openai import OpenAI
 
@@ -233,18 +668,25 @@ def embed_bge(texts: list[str]) -&gt; dict:
         return_colbert_vecs=False,
     )
 
-<span class="tok-comment"># Instruction-tuned model: Qwen3-Embedding with task prefix</span>
+<span class="tok-comment"># Instruction-tuned model: Qwen3-Embedding with an asymmetric task prefix</span>
 from sentence_transformers import SentenceTransformer
 
-qwen = SentenceTransformer("Alibaba-NLP/gte-Qwen3-8B-instruct", trust_remote_code=True)
+qwen = SentenceTransformer("Qwen/Qwen3-Embedding-8B", trust_remote_code=True)
 
 query_vecs = qwen.encode(
     ["What is Matryoshka Representation Learning?"],
     prompt_name="query",          <span class="tok-comment"># asymmetric: query vs. passage prefix</span>
 )
-doc_vecs = qwen.encode(
-    ["MRL trains nested representations..."],
-    prompt_name="passage",
+
+<span class="tok-comment"># Contextualized chunk embeddings: voyage-context-3 injects whole-document</span>
+<span class="tok-comment"># context into each chunk vector — no per-chunk LLM call.</span>
+import voyageai
+
+vo = voyageai.Client()
+ctx = vo.contextualized_embed(
+    inputs=[["Chunk one of the document.", "Chunk two of the document."]],
+    model="voyage-context-3",
+    input_type="document",
 )
 </code></pre>
         </div>

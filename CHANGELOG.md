@@ -24,6 +24,12 @@ project follows [Semantic Versioning](https://semver.org/) — see
 - `assets/js/knowbase.js` — sidebar generation, bilingual HU/EN toggle
   (persisted to `localStorage`), mobile navigation, and Mermaid rendering.
 
+### Changed
+- Embedding Models reference page deep-refreshed with mid-2026 data: MMTEB
+  leaderboard, API-provider models and consolidated pricing, an open-source
+  model catalog, MRL/quantization, late interaction and multimodality, a
+  model-selection guide, and 2026 trends.
+
 ## [0.1.0] - 2026-05-18
 
 ### Added
