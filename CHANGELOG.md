@@ -46,6 +46,11 @@ project follows [Semantic Versioning](https://semver.org/) — see
   nav, the landing page, and the architecture pager chain.
 
 ### Changed
+- OpenAI compatibility reference page §04 expanded with a per-model detail
+  card grid — one `card--rich` per model (GPT-5.5, GPT-5.5-pro, GPT-5.4 /
+  mini / nano, GPT-5.3-Codex, o3, o4-mini) showing input/output modalities,
+  context window, max output, knowledge cutoff, reasoning mode and key
+  capabilities. Data sourced from the `developers.openai.com` model pages.
 - Embedding Models reference page deep-refreshed with mid-2026 data: MMTEB
   leaderboard, API-provider models and consolidated pricing, an open-source
   model catalog, MRL/quantization, late interaction and multimodality, a
