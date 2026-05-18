@@ -151,10 +151,271 @@ flowchart TD
         </div>
       </section>
 
-      <!-- 04 When to use it -->
+      <!-- 04 Core Principles -->
       <section class="section">
         <div class="section__head">
           <span class="section__num">04</span>
+          <h2 class="section__title"><span lang="hu">Alapelvek</span><span lang="en">Core Principles</span></h2>
+        </div>
+        <p class="section__desc">
+          <span lang="hu">Az Adaptive RAG négy elvre épül: a számítási ráfordítást a kérdés nehézségéhez igazítja, lekérdezésenként.</span>
+          <span lang="en">Adaptive RAG rests on four principles: it matches compute to the difficulty of the query, on a per-query basis.</span>
+        </p>
+        <div class="grid grid-2">
+          <div class="info-box">
+            <p class="info-box__title"><span lang="hu">Kérdés-komplexitás osztályozása</span><span lang="en">Query-complexity classification</span></p>
+            <p class="info-box__body">
+              <span lang="hu">A keresési stratégiát egy kérdés-komplexitás osztályozó dönti el — lekérdezésenként, a feldolgozás megkezdése előtt.</span>
+              <span lang="en">A query-complexity classification decides the retrieval strategy — per query, before processing begins.</span>
+            </p>
+          </div>
+          <div class="info-box">
+            <p class="info-box__title"><span lang="hu">Három kanonikus szint</span><span lang="en">Three canonical tiers</span></p>
+            <p class="info-box__body">
+              <span lang="hu">Három kanonikus szint: visszakeresés nélkül, egylépéses visszakeresés, illetve iteratív vagy több-lépéses (multi-hop) visszakeresés.</span>
+              <span lang="en">Three canonical tiers: no retrieval, single-step retrieval, and iterative or multi-hop retrieval.</span>
+            </p>
+          </div>
+          <div class="info-box">
+            <p class="info-box__title"><span lang="hu">Ráfordítás a nehézséghez igazítva</span><span lang="en">Match compute to difficulty</span></p>
+            <p class="info-box__body">
+              <span lang="hu">A számítási ráfordítást a kérdés nehézségéhez igazítja — nem futtat drága folyamatot egy triviális kérdésen.</span>
+              <span lang="en">Compute is matched to difficulty — it does not run an expensive pipeline on a trivial query.</span>
+            </p>
+          </div>
+          <div class="info-box">
+            <p class="info-box__title"><span lang="hu">Kérdéselemzés és önkorrekció</span><span lang="en">Query analysis with self-correction</span></p>
+            <p class="info-box__body">
+              <span lang="hu">A kérdéselemzést aktív, önkorrekciós RAG-mechanizmusokkal kombinálja — a stratégia menet közben is finomodhat.</span>
+              <span lang="en">It combines query analysis with active, self-corrective RAG — the strategy can refine itself on the fly.</span>
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- 05 Use Cases -->
+      <section class="section">
+        <div class="section__head">
+          <span class="section__num">05</span>
+          <h2 class="section__title"><span lang="hu">Felhasználási esetek</span><span lang="en">Use Cases</span></h2>
+        </div>
+        <p class="section__desc">
+          <span lang="hu">Az Adaptive RAG ott a legerősebb, ahol a kérdések a triviálistól a több-lépésesig terjednek — vegyes terhelésű asszisztensekben.</span>
+          <span lang="en">Adaptive RAG is strongest where queries range from trivial to multi-hop — in mixed-workload assistants.</span>
+        </p>
+        <div class="grid grid-3">
+          <div class="card">
+            <div class="card__title"><span lang="hu">Vállalati keresés és support</span><span lang="en">Enterprise search &amp; support</span></div>
+            <p class="card__body">
+              <span lang="hu">Vállalati keresési és support-copilot rendszerek, ahol a kérdések nehézsége tág skálán mozog.</span>
+              <span lang="en">Enterprise search and support copilots, where query difficulty spans a wide range.</span>
+            </p>
+          </div>
+          <div class="card">
+            <div class="card__title"><span lang="hu">Hibrid, több-korpuszos keresés</span><span lang="en">Hybrid multi-corpus retrieval</span></div>
+            <p class="card__body">
+              <span lang="hu">Hibrid visszakeresés pénzügyi, jogi és orvosi korpuszok felett — a stratégia a kérdéshez igazodik.</span>
+              <span lang="en">Hybrid retrieval over financial, legal and medical corpora — the strategy adapts to the query.</span>
+            </p>
+          </div>
+          <div class="card">
+            <div class="card__title"><span lang="hu">Költségérzékeny éles RAG</span><span lang="en">Cost-sensitive production RAG</span></div>
+            <p class="card__body">
+              <span lang="hu">Költségérzékeny éles RAG, amely nem költhet túl az egyszerű kérdéseken.</span>
+              <span lang="en">Cost-sensitive production RAG that must not over-spend on easy queries.</span>
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- 06 Routing Strategy -->
+      <section class="section">
+        <div class="section__head">
+          <span class="section__num">06</span>
+          <h2 class="section__title"><span lang="hu">Útválasztási stratégia</span><span lang="en">Routing Strategy</span></h2>
+        </div>
+        <p class="section__desc">
+          <span lang="hu">Az Adaptive RAG <strong>maga az útválasztási architektúra</strong>. Három útválasztási stílus létezik: <strong>logikai</strong> (diszkrét szabályok — fájltípus, hossz, metaadat), <strong>szemantikus</strong> (a kérdés és útválasztási minta-mondatok beágyazása, maximális koszinusz-hasonlóság — a <code>semantic-router</code> könyvtár; gyors, LLM-hívás nélkül), és <strong>LLM/osztályozó</strong> (egy LLM vagy finomhangolt T5/SVM címkézi a kérdés komplexitását).</span>
+          <span lang="en">Adaptive RAG <strong>is the routing architecture</strong>. There are three routing styles: <strong>logical</strong> (discrete rules — file type, length, metadata), <strong>semantic</strong> (embed the query and route utterances, max cosine similarity — the <code>semantic-router</code> library; fast, no LLM call), and <strong>LLM/classifier</strong> (an LLM or a fine-tuned T5/SVM labels query complexity).</span>
+        </p>
+        <div class="diagram-box">
+<pre class="mermaid" lang="hu">
+flowchart LR
+  Q[Lekérdezés] --&gt; CLS{Osztályozó}
+  CLS --&gt;|Egyszerű| NR[Visszakeresés nélkül]
+  CLS --&gt;|Közepes| SS[Egylépéses visszakeresés]
+  CLS --&gt;|Komplex| IT[Iteratív visszakeresés]
+  NR --&gt; ANS[Válasz]
+  SS --&gt; ANS
+  IT --&gt; ANS
+</pre>
+<pre class="mermaid" lang="en">
+flowchart LR
+  Q[Query] --&gt; CLS{Classifier}
+  CLS --&gt;|Simple| NR[No retrieval]
+  CLS --&gt;|Medium| SS[Single-step retrieval]
+  CLS --&gt;|Complex| IT[Iterative retrieval]
+  NR --&gt; ANS[Answer]
+  SS --&gt; ANS
+  IT --&gt; ANS
+</pre>
+          <p class="mermaid__caption">
+            <span lang="hu">A kérdést egy osztályozó három útra bontja — visszakeresés nélkül, egylépéses vagy iteratív visszakeresés —, mindhárom ugyanahhoz a válaszhoz vezet.</span>
+            <span lang="en">A classifier splits the query onto three paths — no retrieval, single-step or iterative retrieval — all converging on the answer.</span>
+          </p>
+        </div>
+        <div class="info-box">
+          <p class="info-box__title"><span lang="hu">2026-os megfigyelés: TF-IDF + SVM</span><span lang="en">2026 finding: TF-IDF + SVM</span></p>
+          <p class="info-box__body">
+            <span lang="hu">A RAGRouter-Bench [paper] meglepő eredménye szerint egy klasszikus <strong>TF-IDF + SVM</strong> osztályozó felülmúlja a beágyazás-alapú útválasztókat (3,1 makró-F1 ponttal): makró-F1 <strong>0,928</strong>, 93,2%-os pontosság és <strong>28,1%-os token-megtakarítás</strong>. Az útválasztás nem mindig igényel mély modellt.</span>
+            <span lang="en">RAGRouter-Bench [paper] reports a surprising result: a classical <strong>TF-IDF + SVM</strong> classifier beats embedding-based routers (by 3.1 macro-F1) — macro-F1 <strong>0.928</strong>, 93.2% accuracy and <strong>28.1% token savings</strong>. Routing does not always need a deep model.</span>
+          </p>
+        </div>
+      </section>
+
+      <!-- 07 Recommended Frameworks -->
+      <section class="section">
+        <div class="section__head">
+          <span class="section__num">07</span>
+          <h2 class="section__title"><span lang="hu">Ajánlott keretrendszerek</span><span lang="en">Recommended Frameworks</span></h2>
+        </div>
+        <div class="grid grid-3">
+          <div class="card card--rich card--adapt">
+            <span class="card__tag">orchestration</span>
+            <div class="card__title"><span lang="hu">LangGraph</span><span lang="en">LangGraph</span></div>
+            <p class="card__spec">pip install langgraph</p>
+            <p class="card__body">
+              <span lang="hu">A standard megvalósítás: egy útválasztó csomópont osztályoz, majd visszakeresés nélküli / vektoros / webes keresési / iteratív ágra bontja a folyamatot.</span>
+              <span lang="en">The standard implementation: a router node classifies, then branches to a no-retrieval / vector store / web search / iterative path.</span>
+            </p>
+          </div>
+          <div class="card card--rich card--adapt">
+            <span class="card__tag">classifier</span>
+            <div class="card__title"><span lang="hu">Adaptive-RAG (eredeti)</span><span lang="en">Adaptive-RAG (original)</span></div>
+            <p class="card__spec">Jeong et al. 2024</p>
+            <p class="card__body">
+              <span lang="hu">Az eredeti munka egy T5-Large alapú komplexitás-osztályozót használ a három visszakeresési szint megkülönböztetésére.</span>
+              <span lang="en">The original work uses a T5-Large complexity classifier to distinguish the three retrieval tiers.</span>
+            </p>
+          </div>
+          <div class="card card--rich card--adapt">
+            <span class="card__tag">routing</span>
+            <div class="card__title"><span lang="hu">semantic-router</span><span lang="en">semantic-router</span></div>
+            <p class="card__spec">pip install semantic-router</p>
+            <p class="card__body">
+              <span lang="hu">Az aurelio-labs könyvtára beágyazás-hasonlóság alapján útválaszt — gyorsan, LLM-hívás nélkül.</span>
+              <span lang="en">The aurelio-labs library routes by embedding similarity — fast, with no LLM call.</span>
+            </p>
+          </div>
+          <div class="card card--rich card--adapt">
+            <span class="card__tag">routing</span>
+            <div class="card__title"><span lang="hu">vLLM Semantic Router</span><span lang="en">vLLM Semantic Router</span></div>
+            <p class="card__spec">open-source</p>
+            <p class="card__body">
+              <span lang="hu">Nyílt forráskódú, modell-keverékek (mixture-of-models) közötti útválasztást megvalósító komponens.</span>
+              <span lang="en">An open-source component that implements mixture-of-models routing.</span>
+            </p>
+          </div>
+          <div class="card card--rich card--adapt">
+            <span class="card__tag">classifier</span>
+            <div class="card__title"><span lang="hu">LLM-osztályozók</span><span lang="en">LLM classifiers</span></div>
+            <p class="card__spec">zero / few-shot</p>
+            <p class="card__body">
+              <span lang="hu">GPT-4o-mini-osztályú modellek zero- vagy few-shot prompttal a kérdés komplexitásának címkézésére.</span>
+              <span lang="en">GPT-4o-mini-class models with a zero- or few-shot prompt to label query complexity.</span>
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- 08 Expected Results -->
+      <section class="section">
+        <div class="section__head">
+          <span class="section__num">08</span>
+          <h2 class="section__title"><span lang="hu">Várható eredmények</span><span lang="en">Expected Results</span></h2>
+        </div>
+        <p class="section__desc">
+          <span lang="hu">A RAGRouter-Bench [paper] (7 727 lekérdezés, 4 terület) számai szerint az útválasztás a pontosság megtartása mellett csökkenti a költséget és a késleltetést.</span>
+          <span lang="en">RAGRouter-Bench [paper] numbers (7,727 queries, 4 domains) show routing cuts cost and latency while preserving accuracy.</span>
+        </p>
+        <div class="compare-table-wrap">
+          <table class="compare-table">
+            <thead>
+              <tr>
+                <th><span lang="hu">Mérőszám</span><span lang="en">Metric</span></th>
+                <th><span lang="hu">Érték</span><span lang="en">Value</span></th>
+                <th><span lang="hu">Megjegyzés</span><span lang="en">Note</span></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="arch-name"><span lang="hu">Legjobb osztályozó (TF-IDF+SVM)</span><span lang="en">Best classifier (TF-IDF+SVM)</span></td>
+                <td class="mono">0.928</td>
+                <td><span lang="hu">Makró-F1; 93,2%-os pontosság</span><span lang="en">Macro-F1; 93.2% accuracy</span></td>
+              </tr>
+              <tr>
+                <td class="arch-name"><span lang="hu">Token-megtakarítás</span><span lang="en">Token savings</span></td>
+                <td class="mono">28.1%</td>
+                <td><span lang="hu">A perfekt-címke plafon (35,2%) kb. 80%-a</span><span lang="en">~80% of the perfect-label ceiling (35.2%)</span></td>
+              </tr>
+              <tr>
+                <td class="arch-name"><span lang="hu">Legkönnyebb terület (jogi)</span><span lang="en">Easiest domain (legal)</span></td>
+                <td class="mono">0.967</td>
+                <td><span lang="hu">Makró-F1, területenkénti bontásban</span><span lang="en">Macro-F1, per-domain breakdown</span></td>
+              </tr>
+              <tr>
+                <td class="arch-name"><span lang="hu">Legnehezebb terület (orvosi)</span><span lang="en">Hardest domain (medical)</span></td>
+                <td class="mono">0.803</td>
+                <td><span lang="hu">Makró-F1, területenkénti bontásban</span><span lang="en">Macro-F1, per-domain breakdown</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="info-box">
+          <p class="info-box__title"><span lang="hu">Útválasztás → költség leképezés</span><span lang="en">Routing → cost map</span></p>
+          <p class="info-box__body">
+            <span lang="hu">A kérdéstípus a visszakeresési költséget is meghatározza: egylépéses → NaiveRAG 1,4×, multi-hop → HybridRAG 2,8×, összefoglaló → IterativeRAG 3,5× token-költség (a visszakeresés nélküli esethez képest). Nettó hatás: a késleltetés és a költség csökken, a pontosság megmarad.</span>
+            <span lang="en">Query type also sets the retrieval cost: single-hop → NaiveRAG 1.4×, multi-hop → HybridRAG 2.8×, summary → IterativeRAG 3.5× token cost (relative to no retrieval). Net effect: latency and cost drop while accuracy is preserved.</span>
+          </p>
+        </div>
+      </section>
+
+      <!-- 09 Evaluation -->
+      <section class="section">
+        <div class="section__head">
+          <span class="section__num">09</span>
+          <h2 class="section__title"><span lang="hu">Kiértékelés</span><span lang="en">Evaluation</span></h2>
+        </div>
+        <p class="section__desc">
+          <span lang="hu">Az Adaptive RAG kiértékelése két szinten zajlik: az útválasztó pontossága és a routelt válaszok végponttól végpontig vett minősége.</span>
+          <span lang="en">Evaluating Adaptive RAG happens on two levels: the accuracy of the router and the end-to-end quality of the routed answers.</span>
+        </p>
+        <div class="grid grid-2">
+          <ul class="feature-list feature-list--ok">
+            <li><span lang="hu">Útválasztási pontosság: az osztályozó makró-F1 / pontosság értéke címkézett kérdéstípusokon.</span><span lang="en">Routing accuracy: the classifier's macro-F1 / accuracy on labeled query types.</span></li>
+            <li><span lang="hu">Végponttól végpontig: RAGAS-metrikák a routelt válaszokon.</span><span lang="en">End-to-end: RAGAS metrics on the routed answers.</span></li>
+            <li><span lang="hu">RAGAS: kontextus-pontosság és kontextus-felidézés.</span><span lang="en">RAGAS: context precision and context recall.</span></li>
+            <li><span lang="hu">RAGAS: megalapozottság (faithfulness) és válasz-relevancia.</span><span lang="en">RAGAS: faithfulness and answer relevancy.</span></li>
+          </ul>
+          <ul class="feature-list feature-list--warn">
+            <li><span lang="hu">Mérd a token- és költségmegtakarítást egy mindig legdrágább baseline-hoz képest.</span><span lang="en">Measure token and cost savings against an always-most-expensive baseline.</span></li>
+            <li><span lang="hu">Mérd ugyanezt egy perfekt-címke oracle-höz képest is — ez adja meg az elérhető plafont.</span><span lang="en">Also measure it against a perfect-label oracle — this gives the achievable ceiling.</span></li>
+            <li><span lang="hu">Egy rosszul kalibrált osztályozó csendben rossz útvonalra terel és rontja a pontosságot.</span><span lang="en">A miscalibrated classifier silently routes to the wrong path and degrades accuracy.</span></li>
+          </ul>
+        </div>
+        <div class="info-box">
+          <p class="info-box__title"><span lang="hu">Eszközök három szerepre</span><span lang="en">Tooling, three roles</span></p>
+          <p class="info-box__body">
+            <span lang="hu">RAGAS a metrika-feltáráshoz és szintetikus tesztkészletekhez, DeepEval a CI/CD pass/fail kapukhoz, TruLens / Langfuse az éles monitorozáshoz; az Arize Phoenix a folyamatok nyomkövetéséhez (tracing).</span>
+            <span lang="en">RAGAS for metric exploration and synthetic test sets, DeepEval for CI/CD pass/fail gates, TruLens / Langfuse for production monitoring; Arize Phoenix for tracing.</span>
+          </p>
+        </div>
+      </section>
+
+      <!-- 10 When to use it -->
+      <section class="section">
+        <div class="section__head">
+          <span class="section__num">10</span>
           <h2 class="section__title"><span lang="hu">Mikor érdemes használni</span><span lang="en">When to use it</span></h2>
         </div>
         <div class="grid grid-2">
@@ -179,66 +440,85 @@ flowchart TD
         <div class="info-box">
           <p class="info-box__title"><span lang="hu">Pro tipp</span><span lang="en">Pro tip</span></p>
           <p class="info-box__body">
-            <span lang="hu">Kezdj egyszerű heurisztikával az osztályozáshoz (kérdéshossz, kulcsszavak), mielőtt LLM-alapú osztályozóra váltanál — sokszor a szabályalapú megközelítés is elegendő pontosságot ad, töredék késleltetéssel.</span>
-            <span lang="en">Start with simple heuristics for classification (question length, keywords) before switching to an LLM-based classifier — rule-based approaches often achieve sufficient accuracy at a fraction of the latency.</span>
+            <span lang="hu">Mielőtt LLM-alapú osztályozóra váltanál, próbálj ki egy klasszikus, könnyűsúlyú osztályozót: a RAGRouter-Bench [paper] szerint egy TF-IDF + SVM modell felülmúlja a beágyazás-alapú útválasztókat — töredék késleltetéssel és LLM-hívás nélkül.</span>
+            <span lang="en">Before reaching for an LLM-based classifier, try a classical lightweight one: per RAGRouter-Bench [paper], a TF-IDF + SVM model beats embedding-based routers — at a fraction of the latency and with no LLM call.</span>
           </p>
         </div>
       </section>
 
-      <!-- 05 Code example -->
+      <!-- 11 Code example -->
       <section class="section">
         <div class="section__head">
-          <span class="section__num">05</span>
+          <span class="section__num">11</span>
           <h2 class="section__title"><span lang="hu">Kódpélda</span><span lang="en">Code example</span></h2>
         </div>
+        <p class="section__desc">
+          <span lang="hu">A 2026-os standard megvalósítás egy LangGraph-gráf: egy útválasztó csomópont osztályozza a kérdést, majd feltételes élek (conditional edges) terelik a megfelelő visszakeresési ágra.</span>
+          <span lang="en">The 2026 standard implementation is a LangGraph graph: a router node classifies the query, then conditional edges steer it onto the right retrieval branch.</span>
+        </p>
         <div class="code-block">
           <div class="code-block__head">
             <span>adaptive_rag_router.py</span>
           </div>
-          <pre><code><span class="tok-comment"># Complexity levels returned by the classifier</span>
-from enum import Enum
+          <pre><code><span class="tok-comment"># pip install langgraph langchain-openai</span>
+from typing import Literal, TypedDict
+from langgraph.graph import StateGraph, START, END
 from langchain_openai import ChatOpenAI
-from langchain_core.prompts import ChatPromptTemplate
+from pydantic import BaseModel, Field
 
-class Complexity(str, Enum):
-    SIMPLE = "simple"
-    MEDIUM = "medium"
-    COMPLEX = "complex"
+llm = ChatOpenAI(model="gpt-5.4-mini")
 
-<span class="tok-comment"># Lightweight classifier — falls back to LLM when heuristics are uncertain</span>
-def classify_query(question: str, llm: ChatOpenAI) -&gt; Complexity:
-    prompt = ChatPromptTemplate.from_messages([
-        ("system", "Classify the query complexity as 'simple', 'medium', or 'complex'. "
-                   "Reply with ONLY the label."),
-        ("human", "{question}"),
-    ])
-    result = (prompt | llm).invoke({"question": question})
-    return Complexity(result.content.strip().lower())
+class State(TypedDict):
+    question: str
+    answer: str
 
-<span class="tok-comment"># Adaptive router dispatches to the right retrieval strategy</span>
-def adaptive_rag(question: str, retriever, llm: ChatOpenAI) -&gt; str:
-    complexity = classify_query(question, llm)
+<span class="tok-comment"># Router node — classifies the query into one of three tiers</span>
+class Route(BaseModel):
+    tier: Literal["no_retrieval", "single_step", "iterative"] = Field(
+        description="Retrieval tier matched to query complexity"
+    )
 
-    if complexity == Complexity.SIMPLE:
-        <span class="tok-comment"># No retrieval — LLM answers from parametric knowledge</span>
-        return llm.invoke(question).content
+def classify(state: State) -&gt; State:
+    return state  <span class="tok-comment"># pass-through; routing decided by the edge below</span>
 
-    elif complexity == Complexity.MEDIUM:
-        <span class="tok-comment"># Single-step RAG</span>
-        docs = retriever.invoke(question)
-        context = "\n\n".join(d.page_content for d in docs)
-        return llm.invoke(f"Context:\n{context}\n\nQuestion: {question}").content
+def route_query(state: State) -&gt; Literal["no_retrieval", "single_step", "iterative"]:
+    decision = llm.with_structured_output(Route).invoke(
+        f"Classify the retrieval tier for this query: {state['question']}"
+    )
+    return decision.tier
 
-    else:
-        <span class="tok-comment"># Multi-step iterative RAG — refine the query, retrieve again</span>
-        refined = llm.invoke(
-            f"Decompose into 2–3 sub-questions: {question}"
-        ).content
-        all_docs = []
-        for sub_q in refined.split("\n"):
-            all_docs.extend(retriever.invoke(sub_q.strip()))
-        context = "\n\n".join(d.page_content for d in all_docs)
-        return llm.invoke(f"Context:\n{context}\n\nQuestion: {question}").content
+<span class="tok-comment"># Three retrieval strategies, one per tier</span>
+def no_retrieval(state: State) -&gt; State:
+    return {"answer": llm.invoke(state["question"]).content}
+
+def single_step(state: State) -&gt; State:
+    docs = retriever.invoke(state["question"])
+    context = "\n\n".join(d.page_content for d in docs)
+    return {"answer": llm.invoke(f"Context:\n{context}\n\n{state['question']}").content}
+
+def iterative(state: State) -&gt; State:
+    subs = llm.invoke(f"Decompose into sub-questions: {state['question']}").content
+    docs = [d for q in subs.split("\n") for d in retriever.invoke(q.strip())]
+    context = "\n\n".join(d.page_content for d in docs)
+    return {"answer": llm.invoke(f"Context:\n{context}\n\n{state['question']}").content}
+
+<span class="tok-comment"># Build the graph — conditional edges fan out from the router node</span>
+graph = StateGraph(State)
+graph.add_node("classify", classify)
+graph.add_node("no_retrieval", no_retrieval)
+graph.add_node("single_step", single_step)
+graph.add_node("iterative", iterative)
+graph.add_edge(START, "classify")
+graph.add_conditional_edges("classify", route_query, {
+    "no_retrieval": "no_retrieval",
+    "single_step": "single_step",
+    "iterative": "iterative",
+})
+for node in ("no_retrieval", "single_step", "iterative"):
+    graph.add_edge(node, END)
+
+app = graph.compile()
+result = app.invoke({"question": question})
 </code></pre>
         </div>
       </section>
